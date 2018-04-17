@@ -8,24 +8,19 @@ function init(){
     camera = new THREE.PerspectiveCamera(70, width / height, 1, 1000),
     renderer = new THREE.WebGLRenderer({alpha: true});
 
-camera.position.z = 400;
-renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(width, height);
-document.body.appendChild(renderer.domElement);
+  camera.position.z = 400;
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(width, height);
+  document.body.appendChild(renderer.domElement);
 
-d3.json("https://unpkg.com/world-atlas@1/world/50m.json", function(error, topology) {
-  if (error) throw error;
+
   scene.add(graticule = wireframe(graticule10(), new THREE.LineBasicMaterial({color: 0xaaaaaa})));
-  scene.add(mesh = wireframe(topojson.mesh(topology, topology.objects.land), new THREE.LineBasicMaterial({color: 0xff0000})));
-  d3.timer(function(t) {
-    graticule.rotation.x = mesh.rotation.x = Math.sin(t / 11000) * Math.PI / 3 - Math.PI / 2;
-    graticule.rotation.z = mesh.rotation.z = t / 10000;
-    renderer.render(scene, camera);
-  });
-});
+  //renderer.render(scene, camera);
+
 
 // Converts a point [longitude, latitude] in degrees to a THREE.Vector3.
 function vertex(point) {
+  console.log("point", point);
   var lambda = point[0] * Math.PI / 180,
       phi = point[1] * Math.PI / 180,
       cosPhi = Math.cos(phi);
@@ -72,6 +67,11 @@ function graticule10() {
         .concat(d3.range(Math.ceil(x0 / dx) * dx, x1, dx).filter(function(x) { return Math.abs(x % DX) > epsilon; }).map(x))
         .concat(d3.range(Math.ceil(y0 / dy) * dy, y1 + epsilon, dy).filter(function(y) { return Math.abs(y % DY) > epsilon; }).map(y))
   };
+}
+render();
+function render(){
+  requestAnimationFrame(render);
+  renderer.render(scene, camera);
 }
 } //init end
 window.onload = init;
