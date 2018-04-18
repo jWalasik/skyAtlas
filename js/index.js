@@ -7,20 +7,34 @@ function init(){
     scene = new THREE.Scene,
     camera = new THREE.PerspectiveCamera(70, width / height, 1, 1000),
     renderer = new THREE.WebGLRenderer({alpha: true});
+    control = new THREE.TrackballControls(camera),
+    clock = new THREE.Clock();
 
-  camera.position.z = 400;
+    camera.position.x = 100;
+    camera.position.y = 100;
+    camera.position.z = 300;
+    camera.lookAt(new THREE.Vector3(0, 0, 0));
+
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(width, height);
   document.body.appendChild(renderer.domElement);
 
-
+  //add graticule
   scene.add(graticule = wireframe(graticule10(), new THREE.LineBasicMaterial({color: 0xaaaaaa})));
   //renderer.render(scene, camera);
+
+  var trackballControls = new THREE.TrackballControls(camera);
+  trackballControls.rotateSpeed = 1.0;
+  trackballControls.zoomSpeed = 1.0;
+  trackballControls.panSpeed = 1.0;
+  trackballControls.staticMoving = false;
+
+  trackballControls.noPan=true;
 
 
 // Converts a point [longitude, latitude] in degrees to a THREE.Vector3.
 function vertex(point) {
-  console.log("point", point);
+  //console.log("point", point);
   var lambda = point[0] * Math.PI / 180,
       phi = point[1] * Math.PI / 180,
       cosPhi = Math.cos(phi);
@@ -68,8 +82,13 @@ function graticule10() {
         .concat(d3.range(Math.ceil(y0 / dy) * dy, y1 + epsilon, dy).filter(function(y) { return Math.abs(y % DY) > epsilon; }).map(y))
   };
 }
+
 render();
+
 function render(){
+  var delta = clock.getDelta();
+  trackballControls.update(delta);
+
   requestAnimationFrame(render);
   renderer.render(scene, camera);
 }
