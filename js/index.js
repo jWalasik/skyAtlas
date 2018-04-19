@@ -1,15 +1,14 @@
 function init(){
   var width = 960,
     height = 960,
-    radius = 228,
+    radius = 4000,
     mesh,
     graticule,
     scene = new THREE.Scene,
-    camera = new THREE.PerspectiveCamera(70, width / height, 1, 1000),
+    camera = new THREE.PerspectiveCamera(70, width / height, 1, 15000),
     renderer = new THREE.WebGLRenderer({alpha: true});
     control = new THREE.TrackballControls(camera),
     clock = new THREE.Clock();
-
     camera.position.x = 100;
     camera.position.y = 100;
     camera.position.z = 300;
@@ -21,7 +20,39 @@ function init(){
 
   //add graticule
   scene.add(graticule = wireframe(graticule10(), new THREE.LineBasicMaterial({color: 0xaaaaaa})));
-  //renderer.render(scene, camera);
+
+  //parse data
+  var starsData = d3.csv("https://gist.githubusercontent.com/elPaleniozord/433b888e3ed64da651f18d5c60682c8a/raw/76e8fa3fe6eb6aaf93154927788ecf6fd47e240c/hyg_data.csv", function (data){
+
+    /*DATA FORMAT:
+    [0{
+    ci: 0.482 - star color index,
+    dec: 1.089009 - declination, in deg
+    dist: 219.7802 - distance from sun
+    mag: 9.100 - magnitude
+    proper: "" - name of a star, most likely empty string
+    ra: 0.000060 - right ascention, in deg
+    spect: "f5" - spectrum
+    }]
+    */
+    var stars = new THREE.Geometry();
+    data.map(function(d){
+      var star = new THREE.Vector3();
+      var lambda = d.ra*Math.PI/180*15,
+          phi = d.dec*Math.PI/180,
+          cosPhi = Math.cos(phi);
+      star.x = radius*cosPhi*Math.cos(lambda);
+      star.y = radius*cosPhi*Math.sin(lambda);
+      star.z = 4000;
+
+
+      stars.vertices.push(star);
+    })
+
+    var starsMaterial = new THREE.PointsMaterial({color: "blue"});
+    var starField = new THREE.Points(stars, starsMaterial);
+    scene.add(starField);
+  })
 
   var trackballControls = new THREE.TrackballControls(camera);
   trackballControls.rotateSpeed = 1.0;
@@ -61,8 +92,8 @@ function graticule10() {
   var epsilon = 1e-6,
       x1 = 180, x0 = -x1, y1 = 80, y0 = -y1, dx = 10, dy = 10,
       X1 = 180, X0 = -X1, Y1 = 90, Y0 = -Y1, DX = 90, DY = 360,
-      x = graticuleX(y0, y1, 2.5), y = graticuleY(x0, x1, 2.5),
-      X = graticuleX(Y0, Y1, 2.5), Y = graticuleY(X0, X1, 2.5);
+      x = graticuleX(y0, y1, 1.5), y = graticuleY(x0, x1, 1.5),
+      X = graticuleX(Y0, Y1, 1.5), Y = graticuleY(X0, X1, 1.5);
 
   function graticuleX(y0, y1, dy) {
     var y = d3.range(y0, y1 - epsilon, dy).concat(y1);
