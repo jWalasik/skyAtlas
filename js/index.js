@@ -43,7 +43,7 @@ function init(){
           cosPhi = Math.cos(phi);
       star.x = radius*cosPhi*Math.cos(lambda);
       star.y = radius*cosPhi*Math.sin(lambda);
-      star.z = 4000;
+      star.z = radius * Math.sin(phi);
 
 
       stars.vertices.push(star);
