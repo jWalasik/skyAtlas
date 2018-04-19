@@ -35,6 +35,10 @@ function init(){
     spect: "f5" - spectrum
     }]
     */
+    var starColor = d3.scale.linear()
+                      .domain([-1, -0,17, 0.15, 0.44, 0.68, 1.15, 2])
+                      .range([new THREE.Color(0x99d6ff), new THREE.Color(0xccebff), new THREE.Color(0xffffff), new THREE.Color(0xffffcc), new THREE.Color(0xffff99), new THREE.Color(0xffb380), new THREE.Color(0xff6666)])
+
     var stars = new THREE.Geometry();
     data.map(function(d){
       var star = new THREE.Vector3();
@@ -45,12 +49,14 @@ function init(){
       star.y = radius*cosPhi*Math.sin(lambda);
       star.z = radius * Math.sin(phi);
 
-
+      //console.log(stars);
       stars.vertices.push(star);
+      stars.colors.push(starColor(d.ci));
     })
 
-    var starsMaterial = new THREE.PointsMaterial({color: "blue"});
+    var starsMaterial = new THREE.PointsMaterial({size: 5, sizeAttenuation:true, vertexColors: THREE.VertexColors});
     var starField = new THREE.Points(stars, starsMaterial);
+    console.log(starField);
     scene.add(starField);
   })
 

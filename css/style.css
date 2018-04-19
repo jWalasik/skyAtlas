@@ -1,0 +1,17 @@
+.graticule {
+  fill: none;
+  stroke: #777;
+  stroke-width: .5px;
+  stroke-opacity: .5;
+}
+.atlas {
+  background:#000033;
+  margin: auto;
+}
+.stars {
+      fill: #fff;
+      stroke: #000;
+}
+body {
+  background-color: #181868;
+}
