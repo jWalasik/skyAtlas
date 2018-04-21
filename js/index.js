@@ -35,9 +35,51 @@ function init(){
     spect: "f5" - spectrum
     }]
     */
+    //translate color index to real color
     var starColor = d3.scale.linear()
-                      .domain([-1, -0,17, 0.15, 0.44, 0.68, 1.15, 2])
-                      .range([new THREE.Color(0x99d6ff), new THREE.Color(0xccebff), new THREE.Color(0xffffff), new THREE.Color(0xffffcc), new THREE.Color(0xffff99), new THREE.Color(0xffb380), new THREE.Color(0xff6666)])
+                      .domain([-1, -0.17, 0.15, 0.44, 0.68, 1.15, 2])
+                      .range(["#99d6ff", "#ccebff", "#ffffff", "#ffffcc", "#ffff99", "#ffb380", "#ff6666"]);
+    var flareText0 = new THREE.TextureLoader("D:\Programowanie\projekty\three_project\textures\lensflare0.png");
+    var flareText3 = new THREE.TextureLoader("D:\Programowanie\projekty\three_project\textures\lensflare3.png");
+    function addLensFlare(x,y,z, size, overrideImage){
+  var flareColor = new THREE.Color( 0xffffff );
+
+  lensFlare = new THREE.LensFlare( overrideImage, 700, 0.0, THREE.AdditiveBlending, flareColor );
+
+  //	we're going to be using multiple sub-lens-flare artifacts, each with a different size
+  lensFlare.add( flareText0, 4096, 0.0, THREE.AdditiveBlending );
+  lensFlare.add( flareText3, 512, 0.0, THREE.AdditiveBlending );
+  lensFlare.add( flareText0, 512, 0.0, THREE.AdditiveBlending );
+  lensFlare.add( flareText0, 512, 0.0, THREE.AdditiveBlending );
+
+  //	and run each through a function below
+  lensFlare.customUpdateCallback = lensFlareUpdateCallback;
+
+  lensFlare.position = new THREE.Vector3(x,y,z);
+  lensFlare.size = size ? size : 16000 ;
+  return lensFlare;
+}
+
+//	this function will operate over each lensflare artifact, moving them around the screen
+function lensFlareUpdateCallback( object ) {
+  var f, fl = this.lensFlares.length;
+  var flare;
+  var vecX = -this.positionScreen.x * 2;
+  var vecY = -this.positionScreen.y * 2;
+  var size = object.size ? object.size : 16000;
+
+  var camDistance = camera.position.length();
+
+  for( f = 0; f < fl; f ++ ) {
+    flare = this.lensFlares[ f ];
+
+    flare.x = this.positionScreen.x + vecX * flare.distance;
+    flare.y = this.positionScreen.y + vecY * flare.distance;
+
+    flare.scale = size / camDistance;
+    flare.rotation = 0;
+  }
+}
 
     var stars = new THREE.Geometry();
     data.map(function(d){
@@ -51,13 +93,18 @@ function init(){
 
       //console.log(stars);
       stars.vertices.push(star);
-      stars.colors.push(starColor(d.ci));
+      stars.colors.push(new THREE.Color(starColor(d.ci)));
+      addLensFlare();
     })
 
-    var starsMaterial = new THREE.PointsMaterial({size: 5, sizeAttenuation:true, vertexColors: THREE.VertexColors});
+    var starsMaterial = new THREE.PointsMaterial({size: 3, sizeAttenuation:true, vertexColors: THREE.VertexColors});
     var starField = new THREE.Points(stars, starsMaterial);
     console.log(starField);
     scene.add(starField);
+
+
+
+
   })
 
   var trackballControls = new THREE.TrackballControls(camera);
