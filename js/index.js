@@ -2,7 +2,7 @@ function init(){
   var width = 960,
     height = 960,
     radius = 4000,
-    minMag = 20,
+    minMag = 30,
     mesh,
     graticule,
     scene = new THREE.Scene,
@@ -42,7 +42,7 @@ function init(){
     var starsGeometry = new THREE.Geometry();
     hyg.map(function(d){
       var star = new THREE.Vector3();
-      var lambda = -d.ra*Math.PI/180*15,
+      var lambda = d.ra*Math.PI/180*15,
           phi = d.dec*Math.PI/180,
           cosPhi = Math.cos(phi);
       star.x = radius*cosPhi*Math.cos(lambda);
@@ -61,9 +61,8 @@ function init(){
 
     //process contellation boundaries
     var boundsGeometry = new THREE.Geometry();
-    //process constellation lines
 
-    //console.log("lines: ", lines.features);
+    //process constellation lines
     lines.features.map(function(d){
       var linesGeometry = new THREE.Geometry();
       d.geometry.coordinates.map(function(d){
@@ -79,7 +78,7 @@ function init(){
           linesGeometry.vertices.push(point);
         })
 
-        var linesMaterial = new THREE.LineBasicMaterial();
+        var linesMaterial = new THREE.LineBasicMaterial({color: 0x0eb5ed});
         var lines = new THREE.Line(linesGeometry, linesMaterial);
         scene.add(lines);
         console.log()
