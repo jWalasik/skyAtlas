@@ -2,6 +2,7 @@ function init(){
   var width = 960,
     height = 960,
     radius = 4000,
+    minMag = 20,
     mesh,
     graticule,
     scene = new THREE.Scene,
@@ -22,91 +23,72 @@ function init(){
   scene.add(graticule = wireframe(graticule10(), new THREE.LineBasicMaterial({color: 0xaaaaaa})));
 
   //parse data
-  var starsData = d3.csv("https://gist.githubusercontent.com/elPaleniozord/433b888e3ed64da651f18d5c60682c8a/raw/76e8fa3fe6eb6aaf93154927788ecf6fd47e240c/hyg_data.csv", function (data){
+  //parse data
+  queue()
+    .defer(d3.csv, "https://gist.githubusercontent.com/elPaleniozord/433b888e3ed64da651f18d5c60682c8a/raw/76e8fa3fe6eb6aaf93154927788ecf6fd47e240c/hyg_data.csv", function (d){
+      if (d.mag < minMag){return d;}
+    })
+    .defer(d3.json, "https://gist.githubusercontent.com/elPaleniozord/bb775473088f3f60c5f3ca1afeb88a82/raw/66a84de978c8c787916cb363894a8da6b62bb915/bounds.json")
+    .defer(d3.json, "https://gist.githubusercontent.com/elPaleniozord/ed1dd65a955c2c7e1bb6cbc30feb523f/raw/9f2735f48f6f477064f9e151fe73cc7b0361bf2e/lines.json")
+    .await(processData);
 
-    /*DATA FORMAT:
-    [0{
-    ci: 0.482 - star color index,
-    dec: 1.089009 - declination, in deg
-    dist: 219.7802 - distance from sun
-    mag: 9.100 - magnitude
-    proper: "" - name of a star, most likely empty string
-    ra: 0.000060 - right ascention, in deg
-    spect: "f5" - spectrum
-    }]
-    */
-    //translate color index to real color
+  function processData(error, hyg, bounds, lines){
+    //process star data
+    //translate color index to actuall color
     var starColor = d3.scale.linear()
                       .domain([-1, -0.17, 0.15, 0.44, 0.68, 1.15, 2])
                       .range(["#99d6ff", "#ccebff", "#ffffff", "#ffffcc", "#ffff99", "#ffb380", "#ff6666"]);
-    var flareText0 = new THREE.TextureLoader("D:\Programowanie\projekty\three_project\textures\lensflare0.png");
-    var flareText3 = new THREE.TextureLoader("D:\Programowanie\projekty\three_project\textures\lensflare3.png");
-    function addLensFlare(x,y,z, size, overrideImage){
-  var flareColor = new THREE.Color( 0xffffff );
-
-  lensFlare = new THREE.LensFlare( overrideImage, 700, 0.0, THREE.AdditiveBlending, flareColor );
-
-  //	we're going to be using multiple sub-lens-flare artifacts, each with a different size
-  lensFlare.add( flareText0, 4096, 0.0, THREE.AdditiveBlending );
-  lensFlare.add( flareText3, 512, 0.0, THREE.AdditiveBlending );
-  lensFlare.add( flareText0, 512, 0.0, THREE.AdditiveBlending );
-  lensFlare.add( flareText0, 512, 0.0, THREE.AdditiveBlending );
-
-  //	and run each through a function below
-  lensFlare.customUpdateCallback = lensFlareUpdateCallback;
-
-  lensFlare.position = new THREE.Vector3(x,y,z);
-  lensFlare.size = size ? size : 16000 ;
-  return lensFlare;
-}
-
-//	this function will operate over each lensflare artifact, moving them around the screen
-function lensFlareUpdateCallback( object ) {
-  var f, fl = this.lensFlares.length;
-  var flare;
-  var vecX = -this.positionScreen.x * 2;
-  var vecY = -this.positionScreen.y * 2;
-  var size = object.size ? object.size : 16000;
-
-  var camDistance = camera.position.length();
-
-  for( f = 0; f < fl; f ++ ) {
-    flare = this.lensFlares[ f ];
-
-    flare.x = this.positionScreen.x + vecX * flare.distance;
-    flare.y = this.positionScreen.y + vecY * flare.distance;
-
-    flare.scale = size / camDistance;
-    flare.rotation = 0;
-  }
-}
-
-    var stars = new THREE.Geometry();
-    data.map(function(d){
+    //define stars geometries, project them onto sphere
+    var starsGeometry = new THREE.Geometry();
+    hyg.map(function(d){
       var star = new THREE.Vector3();
-      var lambda = d.ra*Math.PI/180*15,
+      var lambda = -d.ra*Math.PI/180*15,
           phi = d.dec*Math.PI/180,
           cosPhi = Math.cos(phi);
       star.x = radius*cosPhi*Math.cos(lambda);
       star.y = radius*cosPhi*Math.sin(lambda);
       star.z = radius * Math.sin(phi);
 
-      //console.log(stars);
-      stars.vertices.push(star);
-      stars.colors.push(new THREE.Color(starColor(d.ci)));
-      addLensFlare();
+      starsGeometry.vertices.push(star);
+      starsGeometry.colors.push(new THREE.Color(starColor(d.ci)));
+
     })
 
-    var starsMaterial = new THREE.PointsMaterial({size: 3, sizeAttenuation:true, vertexColors: THREE.VertexColors});
-    var starField = new THREE.Points(stars, starsMaterial);
-    console.log(starField);
+    var starsMaterial = new THREE.PointsMaterial({size: 2, sizeAttenuation:true, vertexColors: THREE.VertexColors});
+    var starField = new THREE.Points(starsGeometry, starsMaterial);
+    //console.log(starField);
     scene.add(starField);
 
+    //process contellation boundaries
+    var boundsGeometry = new THREE.Geometry();
+    //process constellation lines
 
+    //console.log("lines: ", lines.features);
+    lines.features.map(function(d){
+      var linesGeometry = new THREE.Geometry();
+      d.geometry.coordinates.map(function(d){
+        d.map(function(d){
+          let point = new THREE.Vector3();
+          var lambda = d[0]*Math.PI/180,
+              phi = d[1]*Math.PI/180,
+              cosPhi = Math.cos(phi);
+          point.x = radius*cosPhi*Math.cos(lambda);
+          point.y = radius*cosPhi*Math.sin(lambda);
+          point.z = radius * Math.sin(phi);
 
+          linesGeometry.vertices.push(point);
+        })
 
-  })
+        var linesMaterial = new THREE.LineBasicMaterial();
+        var lines = new THREE.Line(linesGeometry, linesMaterial);
+        scene.add(lines);
+        console.log()
+        linesGeometry = new THREE.Geometry();
+      })  //coordinates mapping end
 
+    })  //lines.features.map end
+  }
+  //camera controls
   var trackballControls = new THREE.TrackballControls(camera);
   trackballControls.rotateSpeed = 1.0;
   trackballControls.zoomSpeed = 1.0;
@@ -132,7 +114,7 @@ function vertex(point) {
 // Converts a GeoJSON MultiLineString in spherical coordinates to a THREE.LineSegments.
 function wireframe(multilinestring, material) {
   var geometry = new THREE.Geometry;
-  multilinestring.coordinates.forEach(function(line) {
+    multilinestring.coordinates.forEach(function(line) {
     d3.pairs(line.map(vertex), function(a, b) {
       geometry.vertices.push(a, b);
     });
