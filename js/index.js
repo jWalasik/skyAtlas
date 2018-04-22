@@ -60,8 +60,27 @@ function init(){
     scene.add(starField);
 
     //process contellation boundaries
-    var boundsGeometry = new THREE.Geometry();
 
+    bounds.boundaries.map(function(d){
+      var boundsGeometry = new THREE.Geometry();
+      d.shift();
+      for(var i=0; i<d.length; i+=2){
+        let point = new THREE.Vector3();
+        var lambda = d[i]*Math.PI/180,
+            phi = d[i+1]*Math.PI/180,
+            cosPhi = Math.cos(phi);
+        point.x = radius*cosPhi*Math.cos(lambda);
+        point.y = radius*cosPhi*Math.sin(lambda);
+        point.z = radius * Math.sin(phi);
+
+        boundsGeometry.vertices.push(point);
+      }
+
+      var boundsMaterial = new THREE.LineBasicMaterial({color: 0xe8dd4e});
+      var boundaries = new THREE.Line(boundsGeometry, boundsMaterial);
+      scene.add(boundaries);
+
+    });
     //process constellation lines
     lines.features.map(function(d){
       var linesGeometry = new THREE.Geometry();
@@ -78,10 +97,9 @@ function init(){
           linesGeometry.vertices.push(point);
         })
 
-        var linesMaterial = new THREE.LineBasicMaterial({color: 0x0eb5ed});
+        var linesMaterial = new THREE.LineBasicMaterial({color: 0x8cb4ff});
         var lines = new THREE.Line(linesGeometry, linesMaterial);
         scene.add(lines);
-        console.log()
         linesGeometry = new THREE.Geometry();
       })  //coordinates mapping end
 
