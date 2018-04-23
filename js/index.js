@@ -14,7 +14,7 @@ function init(){
     camera.position.y = 100;
     camera.position.z = 300;
     camera.lookAt(new THREE.Vector3(0, 0, 0));
-
+  var sprite = new THREE.TextureLoader( 'D:/Programowanie/projekty/three_project/textures/lensflare0.png' );
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(width, height);
   document.body.appendChild(renderer.domElement);
@@ -38,6 +38,9 @@ function init(){
     var starColor = d3.scale.linear()
                       .domain([-1, -0.17, 0.15, 0.44, 0.68, 1.15, 2])
                       .range(["#99d6ff", "#ccebff", "#ffffff", "#ffffcc", "#ffff99", "#ffb380", "#ff6666"]);
+    var scaleMag = d3.scale.linear()
+                      .domain([-1, 5])
+                      .range([4, 1.5]);
     //define stars geometries, project them onto sphere
     var starsGeometry = new THREE.Geometry();
     hyg.map(function(d){
@@ -53,12 +56,15 @@ function init(){
       starsGeometry.colors.push(new THREE.Color(starColor(d.ci)));
 
     })
-
-    var starsMaterial = new THREE.PointsMaterial({size: 2, sizeAttenuation:true, vertexColors: THREE.VertexColors});
+    THREE.ImageUtils.crossOrigin = '';
+    var sprite = new THREE.TextureLoader( 'D:/Programowanie/projekty/three_project/textures/lensflare0.png' );
+    console.log(starsGeometry);
+    var starsMaterial = new THREE.PointsMaterial({size: 1, sizeAttenuation:true, vertexColors: THREE.VertexColors});
     var starField = new THREE.Points(starsGeometry, starsMaterial);
     //console.log(starField);
     scene.add(starField);
-
+    var lensflare = new THREE.LensFlare(sprite, 1000, 0.0, THREE.AdditiveBlending);
+    scene.add(lensflare);
     //process contellation boundaries
 
     bounds.boundaries.map(function(d){
