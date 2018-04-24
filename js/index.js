@@ -39,34 +39,41 @@ function init(){
                       .domain([-1, -0.17, 0.15, 0.44, 0.68, 1.15, 2])
                       .range(["#99d6ff", "#ccebff", "#ffffff", "#ffffcc", "#ffff99", "#ffb380", "#ff6666"]);
     var scaleMag = d3.scale.linear()
-                      .domain([-1, 5])
-                      .range([4, 1.5]);
+                      .domain([-2.5, 16])
+                      .range([8, 1.0]);
     //define stars geometries, project them onto sphere
-    var starsGeometry = new THREE.Geometry();
+    var starsGeometry = new THREE.BufferGeometry();
+    var vertices = [];
+    var colors = [];
+    var sizes = [];
+    console.log(hyg);
     hyg.map(function(d){
-      var star = new THREE.Vector3();
       var lambda = d.ra*Math.PI/180*15,
           phi = d.dec*Math.PI/180,
           cosPhi = Math.cos(phi);
-      star.x = radius*cosPhi*Math.cos(lambda);
-      star.y = radius*cosPhi*Math.sin(lambda);
-      star.z = radius * Math.sin(phi);
+      vertices.push(radius*cosPhi*Math.cos(lambda));
+      vertices.push(radius*cosPhi*Math.sin(lambda));
+      vertices.push(radius * Math.sin(phi));
+      colors.push(new THREE.Color(starColor(d.ci)));
+      sizes.push(scaleMag(d.mag));
 
-      starsGeometry.vertices.push(star);
-      starsGeometry.colors.push(new THREE.Color(starColor(d.ci)));
-
-    })
-    THREE.ImageUtils.crossOrigin = '';
-    var sprite = new THREE.TextureLoader( 'D:/Programowanie/projekty/three_project/textures/lensflare0.png' );
+    });
+    starsGeometry.addAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+    starsGeometry.addAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+    starsGeometry.addAttribute('size', new THREE.Float32BufferAttribute(sizes, 1));
     console.log(starsGeometry);
-    var starsMaterial = new THREE.PointsMaterial({size: 1, sizeAttenuation:true, vertexColors: THREE.VertexColors});
+
+    var starsMaterial = new THREE.ShaderMaterial({
+      vertexShader: document.getElementById('vertexshader').textContent,
+      fragmentShader: document.getElementById('fragmentshader').textContent,
+      transparent: true
+    });
+
     var starField = new THREE.Points(starsGeometry, starsMaterial);
     //console.log(starField);
     scene.add(starField);
-    var lensflare = new THREE.LensFlare(sprite, 1000, 0.0, THREE.AdditiveBlending);
-    scene.add(lensflare);
-    //process contellation boundaries
 
+    //process contellation boundaries
     bounds.boundaries.map(function(d){
       var boundsGeometry = new THREE.Geometry();
       d.shift();

@@ -21,6 +21,23 @@
   <script src="https://unpkg.com/topojson-client@3"></script>
   <script src='lib/TrackballControls.js'></script>
 
+  <!-- SHADERS -->
+  <script type="x-shader/x-vertex" id="vertexshader">
+    attribute float size;
+    void main() {
+        vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+        gl_PointSize = 2.0 * size; // use alpha to vary point size, instead
+        gl_Position = projectionMatrix * mvPosition;
+    }
+  </script>
+
+  <script type="x-shader/x-fragment" id="fragmentshader">
+    uniform vec3 color;
+    void main() {
+        gl_FragColor = vec4( color, 1 );
+    }
+  </script>
+
   <div id="Stats-Output">
   </div>
   <!-- Div which will hold the Output -->
