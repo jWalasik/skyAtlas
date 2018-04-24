@@ -24,17 +24,20 @@
   <!-- SHADERS -->
   <script type="x-shader/x-vertex" id="vertexshader">
     attribute float size;
+    varying vec3 vColor;
     void main() {
+        vColor = color;
+
         vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
-        gl_PointSize = 2.0 * size; // use alpha to vary point size, instead
+        gl_PointSize = (1.0 * size); // use alpha to vary point size, instead
         gl_Position = projectionMatrix * mvPosition;
     }
   </script>
 
   <script type="x-shader/x-fragment" id="fragmentshader">
-    uniform vec3 color;
+    varying vec3 vColor;
     void main() {
-        gl_FragColor = vec4( color, 1 );
+        gl_FragColor = vec4( vColor, 1 );
     }
   </script>
 

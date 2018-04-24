@@ -40,13 +40,16 @@ function init(){
                       .range(["#99d6ff", "#ccebff", "#ffffff", "#ffffcc", "#ffff99", "#ffb380", "#ff6666"]);
     var scaleMag = d3.scale.linear()
                       .domain([-2.5, 16])
-                      .range([8, 1.0]);
+                      .range([4, 0.02]);
     //define stars geometries, project them onto sphere
     var starsGeometry = new THREE.BufferGeometry();
     var vertices = [];
     var colors = [];
     var sizes = [];
-    console.log(hyg);
+    var uniforms = {
+      color: { type: "c", value: new THREE.Color( 0xffffff ) },
+    };
+
     hyg.map(function(d){
       var lambda = d.ra*Math.PI/180*15,
           phi = d.dec*Math.PI/180,
@@ -66,7 +69,8 @@ function init(){
     var starsMaterial = new THREE.ShaderMaterial({
       vertexShader: document.getElementById('vertexshader').textContent,
       fragmentShader: document.getElementById('fragmentshader').textContent,
-      transparent: true
+      transparent: true,
+      vertexColors: true,
     });
 
     var starField = new THREE.Points(starsGeometry, starsMaterial);
