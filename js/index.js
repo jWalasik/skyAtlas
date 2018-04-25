@@ -37,7 +37,7 @@ function init(){
     //translate color index to actuall color
     var starColor = d3.scale.linear()
                       .domain([-1, -0.17, 0.15, 0.44, 0.68, 1.15, 2])
-                      .range([(153,214,0), (204,235,0), (255,255,100), (255,255,100), (255,255,153), (255,179,128), (255,102,255)]);
+                      .range([[153, 214, 255], [204, 235, 255], [255, 255, 255], [255, 255, 204], [255, 255, 153], [255, 179, 128], [255, 102, 102]]);
     var scaleMag = d3.scale.linear()
                       .domain([-2.5, 16])
                       .range([4, 0.02]);
@@ -49,7 +49,7 @@ function init(){
     var uniforms = {
       color: { type: "c", value: new THREE.Color( 0xffffff ) },
     };
-    console.log((starColor(-1)))
+
     hyg.map(function(d){
       var lambda = d.ra*Math.PI/180*15,
           phi = d.dec*Math.PI/180,
@@ -57,13 +57,14 @@ function init(){
       vertices.push(radius*cosPhi*Math.cos(lambda));
       vertices.push(radius*cosPhi*Math.sin(lambda));
       vertices.push(radius * Math.sin(phi));
-      colors.push(starColor(d.ci));
+      var rgb = starColor(d.ci)
+      colors.push(rgb[0], rgb[1], rgb[2]);
       sizes.push(scaleMag(d.mag));
 
     });
     console.log(colors);
     starsGeometry.addAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-    starsGeometry.addAttribute('color', new THREE.Float32BufferAttribute(colors, 1));
+    starsGeometry.addAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
     starsGeometry.addAttribute('size', new THREE.Float32BufferAttribute(sizes, 1));
     console.log(starsGeometry);
 
