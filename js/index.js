@@ -37,7 +37,7 @@ function init(){
     //translate color index to actuall color
     var starColor = d3.scale.linear()
                       .domain([-1, -0.17, 0.15, 0.44, 0.68, 1.15, 2])
-                      .range([[153, 214, 255], [204, 235, 255], [255, 255, 255], [255, 255, 204], [255, 255, 153], [255, 179, 128], [255, 102, 102]]);
+                      .range(['#63B0FF', '#CFE5FF', '#FFFFFF', '#FFFFC8', '#FFFF00', '#FF7300', '#FF0000']);
     var scaleMag = d3.scale.linear()
                       .domain([-2.5, 16])
                       .range([4, 0.02]);
@@ -50,6 +50,7 @@ function init(){
       color: { type: "c", value: new THREE.Color( 0xffffff ) },
     };
 
+
     hyg.map(function(d){
       var lambda = d.ra*Math.PI/180*15,
           phi = d.dec*Math.PI/180,
@@ -57,8 +58,8 @@ function init(){
       vertices.push(radius*cosPhi*Math.cos(lambda));
       vertices.push(radius*cosPhi*Math.sin(lambda));
       vertices.push(radius * Math.sin(phi));
-      var rgb = starColor(d.ci)
-      colors.push(rgb[0], rgb[1], rgb[2]);
+      var rgb = new THREE.Color(starColor(d.ci));
+      colors.push(rgb.r, rgb.g, rgb.b);
       sizes.push(scaleMag(d.mag));
 
     });
