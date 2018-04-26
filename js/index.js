@@ -63,16 +63,16 @@ function init(){
       sizes.push(scaleMag(d.mag));
 
     });
-    console.log(colors);
+
     starsGeometry.addAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
     starsGeometry.addAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
     starsGeometry.addAttribute('size', new THREE.Float32BufferAttribute(sizes, 1));
-    console.log(starsGeometry);
+
 
     var uniforms = {
-				texture: {value: new THREE.TextureLoader('D:/Programowanie/projekty/three_project/textures/lensflare0.png')}
+				texture: {value: new THREE.TextureLoader('/textures/lensflare0.png')}
 			};
-
+    
     var starsMaterial = new THREE.ShaderMaterial({
       vertexShader: document.getElementById('vertexshader').textContent,
       fragmentShader: document.getElementById('fragmentshader').textContent,
