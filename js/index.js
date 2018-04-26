@@ -14,7 +14,7 @@ function init(){
     camera.position.y = 100;
     camera.position.z = 300;
     camera.lookAt(new THREE.Vector3(0, 0, 0));
-  var sprite = new THREE.TextureLoader( 'D:/Programowanie/projekty/three_project/textures/lensflare0.png' );
+
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(width, height);
   document.body.appendChild(renderer.domElement);
@@ -40,7 +40,7 @@ function init(){
                       .range(['#63B0FF', '#CFE5FF', '#FFFFFF', '#FFFFC8', '#FFFF00', '#FF7300', '#FF0000']);
     var scaleMag = d3.scale.linear()
                       .domain([-2.5, 16])
-                      .range([4, 0.02]);
+                      .range([3.5, 0.01]);
     //define stars geometries, project them onto sphere
     var starsGeometry = new THREE.BufferGeometry();
     var vertices = [];
@@ -68,6 +68,10 @@ function init(){
     starsGeometry.addAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
     starsGeometry.addAttribute('size', new THREE.Float32BufferAttribute(sizes, 1));
     console.log(starsGeometry);
+
+    var uniforms = {
+				texture: {value: new THREE.TextureLoader('D:/Programowanie/projekty/three_project/textures/lensflare0.png')}
+			};
 
     var starsMaterial = new THREE.ShaderMaterial({
       vertexShader: document.getElementById('vertexshader').textContent,
