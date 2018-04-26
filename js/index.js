@@ -1,8 +1,8 @@
 function init(){
   var width = 960,
     height = 960,
-    radius = 4000,
-    minMag = 30,
+    radius = 8000,
+    minMag = 20,
     mesh,
     graticule,
     scene = new THREE.Scene,
@@ -36,8 +36,8 @@ function init(){
     //process star data
     //translate color index to actuall color
     var starColor = d3.scale.linear()
-                      .domain([-1, -0.17, 0.15, 0.44, 0.68, 1.15, 2])
-                      .range(['#63B0FF', '#CFE5FF', '#FFFFFF', '#FFFFC8', '#FFFF00', '#FF7300', '#FF0000']);
+                      .domain([-1, 0.5, 0.73, 0.89, 1.05, 1.50, 2])
+                      .range(['#68b1ff', '#93e4ff', '#d8f5ff', '#FFFFFF', '#fff8c9', '#ffcf84', '#ff8787']);
     var scaleMag = d3.scale.linear()
                       .domain([-2.5, 16])
                       .range([3.5, 0.01]);
@@ -70,18 +70,22 @@ function init(){
 
 
     var uniforms = {
-				texture: {value: new THREE.TextureLoader('/textures/lensflare0.png')}
+				texture: {value: new THREE.TextureLoader().load('D:/Programowanie/projekty/three_project/textures/lensflare0_alpha.png')}
 			};
-    
+
     var starsMaterial = new THREE.ShaderMaterial({
+      uniforms: uniforms,
       vertexShader: document.getElementById('vertexshader').textContent,
       fragmentShader: document.getElementById('fragmentshader').textContent,
+      blending: THREE.AdditiveBlending,
+      depthTest: false,
       transparent: true,
       vertexColors: true,
+      alphaTest: 0.5
     });
 
     var starField = new THREE.Points(starsGeometry, starsMaterial);
-    //console.log(starField);
+    console.log(starField);
     scene.add(starField);
 
     //process contellation boundaries
