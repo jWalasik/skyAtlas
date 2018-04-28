@@ -2,14 +2,15 @@ function init(){
   var width = 960,
     height = 960,
     radius = 8000,
-    minMag = 20,
+    minMag = 6.5,
     mesh,
     graticule,
     scene = new THREE.Scene,
-    camera = new THREE.PerspectiveCamera(70, width / height, 1, 15000),
+    camera = new THREE.PerspectiveCamera(70, width / height, 1, 100000),
     renderer = new THREE.WebGLRenderer({alpha: true});
     control = new THREE.TrackballControls(camera),
-    clock = new THREE.Clock();
+    clock = new THREE.Clock(),
+    marker = 0;
     camera.position.x = 100;
     camera.position.y = 100;
     camera.position.z = 300;
@@ -36,11 +37,16 @@ function init(){
     //process star data
     //translate color index to actuall color
     var starColor = d3.scale.linear()
-                      .domain([-1, 0.5, 0.73, 0.89, 1.05, 1.50, 2])
+                      .domain([-1, 0.5, 0.73, 1.05, 1.25, 1.60, 2])
                       .range(['#68b1ff', '#93e4ff', '#d8f5ff', '#FFFFFF', '#fff8c9', '#ffcf84', '#ff8787']);
+    //inverse size scalling with magnitude
     var scaleMag = d3.scale.linear()
                       .domain([-2.5, 16])
                       .range([3.5, 0.01]);
+
+    var label = function(position){
+
+    }
     //define stars geometries, project them onto sphere
     var starsGeometry = new THREE.BufferGeometry();
     var vertices = [];
@@ -61,6 +67,17 @@ function init(){
       var rgb = new THREE.Color(starColor(d.ci));
       colors.push(rgb.r, rgb.g, rgb.b);
       sizes.push(scaleMag(d.mag));
+      if(d.proper !== ""){
+        var label = document.createElement('div');
+        label.style.position = 'absolute';
+        label.style.width = 100;
+        label.style.height = 100;
+        console.log(d.proper);
+        label.innerHTML = d.proper;
+        label.style.top = vertices[0]+'px';
+        label.style.left = vertices[1]+'px';
+        document.body.appendChild(label);
+      }
 
     });
 
@@ -81,7 +98,8 @@ function init(){
       depthTest: false,
       transparent: true,
       vertexColors: true,
-      alphaTest: 0.5
+      alphaTest: 0.5,
+      sizeAttenuation: true,
     });
 
     var starField = new THREE.Points(starsGeometry, starsMaterial);
@@ -135,7 +153,7 @@ function init(){
   }
   //camera controls
   var trackballControls = new THREE.TrackballControls(camera);
-  trackballControls.rotateSpeed = 1.0;
+  trackballControls.rotateSpeed = 0.5;
   trackballControls.zoomSpeed = 1.0;
   trackballControls.panSpeed = 1.0;
   trackballControls.staticMoving = false;
