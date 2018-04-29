@@ -67,32 +67,9 @@ function init(){
       var rgb = new THREE.Color(starColor(d.ci));
       colors.push(rgb.r, rgb.g, rgb.b);
       sizes.push(scaleMag(d.mag));
-
+      //add labels
       if(d.proper !== ""){
-        var canvas = document.createElement('canvas');
-        var context = canvas.getContext("2d");
-
-        context.font = '10pt Arial';
-
-        var margin = 10;
-        var textWidth = context.measureText(d.proper).width;
-        context.strokeStyle = "white";
-        context.strokeRect(canvas.width / 2 - textWidth / 2 - margin / 2, canvas.height / 2 - 10 / 2 - +margin / 2, textWidth + margin, 10 + margin);
-        context.textAlign = "center";
-				context.textBaseline = "middle";
-				context.fillStyle = "black";
-				context.fillText(d.proper, canvas.width / 2, canvas.height / 2);
-				var texture = new THREE.Texture(canvas);
-				texture.needsUpdate = true;
-				var material = new THREE.MeshBasicMaterial({
-						map : texture
-          });
-        var mesh = new THREE.Mesh(new THREE.PlaneGeometry(canvas.width, canvas.height, 10, 10), material);
-  			mesh.overdraw = true;
-  			// mesh.doubleSided = true;
-  			mesh.position.x = radius*cosPhi*Math.cos(lambda);
-  			mesh.position.y = radius*cosPhi*Math.sin(lambda);
-  			scene.add(mesh);
+        
       }
 
     });
