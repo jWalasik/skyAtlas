@@ -56,7 +56,7 @@ function init(){
       color: { type: "c", value: new THREE.Color( 0xffffff ) },
     };
 
-
+    var contrainer = new THREE.Object3D();
     hyg.map(function(d){
       var lambda = d.ra*Math.PI/180*15,
           phi = d.dec*Math.PI/180,
@@ -69,7 +69,8 @@ function init(){
       sizes.push(scaleMag(d.mag));
       //add labels
       if(d.proper !== ""){
-        
+        var xy = [radius*cosPhi*Math.cos(lambda),radius*cosPhi*Math.sin(lambda)];
+        addLabel(d.proper, xy);
       }
 
     });
@@ -150,10 +151,26 @@ function init(){
   trackballControls.zoomSpeed = 1.0;
   trackballControls.panSpeed = 1.0;
   trackballControls.staticMoving = false;
-
   trackballControls.noPan=true;
 
+//create label for an object
+function addLabel(obj, xy){
+  var template = document.getElementById( 'marker_template' );
+	var marker = template.cloneNode(true);
+  marker.obj = obj;
+  marker.absPosition = xy;
+  marker.size = 10;
+  marker.id = obj;
+  marker.style.fontSize = 24+'px';
 
+  console.log(xy);
+
+  var nameLayer = marker.children[0];
+  nameLayer.innerHTML = obj;
+  nameLayer.style.top = xy[0];
+  nameLayer.style.left = xy[1];
+  console.log(nameLayer);
+}
 // Converts a point [longitude, latitude] in degrees to a THREE.Vector3.
 function vertex(point) {
   //console.log("point", point);

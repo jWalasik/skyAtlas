@@ -15,3 +15,49 @@
 body {
   background-color: #181868;
 }
+.marker {
+  font-family: 'Lekton', monospace;
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  /*
+   Introduced in IE 10.
+   See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
+  */
+  -ms-user-select: none;
+  user-select: none;
+  position: absolute;
+  padding: 0px 0px;
+  cursor: pointer;
+  -webkit-transform-style: preserve-3d;
+  -moz-transform-style: preserve-3d;
+  -webkit-transition: opacity 0.5s;
+  -moz-transition: opacity 0.5s;
+  -ms-transition: opacity 0.5s;
+  -o-transition: opacity 0.5s;
+  transition: opacity 0.5s; }
+  .marker span.name {
+    color: #fff;
+    text-shadow: 0 0 3px #fff, 0 0 10px #000;
+    -webkit-transition: text-shadow 0.25s;
+    -moz-transition: text-shadow 0.25s;
+    -ms-transition: text-shadow 0.25s;
+    -o-transition: text-shadow 0.25s;
+    transition: text-shadow 0.25s; }
+    .marker span.name:hover {
+      text-shadow: 0 0 3px #fff, 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #fff; }
+  .marker.label span.name {
+    cursor: default !important;
+    font-size-adjust: none; }
+    .marker.label span.name:hover {
+      text-shadow: 0 0 3px #fff, 0 0 10px #000 !important; }
+  .marker span.name {
+    color: #fff;
+    text-shadow: 0 0 3px #fff, 0 0 10px #000;
+    -webkit-transition: text-shadow 0.25s;
+    -moz-transition: text-shadow 0.25s;
+    -ms-transition: text-shadow 0.25s;
+    -o-transition: text-shadow 0.25s;
+    transition: text-shadow 0.25s; }
+    .marker span.name:hover {
+      text-shadow: 0 0 3px #fff, 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #fff; }
