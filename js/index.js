@@ -71,11 +71,12 @@ function init(){
       if(d.proper !== ""){
         var canvas = document.createElement('canvas');
         var context = canvas.getContext('2d');
-        context.font = "Bold 80px Arial";
+        context.font = "Bold 50px Arial";
         context.fillStyle = "rgba(255, 255, 255, 1)";
-        context.fillText("hello world", 10 ,50);
+        context.fillText(d.proper, 0 ,50);
 
         var texture = new THREE.Texture(canvas);
+        texture.needsUpdate = true;
         var material = new THREE.MeshBasicMaterial({ map:texture, side:THREE.DoubleSide })
         material.transparent = true;
 
