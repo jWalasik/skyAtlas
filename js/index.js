@@ -69,8 +69,20 @@ function init(){
       sizes.push(scaleMag(d.mag));
       //add labels
       if(d.proper !== ""){
-        var xy = [radius*cosPhi*Math.cos(lambda),radius*cosPhi*Math.sin(lambda)];
-        addLabel(d.proper, xy);
+        var canvas = document.createElement('canvas');
+        var context = canvas.getContext('2d');
+        context.font = "Bold 80px Arial";
+        context.fillStyle = "rgba(255, 255, 255, 1)";
+        context.fillText("hello world", 10 ,50);
+
+        var texture = new THREE.Texture(canvas);
+        var material = new THREE.MeshBasicMaterial({ map:texture, side:THREE.DoubleSide })
+        material.transparent = true;
+
+        var label = new THREE.Mesh(new THREE.PlaneGeometry(canvas.width, canvas.height), material);
+        label.position.set(radius*cosPhi*Math.cos(lambda),radius*cosPhi*Math.sin(lambda), radius * Math.sin(phi));
+        scene.add(label);
+        console.log(context);
       }
 
     });
@@ -153,24 +165,6 @@ function init(){
   trackballControls.staticMoving = false;
   trackballControls.noPan=true;
 
-//create label for an object
-function addLabel(obj, xy){
-  var template = document.getElementById( 'marker_template' );
-	var marker = template.cloneNode(true);
-  marker.obj = obj;
-  marker.absPosition = xy;
-  marker.size = 10;
-  marker.id = obj;
-  marker.style.fontSize = 24+'px';
-
-  console.log(xy);
-
-  var nameLayer = marker.children[0];
-  nameLayer.innerHTML = obj;
-  nameLayer.style.top = xy[0];
-  nameLayer.style.left = xy[1];
-  console.log(nameLayer);
-}
 // Converts a point [longitude, latitude] in degrees to a THREE.Vector3.
 function vertex(point) {
   //console.log("point", point);
