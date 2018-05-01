@@ -61,9 +61,12 @@ function init(){
       var lambda = d.ra*Math.PI/180*15,
           phi = d.dec*Math.PI/180,
           cosPhi = Math.cos(phi);
-      vertices.push(radius*cosPhi*Math.cos(lambda));
-      vertices.push(radius*cosPhi*Math.sin(lambda));
-      vertices.push(radius * Math.sin(phi));
+      var x = radius*cosPhi*Math.cos(lambda),
+          y = radius*cosPhi*Math.sin(lambda),
+          z = radius * Math.sin(phi);
+      vertices.push(x);
+      vertices.push(y);
+      vertices.push(z);
       var rgb = new THREE.Color(starColor(d.ci));
       colors.push(rgb.r, rgb.g, rgb.b);
       sizes.push(scaleMag(d.mag));
@@ -71,19 +74,22 @@ function init(){
       if(d.proper !== ""){
         var canvas = document.createElement('canvas');
         var context = canvas.getContext('2d');
-        context.font = "Bold 50px Arial";
+        var textWidth = (context.measureText(d.proper)).width;
+        context.font = "Bold 40px Arial";
         context.fillStyle = "rgba(255, 255, 255, 1)";
-        context.fillText(d.proper, 0 ,50);
+        context.fillText(d.proper, textWidth/2.5, 60);
 
         var texture = new THREE.Texture(canvas);
         texture.needsUpdate = true;
-        var material = new THREE.MeshBasicMaterial({ map:texture, side:THREE.DoubleSide })
+        texture.minFilter = THREE.LinearFilter;
+        var material = new THREE.SpriteMaterial({ map:texture})
         material.transparent = true;
 
-        var label = new THREE.Mesh(new THREE.PlaneGeometry(canvas.width, canvas.height), material);
+        var label = new THREE.Sprite(material);
         label.position.set(radius*cosPhi*Math.cos(lambda),radius*cosPhi*Math.sin(lambda), radius * Math.sin(phi));
+        label.scale.set(1000, 1000, 1000);
         scene.add(label);
-        console.log(context);
+
       }
 
     });
@@ -136,6 +142,26 @@ function init(){
     });
     //process constellation lines
     lines.features.map(function(d){
+      var name = d.id;
+      var canvas = document.createElement('canvas');
+      var context = canvas.getContext('2d');
+      var textWidth = (context.measureText(d.id)).width;
+      context.font = "Bold 40px Arial";
+      context.fillStyle = "rgba(130, 255, 240, 1)";
+      context.fillText(d.id, textWidth/2.5, 60);
+
+      var texture = new THREE.Texture(canvas);
+      texture.needsUpdate = true;
+      texture.minFilter = THREE.LinearFilter;
+      var material = new THREE.SpriteMaterial({ map:texture})
+      material.transparent = true;
+
+      var label = new THREE.Sprite(material);
+      var position = vertex(d.geometry.coordinates[0][0]);
+      label.position.set(position.x, position.y, position.z);
+      label.scale.set(1000, 1000, 1000);
+      scene.add(label);
+
       var linesGeometry = new THREE.Geometry();
       d.geometry.coordinates.map(function(d){
         d.map(function(d){
@@ -160,12 +186,15 @@ function init(){
   }
   //camera controls
   var trackballControls = new THREE.TrackballControls(camera);
-  trackballControls.rotateSpeed = 0.5;
+  trackballControls.rotateSpeed = 0.2;
   trackballControls.zoomSpeed = 1.0;
-  trackballControls.panSpeed = 1.0;
+  trackballControls.panSpeed = 0.2;
   trackballControls.staticMoving = false;
   trackballControls.noPan=true;
+//add labels
+function makeLabel(text, position){
 
+}
 // Converts a point [longitude, latitude] in degrees to a THREE.Vector3.
 function vertex(point) {
   //console.log("point", point);
