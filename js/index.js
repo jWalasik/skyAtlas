@@ -1,8 +1,13 @@
+//controls
+var displayStars = true,
+    displayConLabels = true,
+    displayBoundLabels = true,
+    minMag = 6.5;
+
 function init(){
   var width = 960,
     height = 960,
     radius = 8000,
-    minMag = 6.5,
     mesh,
     graticule,
     scene = new THREE.Scene,
@@ -191,6 +196,17 @@ function init(){
   trackballControls.panSpeed = 0.2;
   trackballControls.staticMoving = false;
   trackballControls.noPan=true;
+
+  var gui = new dat.GUI();
+
+  var controls = {
+    toggleObjects: function(){
+      g3white.traverse(function(child){child.visible = true;});
+      g3black.traverse(function(child){child.visible = false;});
+    }
+  };
+
+gui.add(controls, 'toggleObjects');
 //add labels
 function makeLabel(text, position){
 
