@@ -105,7 +105,8 @@ function init(){
 
 
     var uniforms = {
-				texture: {value: new THREE.TextureLoader().load('D:/Programowanie/projekty/three_project/textures/lensflare0_alpha.png')}
+				texture: {value: new THREE.TextureLoader().load('D:/Programowanie/projekty/three_project/textures/lensflare0_alpha.png')},
+        scale: {type: 'f', value: window.innerHeight/2}
 			};
 
     var starsMaterial = new THREE.ShaderMaterial({
@@ -116,8 +117,7 @@ function init(){
       depthTest: false,
       transparent: true,
       vertexColors: true,
-      alphaTest: 0.5,
-      sizeAttenuation: true,
+      alphaTest: 0.5
     });
 
     var starField = new THREE.Points(starsGeometry, starsMaterial);
