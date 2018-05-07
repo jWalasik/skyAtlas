@@ -2,7 +2,7 @@
 var displayStars = true,
     displayConLabels = true,
     displayBoundLabels = true,
-    minMag = 6.5;
+    minMag = 20;
 
 function init(){
   var width = 960,
