@@ -121,7 +121,6 @@ function init(){
     });
 
     var starField = new THREE.Points(starsGeometry, starsMaterial);
-    console.log(starField);
     scene.add(starField);
 
     //process contellation boundaries
@@ -189,6 +188,10 @@ function init(){
 
     })  //lines.features.map end
   }
+  //raycaster
+  raycaster = new THREE.Raycaster();
+  mouse = new THREE.Vector3();
+
   //camera controls
   var trackballControls = new THREE.TrackballControls(camera);
   trackballControls.rotateSpeed = 0.2;
@@ -268,8 +271,32 @@ function render(){
   var delta = clock.getDelta();
   trackballControls.update(delta);
 
+  raycaster.setFromCamera( mouse, camera );
+
+				var intersects = raycaster.intersectObjects( scene.children );
+
+				if ( intersects.length > 0 ) {
+
+					if ( INTERSECTED != intersects[ 0 ].object ) {
+
+						if ( INTERSECTED ) INTERSECTED.material.program = programStroke;
+
+						INTERSECTED = intersects[ 0 ].object;
+						INTERSECTED.material.program = programFill;
+
+					}
+
+				} else {
+
+					if ( INTERSECTED ) INTERSECTED.material.program = programStroke;
+
+					INTERSECTED = null;
+
+				}
+
   requestAnimationFrame(render);
   renderer.render(scene, camera);
 }
+
 } //init end
 window.onload = init;
