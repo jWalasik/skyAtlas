@@ -2,8 +2,9 @@
 var displayStars = true,
     displayConLabels = true,
     displayBoundLabels = true,
-    minMag = 20;
-var INTERSECTED;
+    minMag = 20,
+    mouse = {x:0,y:0},
+    INTERSECTED;
 
 function init(){
   var width = 960,
@@ -29,6 +30,7 @@ function init(){
   //add graticule
   scene.add(graticule = wireframe(graticule10(), new THREE.LineBasicMaterial({color: 0xaaaaaa})));
 
+  document.addEventListener('mousemove', mousePosition, false);
   //parse data
   //parse data
   queue()
@@ -95,9 +97,7 @@ function init(){
         label.position.set(radius*cosPhi*Math.cos(lambda),radius*cosPhi*Math.sin(lambda), radius * Math.sin(phi));
         label.scale.set(1000, 1000, 1000);
         scene.add(label);
-
       }
-
     });
 
     starsGeometry.addAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
@@ -211,10 +211,7 @@ function init(){
   };
 
 gui.add(controls, 'toggleObjects');
-//add labels
-function makeLabel(text, position){
 
-}
 // Converts a point [longitude, latitude] in degrees to a THREE.Vector3.
 function vertex(point) {
   //console.log("point", point);
@@ -273,6 +270,7 @@ function render(){
   trackballControls.update(delta);
 
   var vector = new THREE.Vector3(mouse.x, mouse.y, 1);
+  console.log(vector);
   vector.unproject(camera);
   var ray = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
 
@@ -311,3 +309,12 @@ function render(){
 
 } //init end
 window.onload = init;
+function mousePosition(event) {
+  // the following line would stop any other event handler from firing
+  // (such as the mouse's TrackballControls)
+  // event.preventDefault();
+
+  // update the mouse variable
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+}
