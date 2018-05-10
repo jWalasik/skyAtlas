@@ -3,6 +3,7 @@ var displayStars = true,
     displayConLabels = true,
     displayBoundLabels = true,
     minMag = 20;
+var INTERSECTED;
 
 function init(){
   var width = 960,
@@ -271,29 +272,39 @@ function render(){
   var delta = clock.getDelta();
   trackballControls.update(delta);
 
-  raycaster.setFromCamera( mouse, camera );
+  var vector = new THREE.Vector3(mouse.x, mouse.y, 1);
+  vector.unproject(camera);
+  var ray = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
 
-				var intersects = raycaster.intersectObjects( scene.children );
+  // create an array containing all objects in the scene with which the ray intersects
+  var intersects = ray.intersectObjects(scene.children);
 
-				if ( intersects.length > 0 ) {
+  // INTERSECTED = the object in the scene currently closest to the camera
+  //		and intersected by the Ray projected from the mouse position
 
-					if ( INTERSECTED != intersects[ 0 ].object ) {
-
-						if ( INTERSECTED ) INTERSECTED.material.program = programStroke;
-
-						INTERSECTED = intersects[ 0 ].object;
-						INTERSECTED.material.program = programFill;
-
-					}
-
-				} else {
-
-					if ( INTERSECTED ) INTERSECTED.material.program = programStroke;
-
-					INTERSECTED = null;
-
-				}
-
+  // if there is one (or more) intersections
+  if (intersects.length > 0) {
+    // if the closest object intersected is not the currently stored intersection object
+    if (intersects[0].object != INTERSECTED) {
+      // restore previous intersection object (if it exists) to its original color
+      if (INTERSECTED)
+        INTERSECTED.material.color.setHex(INTERSECTED.currentHex);
+      // store reference to closest object as current intersection object
+      INTERSECTED = intersects[0].object;
+      // store color of closest object (for later restoration)
+      INTERSECTED.currentHex = INTERSECTED.material.color.getHex();
+      // set a new color for closest object
+      INTERSECTED.material.color.setHex(0xffff00);
+    }
+  } else // there are no intersections
+  {
+    // restore previous intersection object (if it exists) to its original color
+    if (INTERSECTED)
+      INTERSECTED.material.color.setHex(INTERSECTED.currentHex);
+    // remove previous intersection object reference
+    //     by setting current intersection object to "nothing"
+    INTERSECTED = null;
+  }
   requestAnimationFrame(render);
   renderer.render(scene, camera);
 }
