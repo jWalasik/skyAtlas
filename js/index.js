@@ -3,7 +3,7 @@ var displayStars = true,
     displayConLabels = true,
     displayBoundLabels = true,
     minMag = 20,
-    mouse = {x:0,y:0},
+    mouse = new THREE.Vector2(),
     INTERSECTED;
 
 function init(){
@@ -18,9 +18,9 @@ function init(){
     control = new THREE.TrackballControls(camera),
     clock = new THREE.Clock(),
     marker = 0;
-    camera.position.x = 100;
-    camera.position.y = 100;
-    camera.position.z = 300;
+    camera.position.x = 0;
+    camera.position.y = 2000;
+    camera.position.z = -5000;
     camera.lookAt(new THREE.Vector3(0, 0, 0));
 
   renderer.setPixelRatio(window.devicePixelRatio);
@@ -205,8 +205,10 @@ function init(){
 
   var controls = {
     toggleObjects: function(){
-      g3white.traverse(function(child){child.visible = true;});
-      g3black.traverse(function(child){child.visible = false;});
+      scene.traverse(function(child){
+        console.log(child);
+        child.visible = true;});
+      scene.traverse(function(child){child.visible = false;});
     }
   };
 
@@ -264,18 +266,20 @@ function graticule10() {
 }
 
 render();
-
+console.log(scene.children);
 function render(){
   var delta = clock.getDelta();
   trackballControls.update(delta);
 
-  var vector = new THREE.Vector3(mouse.x, mouse.y, 1);
-  console.log(vector);
+  var vector = new THREE.Vector3(mouse.x, mouse.y, 0.5);
+
+
   vector.unproject(camera);
+
   var ray = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
 
   // create an array containing all objects in the scene with which the ray intersects
-  var intersects = ray.intersectObjects(scene.children);
+  var intersects = ray.intersectObjects(scene.children, true);
 
   // INTERSECTED = the object in the scene currently closest to the camera
   //		and intersected by the Ray projected from the mouse position
@@ -284,15 +288,17 @@ function render(){
   if (intersects.length > 0) {
     // if the closest object intersected is not the currently stored intersection object
     if (intersects[0].object != INTERSECTED) {
+
       // restore previous intersection object (if it exists) to its original color
       if (INTERSECTED)
         INTERSECTED.material.color.setHex(INTERSECTED.currentHex);
       // store reference to closest object as current intersection object
       INTERSECTED = intersects[0].object;
+      console.log(INTERSECTED);
       // store color of closest object (for later restoration)
       INTERSECTED.currentHex = INTERSECTED.material.color.getHex();
       // set a new color for closest object
-      INTERSECTED.material.color.setHex(0xffff00);
+      INTERSECTED.material.color.setHex(Math.random() * 0xffffff );
     }
   } else // there are no intersections
   {
@@ -312,9 +318,10 @@ window.onload = init;
 function mousePosition(event) {
   // the following line would stop any other event handler from firing
   // (such as the mouse's TrackballControls)
-  // event.preventDefault();
+  event.preventDefault();
 
   // update the mouse variable
   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
   mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
 }
