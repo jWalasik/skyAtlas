@@ -18,7 +18,7 @@ function init(){
     control = new THREE.TrackballControls(camera),
     clock = new THREE.Clock(),
     marker = 0;
-    camera.position.x = 0;
+    camera.position.x = 2000;
     camera.position.y = 2000;
     camera.position.z = -5000;
     camera.lookAt(new THREE.Vector3(0, 0, 0));
