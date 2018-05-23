@@ -126,8 +126,9 @@ function init(){
 
     //process contellation boundaries
     bounds.boundaries.map(function(d){
-      var boundsGeometry = new THREE.Geometry();
+      var points = [];
       d.shift();
+      var boundsOutline = new THREE.Geometry();
       for(var i=0; i<d.length; i+=2){
         let point = new THREE.Vector3();
         var lambda = d[i]*Math.PI/180,
@@ -137,13 +138,16 @@ function init(){
         point.y = radius*cosPhi*Math.sin(lambda);
         point.z = radius * Math.sin(phi);
 
-        boundsGeometry.vertices.push(point);
+        boundsOutline.vertices.push(point);
+        points.push(point);
       }
-
-      var boundsMaterial = new THREE.LineBasicMaterial({color: 0xe8dd4e});
-      var boundaries = new THREE.Line(boundsGeometry, boundsMaterial);
+      var boundsGeometry = new THREE.ConvexGeometry(points);
+      var boundsMaterial = new THREE.MeshBasicMaterial({color: 0xffffff, transparent:true, opacity:0.1});
+      var boundaries = new THREE.Mesh(boundsGeometry, boundsMaterial);
+      var outlineMaterial = new THREE.LineBasicMaterial({color: 0xff0707});
+      var outline = new THREE.Line(boundsOutline, outlineMaterial);
       scene.add(boundaries);
-
+      scene.add(outline);
     });
     //process constellation lines
     lines.features.map(function(d){
@@ -199,7 +203,7 @@ function init(){
   trackballControls.zoomSpeed = 1.0;
   trackballControls.panSpeed = 0.2;
   trackballControls.staticMoving = false;
-  trackballControls.noPan=true;
+  trackballControls.noPan=false;
 
   var gui = new dat.GUI();
 
@@ -281,34 +285,7 @@ function render(){
   // create an array containing all objects in the scene with which the ray intersects
   var intersects = ray.intersectObjects(scene.children, true);
 
-  // INTERSECTED = the object in the scene currently closest to the camera
-  //		and intersected by the Ray projected from the mouse position
 
-  // if there is one (or more) intersections
-  if (intersects.length > 0) {
-    // if the closest object intersected is not the currently stored intersection object
-    if (intersects[0].object != INTERSECTED) {
-
-      // restore previous intersection object (if it exists) to its original color
-      if (INTERSECTED)
-        INTERSECTED.material.color.setHex(INTERSECTED.currentHex);
-      // store reference to closest object as current intersection object
-      INTERSECTED = intersects[0].object;
-      console.log(INTERSECTED);
-      // store color of closest object (for later restoration)
-      INTERSECTED.currentHex = INTERSECTED.material.color.getHex();
-      // set a new color for closest object
-      INTERSECTED.material.color.setHex(Math.random() * 0xffffff );
-    }
-  } else // there are no intersections
-  {
-    // restore previous intersection object (if it exists) to its original color
-    if (INTERSECTED)
-      INTERSECTED.material.color.setHex(INTERSECTED.currentHex);
-    // remove previous intersection object reference
-    //     by setting current intersection object to "nothing"
-    INTERSECTED = null;
-  }
   requestAnimationFrame(render);
   renderer.render(scene, camera);
 }
