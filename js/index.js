@@ -2,9 +2,7 @@
 var displayStars = true,
     displayConLabels = true,
     displayBoundLabels = true,
-    minMag = 20,
-    mouse = new THREE.Vector2(),
-    INTERSECTED;
+    minMag = 20;
 
 function init(){
   var width = 960,
@@ -17,7 +15,8 @@ function init(){
     renderer = new THREE.WebGLRenderer({alpha: true});
     control = new THREE.TrackballControls(camera),
     clock = new THREE.Clock(),
-    marker = 0;
+    marker = 0,
+    mouse=new THREE.Vector3();
     camera.position.x = 2000;
     camera.position.y = 2000;
     camera.position.z = -5000;
@@ -30,7 +29,6 @@ function init(){
   //add graticule
   scene.add(graticule = wireframe(graticule10(), new THREE.LineBasicMaterial({color: 0xaaaaaa})));
 
-  document.addEventListener('mousemove', mousePosition, false);
   //parse data
   //parse data
   queue()
@@ -65,6 +63,32 @@ function init(){
     };
 
     var contrainer = new THREE.Object3D();
+
+    //process contellation boundaries
+    bounds.boundaries.map(function(d){
+      var points = [];
+      d.shift();
+      var boundsOutline = new THREE.Geometry();
+      for(var i=2; i<d.length; i+=2){
+        let point = new THREE.Vector3();
+        var lambda = d[i]*Math.PI/180,
+            phi = d[i+1]*Math.PI/180,
+            cosPhi = Math.cos(phi);
+        point.x = radius*cosPhi*Math.cos(lambda);
+        point.y = radius*cosPhi*Math.sin(lambda);
+        point.z = radius * Math.sin(phi);
+
+        boundsOutline.vertices.push(point);
+        points.push(point);
+      }
+      var boundsGeometry = new THREE.ConvexGeometry(points);
+      var boundsMaterial = new THREE.MeshBasicMaterial({color: 0xffffff, transparent:true, opacity:0.3});
+      var boundaries = new THREE.Mesh(boundsGeometry, boundsMaterial);
+      var outlineMaterial = new THREE.LineBasicMaterial({color: 0xfbff3d});
+      var outline = new THREE.Line(boundsOutline, outlineMaterial);
+      scene.add(boundaries);
+      scene.add(outline);
+    });
     hyg.map(function(d){
       var lambda = d.ra*Math.PI/180*15,
           phi = d.dec*Math.PI/180,
@@ -124,31 +148,7 @@ function init(){
     var starField = new THREE.Points(starsGeometry, starsMaterial);
     scene.add(starField);
 
-    //process contellation boundaries
-    bounds.boundaries.map(function(d){
-      var points = [];
-      d.shift();
-      var boundsOutline = new THREE.Geometry();
-      for(var i=0; i<d.length; i+=2){
-        let point = new THREE.Vector3();
-        var lambda = d[i]*Math.PI/180,
-            phi = d[i+1]*Math.PI/180,
-            cosPhi = Math.cos(phi);
-        point.x = radius*cosPhi*Math.cos(lambda);
-        point.y = radius*cosPhi*Math.sin(lambda);
-        point.z = radius * Math.sin(phi);
 
-        boundsOutline.vertices.push(point);
-        points.push(point);
-      }
-      var boundsGeometry = new THREE.ConvexGeometry(points);
-      var boundsMaterial = new THREE.MeshBasicMaterial({color: 0xffffff, transparent:true, opacity:0.1});
-      var boundaries = new THREE.Mesh(boundsGeometry, boundsMaterial);
-      var outlineMaterial = new THREE.LineBasicMaterial({color: 0xff0707});
-      var outline = new THREE.Line(boundsOutline, outlineMaterial);
-      scene.add(boundaries);
-      scene.add(outline);
-    });
     //process constellation lines
     lines.features.map(function(d){
       var name = d.id;
@@ -193,9 +193,6 @@ function init(){
 
     })  //lines.features.map end
   }
-  //raycaster
-  raycaster = new THREE.Raycaster();
-  mouse = new THREE.Vector3();
 
   //camera controls
   var trackballControls = new THREE.TrackballControls(camera);
@@ -270,35 +267,27 @@ function graticule10() {
 }
 
 render();
-console.log(scene.children);
+
 function render(){
   var delta = clock.getDelta();
   trackballControls.update(delta);
-
-  var vector = new THREE.Vector3(mouse.x, mouse.y, 0.5);
-
-
-  vector.unproject(camera);
-
-  var ray = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
-
-  // create an array containing all objects in the scene with which the ray intersects
-  var intersects = ray.intersectObjects(scene.children, true);
+  checkHighlight();
 
 
   requestAnimationFrame(render);
   renderer.render(scene, camera);
 }
 
+document.addEventListener('mousemove', onDocumentMouseMove, false);
 } //init end
 window.onload = init;
-function mousePosition(event) {
-  // the following line would stop any other event handler from firing
-  // (such as the mouse's TrackballControls)
-  event.preventDefault();
 
-  // update the mouse variable
-  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+function onDocumentMouseMove(event){
+// the following line would stop any other event handler from firing
+// (such as the mouse's TrackballControls)
+//event.preventDefault();
 
+// update the mouse variable
+  mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+  mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 }
