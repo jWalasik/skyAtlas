@@ -2,14 +2,20 @@
 var displayStars = true,
     displayConLabels = true,
     displayBoundLabels = true,
-    minMag = 20;
+    minMag = 20,
+    projector,
+    mouse = {x: 0, y: 0},
+    INTERSECTED;
 
 function init(){
+  //globals
   var width = 960,
     height = 960,
     radius = 8000,
     mesh,
     graticule,
+
+  //standard three.js stuff
     scene = new THREE.Scene,
     camera = new THREE.PerspectiveCamera(70, width / height, 1, 100000),
     renderer = new THREE.WebGLRenderer({alpha: true});
@@ -29,7 +35,6 @@ function init(){
   //add graticule
   scene.add(graticule = wireframe(graticule10(), new THREE.LineBasicMaterial({color: 0xaaaaaa})));
 
-  //parse data
   //parse data
   queue()
     .defer(d3.csv, "https://gist.githubusercontent.com/elPaleniozord/433b888e3ed64da651f18d5c60682c8a/raw/76e8fa3fe6eb6aaf93154927788ecf6fd47e240c/hyg_data.csv", function (d){
@@ -62,7 +67,7 @@ function init(){
       color: { type: "c", value: new THREE.Color( 0xffffff ) },
     };
 
-    var contrainer = new THREE.Object3D();
+    //var contrainer = new THREE.Object3D();
 
     //process contellation boundaries
     bounds.boundaries.map(function(d){
@@ -82,7 +87,7 @@ function init(){
         points.push(point);
       }
       var boundsGeometry = new THREE.ConvexGeometry(points);
-      var boundsMaterial = new THREE.MeshBasicMaterial({color: 0xffffff, transparent:true, opacity:0.3});
+      var boundsMaterial = new THREE.MeshBasicMaterial({color: 0xffffff, transparent:true, opacity:0.0});
       var boundaries = new THREE.Mesh(boundsGeometry, boundsMaterial);
       var outlineMaterial = new THREE.LineBasicMaterial({color: 0xfbff3d});
       var outline = new THREE.Line(boundsOutline, outlineMaterial);
@@ -271,14 +276,32 @@ render();
 function render(){
   var delta = clock.getDelta();
   trackballControls.update(delta);
-  checkHighlight();
 
+  checkHighlight();
 
   requestAnimationFrame(render);
   renderer.render(scene, camera);
 }
+//
+projector = new THREE.Projector();
 
+//event listeners
 document.addEventListener('mousemove', onDocumentMouseMove, false);
+
+function checkHighlight(){
+  var vector = new THREE.Vector3(mouse.x, mouse.y, 1);
+  vector.unproject(camera);
+  var ray = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
+
+  var intersects = ray.intersectObjects(scene.children);
+
+  //if there is at least one intersection
+  if(intersects.length>0){
+    INTERSECTED = intersects[0].object;
+    //console.log(INTERSECTED);
+    INTERSECTED.material.opacity = 0.3;
+  }
+}
 } //init end
 window.onload = init;
 
