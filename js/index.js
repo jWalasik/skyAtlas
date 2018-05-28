@@ -9,8 +9,8 @@ var displayStars = true,
 
 function init(){
   //globals
-  var width = 960,
-    height = 960,
+  var width = window.innerWidth,
+    height = window.innerHeight,
     radius = 8000,
     mesh,
     graticule,
@@ -87,7 +87,7 @@ function init(){
         points.push(point);
       }
       var boundsGeometry = new THREE.ConvexGeometry(points);
-      var boundsMaterial = new THREE.MeshBasicMaterial({color: 0xffffff, transparent:true, opacity:0.0});
+      var boundsMaterial = new THREE.MeshBasicMaterial({color: 0x96fff7, transparent:true, opacity:0.0});
       var boundaries = new THREE.Mesh(boundsGeometry, boundsMaterial);
       var outlineMaterial = new THREE.LineBasicMaterial({color: 0xfbff3d});
       var outline = new THREE.Line(boundsOutline, outlineMaterial);
@@ -197,6 +197,7 @@ function init(){
       })  //coordinates mapping end
 
     })  //lines.features.map end
+
   }
 
   //camera controls
@@ -291,15 +292,25 @@ document.addEventListener('mousemove', onDocumentMouseMove, false);
 function checkHighlight(){
   var vector = new THREE.Vector3(mouse.x, mouse.y, 1);
   vector.unproject(camera);
-  var ray = new THREE.Raycaster(camera.position, vector.sub(camera.position).normalize());
+
+  var ray = new THREE.Raycaster(camera.position, vector.normalize());
+
+  //var arrow = new THREE.ArrowHelper( vector, camera.position, 100, 0xffffff );
+  //scene.add( arrow );
+
 
   var intersects = ray.intersectObjects(scene.children);
 
   //if there is at least one intersection
   if(intersects.length>0){
+    //remove highlight from previous boundary
+    if(INTERSECTED && intersects[0].object != INTERSECTED){
+      INTERSECTED.material.opacity = 0.0;
+    }
     INTERSECTED = intersects[0].object;
     //console.log(INTERSECTED);
-    INTERSECTED.material.opacity = 0.3;
+
+    INTERSECTED.material.opacity = 0.25;
   }
 }
 } //init end
