@@ -2,7 +2,7 @@
 var displayStars = true,
     displayConLabels = true,
     displayBoundLabels = true,
-    minMag = 20,
+    minMag = 7,
     projector,
     mouse = {x: 0, y: 0},
     INTERSECTED;
@@ -72,9 +72,12 @@ function init(){
     //process contellation boundaries
     bounds.boundaries.map(function(d){
       var points = [];
-      d.shift();
+      var boundsName = d.shift();
       var boundsOutline = new THREE.Geometry();
-      for(var i=2; i<d.length; i+=2){
+      var labelX = [];
+      var labelY = [];
+      var labelZ = [];
+      for(var i=0; i<d.length; i+=2){
         let point = new THREE.Vector3();
         var lambda = d[i]*Math.PI/180,
             phi = d[i+1]*Math.PI/180,
@@ -85,6 +88,10 @@ function init(){
 
         boundsOutline.vertices.push(point);
         points.push(point);
+        //label coordinates
+        labelX.push(point.x);
+        labelY.push(point.y);
+        labelZ.push(point.z);
       }
       var boundsGeometry = new THREE.ConvexGeometry(points);
       var boundsMaterial = new THREE.MeshBasicMaterial({color: 0x96fff7, transparent:true, opacity:0.0});
@@ -93,6 +100,36 @@ function init(){
       var outline = new THREE.Line(boundsOutline, outlineMaterial);
       scene.add(boundaries);
       scene.add(outline);
+
+      //boundary label
+      var labelPosition = new THREE.Vector3();
+
+      labelPosition.x = findLabelPos(labelX);
+      labelPosition.y = findLabelPos(labelY);
+      labelPosition.z = findLabelPos(labelZ);
+      //create label in camvas
+      var name = boundsName;
+      var canvas = document.createElement('canvas');
+      var context = canvas.getContext('2d');
+      var textWidth = (context.measureText(boundsName)).width;
+      context.font = "Bold 40px Arial";
+      context.fillStyle = "rgba(130, 255, 240, 1)";
+      context.fillText(boundsName, textWidth/2.5, 60);
+
+      //create texture
+      var texture = new THREE.Texture(canvas);
+      texture.needsUpdate = true;
+      texture.minFilter = THREE.LinearFilter;
+      var material = new THREE.SpriteMaterial({ map:texture})
+      material.transparent = true;
+
+      var label = new THREE.Sprite(material);
+      label.position.set(labelPosition.x, labelPosition.y, labelPosition.z);
+      label.scale.set(1000, 1000, 1000);
+      boundaries.add(label);
+
+
+
     });
     hyg.map(function(d){
       var lambda = d.ra*Math.PI/180*15,
@@ -156,25 +193,7 @@ function init(){
 
     //process constellation lines
     lines.features.map(function(d){
-      var name = d.id;
-      var canvas = document.createElement('canvas');
-      var context = canvas.getContext('2d');
-      var textWidth = (context.measureText(d.id)).width;
-      context.font = "Bold 40px Arial";
-      context.fillStyle = "rgba(130, 255, 240, 1)";
-      context.fillText(d.id, textWidth/2.5, 60);
 
-      var texture = new THREE.Texture(canvas);
-      texture.needsUpdate = true;
-      texture.minFilter = THREE.LinearFilter;
-      var material = new THREE.SpriteMaterial({ map:texture})
-      material.transparent = true;
-
-      var label = new THREE.Sprite(material);
-      var position = vertex(d.geometry.coordinates[0][0]);
-      label.position.set(position.x, position.y, position.z);
-      label.scale.set(1000, 1000, 1000);
-      scene.add(label);
 
       var linesGeometry = new THREE.Geometry();
       d.geometry.coordinates.map(function(d){
@@ -220,6 +239,16 @@ function init(){
   };
 
 gui.add(controls, 'toggleObjects');
+
+//find coordinates for a label
+function findLabelPos(coordArray){
+
+  var min = Math.min(...coordArray),
+      max = Math.max(...coordArray),
+      mid = min + (max-min)/2;
+  console.log(mid);
+  return mid;
+}
 
 // Converts a point [longitude, latitude] in degrees to a THREE.Vector3.
 function vertex(point) {
