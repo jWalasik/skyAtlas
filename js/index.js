@@ -77,7 +77,16 @@ function init(){
       var labelX = [];
       var labelY = [];
       var labelZ = [];
+      //2d shape to be projected onto sphere
+      var boundary2d = new THREE.Shape();
+      console.log(d[0], d[1]);
+      boundary2d.moveTo(d[0], d[1]);
       for(var i=0; i<d.length; i+=2){
+
+        //2d method
+        boundary2d.lineTo(d[i],d[i+1]);
+
+        //convex method
         let point = new THREE.Vector3();
         var lambda = d[i]*Math.PI/180,
             phi = d[i+1]*Math.PI/180,
@@ -93,6 +102,8 @@ function init(){
         labelY.push(point.y);
         labelZ.push(point.z);
       }
+
+      //convex method
       var boundsGeometry = new THREE.ConvexGeometry(points);
       var boundsMaterial = new THREE.MeshBasicMaterial({color: 0x96fff7, transparent:true, opacity:0.0});
       var boundaries = new THREE.Mesh(boundsGeometry, boundsMaterial);
@@ -100,6 +111,12 @@ function init(){
       var outline = new THREE.Line(boundsOutline, outlineMaterial);
       scene.add(boundaries);
       scene.add(outline);
+
+      //2d method
+      var boundary2dGeometry = new THREE.ShapeGeometry(boundary2d);
+      var boundary2dMaterial = new THREE.MeshBasicMaterial({color: 0x00FF00});
+      var boundary2dMesh = new THREE.Mesh(boundary2dGeometry, boundary2dMaterial);
+      scene.add(boundary2dMesh);
 
       //boundary label
       var labelPosition = new THREE.Vector3();
@@ -246,7 +263,7 @@ function findLabelPos(coordArray){
   var min = Math.min(...coordArray),
       max = Math.max(...coordArray),
       mid = min + (max-min)/2;
-  console.log(mid);
+
   return mid;
 }
 
