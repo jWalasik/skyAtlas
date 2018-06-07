@@ -73,6 +73,7 @@ function init(){
     bounds.boundaries.map(function(d){
       var points = [];
       var boundsName = d.shift();
+      console.log(boundsName);
       var boundsOutline = new THREE.Geometry();
       var labelX = [];
       var labelY = [];
@@ -109,13 +110,27 @@ function init(){
       var boundaries = new THREE.Mesh(boundsGeometry, boundsMaterial);
       var outlineMaterial = new THREE.LineBasicMaterial({color: 0xfbff3d});
       var outline = new THREE.Line(boundsOutline, outlineMaterial);
-      scene.add(boundaries);
+      //scene.add(boundaries);
       scene.add(outline);
 
       //2d method
+
       var boundary2dGeometry = new THREE.ShapeGeometry(boundary2d);
-      var boundary2dMaterial = new THREE.MeshBasicMaterial({color: 0x00FF00});
+
+      for (var i = 0; i<boundary2dGeometry.vertices.length; i++){
+        let point = new THREE.Vector3();
+        var lambda = boundary2dGeometry.vertices[i].x*Math.PI/180,
+            phi = boundary2dGeometry.vertices[i].y*Math.PI/180,
+            cosPhi = Math.cos(phi);
+        boundary2dGeometry.vertices[i].x = radius*cosPhi*Math.cos(lambda);
+        boundary2dGeometry.vertices[i].y = radius*cosPhi*Math.sin(lambda);
+        boundary2dGeometry.vertices[i].z = radius * Math.sin(phi);
+
+      }
+      console.log(boundary2dGeometry);
+      var boundary2dMaterial = new THREE.MeshBasicMaterial({color: 0x96fff7, transparent:true, opacity:0.0});
       var boundary2dMesh = new THREE.Mesh(boundary2dGeometry, boundary2dMaterial);
+
       scene.add(boundary2dMesh);
 
       //boundary label
@@ -143,7 +158,7 @@ function init(){
       var label = new THREE.Sprite(material);
       label.position.set(labelPosition.x, labelPosition.y, labelPosition.z);
       label.scale.set(1000, 1000, 1000);
-      boundaries.add(label);
+      //boundaries.add(label);
 
 
 
