@@ -40,7 +40,7 @@ function init(){
     .defer(d3.csv, "https://gist.githubusercontent.com/elPaleniozord/433b888e3ed64da651f18d5c60682c8a/raw/76e8fa3fe6eb6aaf93154927788ecf6fd47e240c/hyg_data.csv", function (d){
       if (d.mag < minMag){return d;}
     })
-    .defer(d3.json, "https://gist.githubusercontent.com/elPaleniozord/bb775473088f3f60c5f3ca1afeb88a82/raw/66a84de978c8c787916cb363894a8da6b62bb915/bounds.json")
+    .defer(d3.json, "https://gist.githubusercontent.com/elPaleniozord/bb775473088f3f60c5f3ca1afeb88a82/raw/e564adc14380c69c0b9012c1363750dbef2411f1/bounds.json")
     .defer(d3.json, "https://gist.githubusercontent.com/elPaleniozord/ed1dd65a955c2c7e1bb6cbc30feb523f/raw/9f2735f48f6f477064f9e151fe73cc7b0361bf2e/lines.json")
     .await(processData);
 
@@ -80,7 +80,7 @@ function init(){
       var labelZ = [];
       //2d shape to be projected onto sphere
       var boundary2d = new THREE.Shape();
-      console.log(d[0], d[1]);
+      //console.log(d[0], d[1]);
       boundary2d.moveTo(d[0], d[1]);
       for(var i=0; i<d.length; i+=2){
 
@@ -119,6 +119,8 @@ function init(){
 
       for (var i = 0; i<boundary2dGeometry.vertices.length; i++){
         let point = new THREE.Vector3();
+        console.log(boundsName);
+        console.log(boundary2dGeometry.vertices[i].x, boundary2dGeometry.vertices[i].y);
         var lambda = boundary2dGeometry.vertices[i].x*Math.PI/180,
             phi = boundary2dGeometry.vertices[i].y*Math.PI/180,
             cosPhi = Math.cos(phi);
@@ -127,10 +129,10 @@ function init(){
         boundary2dGeometry.vertices[i].z = radius * Math.sin(phi);
 
       }
-      console.log(boundary2dGeometry);
-      var boundary2dMaterial = new THREE.MeshBasicMaterial({color: 0x96fff7, transparent:true, opacity:0.0});
+      console.log(boundsName, boundary2dGeometry.vertices);
+      var boundary2dMaterial = new THREE.MeshBasicMaterial({color: 0x96fff7, transparent:true, opacity:0.3});
       var boundary2dMesh = new THREE.Mesh(boundary2dGeometry, boundary2dMaterial);
-
+      boundary2dMesh.material.side = THREE.DoubleSide;
       scene.add(boundary2dMesh);
 
       //boundary label
@@ -158,7 +160,7 @@ function init(){
       var label = new THREE.Sprite(material);
       label.position.set(labelPosition.x, labelPosition.y, labelPosition.z);
       label.scale.set(1000, 1000, 1000);
-      //boundaries.add(label);
+      boundary2dMesh.add(label);
 
 
 
@@ -194,7 +196,7 @@ function init(){
         var label = new THREE.Sprite(material);
         label.position.set(radius*cosPhi*Math.cos(lambda),radius*cosPhi*Math.sin(lambda), radius * Math.sin(phi));
         label.scale.set(1000, 1000, 1000);
-        scene.add(label);
+        //scene.add(label);
       }
     });
 
@@ -280,6 +282,14 @@ function findLabelPos(coordArray){
       mid = min + (max-min)/2;
 
   return mid;
+}
+
+//check if polygon vertices are clockwise
+function clockwise(points){
+  var edges=[];
+  points.forEach(function(d){
+    console.log(d);
+  })
 }
 
 // Converts a point [longitude, latitude] in degrees to a THREE.Vector3.
