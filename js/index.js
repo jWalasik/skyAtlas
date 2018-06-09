@@ -114,24 +114,18 @@ function init(){
       scene.add(outline);
 
       //2d method
+      var boundaryVertices = boundsOutline.vertices;
 
-      var boundary2dGeometry = new THREE.ShapeGeometry(boundary2d);
-
-      for (var i = 0; i<boundary2dGeometry.vertices.length; i++){
-        let point = new THREE.Vector3();
-        console.log(boundsName);
-        console.log(boundary2dGeometry.vertices[i].x, boundary2dGeometry.vertices[i].y);
-        var lambda = boundary2dGeometry.vertices[i].x*Math.PI/180,
-            phi = boundary2dGeometry.vertices[i].y*Math.PI/180,
-            cosPhi = Math.cos(phi);
-        boundary2dGeometry.vertices[i].x = radius*cosPhi*Math.cos(lambda);
-        boundary2dGeometry.vertices[i].y = radius*cosPhi*Math.sin(lambda);
-        boundary2dGeometry.vertices[i].z = radius * Math.sin(phi);
-
+      var boundary2dGeometry = new THREE.Geometry();
+      boundary2dGeometry.vertices = boundaryVertices;
+      var triangles = THREE.ShapeUtils.triangulateShape(boundary2dGeometry.vertices, []);
+      for(var i = 0; i < triangles.length; i++){
+        boundary2dGeometry.faces.push(new THREE.Face3(triangles[i][0], triangles[i][2], triangles[i][1]));
       }
-      console.log(boundsName, boundary2dGeometry.vertices);
+
       var boundary2dMaterial = new THREE.MeshBasicMaterial({color: 0x96fff7, transparent:true, opacity:0.3});
       var boundary2dMesh = new THREE.Mesh(boundary2dGeometry, boundary2dMaterial);
+
       boundary2dMesh.material.side = THREE.DoubleSide;
       scene.add(boundary2dMesh);
 
