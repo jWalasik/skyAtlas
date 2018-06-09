@@ -67,27 +67,17 @@ function init(){
       color: { type: "c", value: new THREE.Color( 0xffffff ) },
     };
 
-    //var contrainer = new THREE.Object3D();
-
     //process contellation boundaries
     bounds.boundaries.map(function(d){
       var points = [];
       var boundsName = d.shift();
-      console.log(boundsName);
-      var boundsOutline = new THREE.Geometry();
+      var boundsGeometry = new THREE.Geometry();
+      var outlineGeometry = new THREE.Geometry();
       var labelX = [];
       var labelY = [];
       var labelZ = [];
-      //2d shape to be projected onto sphere
-      var boundary2d = new THREE.Shape();
-      //console.log(d[0], d[1]);
-      boundary2d.moveTo(d[0], d[1]);
+      //extract vertices from database
       for(var i=0; i<d.length; i+=2){
-
-        //2d method
-        boundary2d.lineTo(d[i],d[i+1]);
-
-        //convex method
         let point = new THREE.Vector3();
         var lambda = d[i]*Math.PI/180,
             phi = d[i+1]*Math.PI/180,
@@ -96,38 +86,30 @@ function init(){
         point.y = radius*cosPhi*Math.sin(lambda);
         point.z = radius * Math.sin(phi);
 
-        boundsOutline.vertices.push(point);
-        points.push(point);
+        boundsGeometry.vertices.push(point);
+        outlineGeometry.vertices.push(point);
         //label coordinates
         labelX.push(point.x);
         labelY.push(point.y);
         labelZ.push(point.z);
       }
-
-      //convex method
-      var boundsGeometry = new THREE.ConvexGeometry(points);
-      var boundsMaterial = new THREE.MeshBasicMaterial({color: 0x96fff7, transparent:true, opacity:0.0});
-      var boundaries = new THREE.Mesh(boundsGeometry, boundsMaterial);
+      //draw boundary outline
       var outlineMaterial = new THREE.LineBasicMaterial({color: 0xfbff3d});
-      var outline = new THREE.Line(boundsOutline, outlineMaterial);
-      //scene.add(boundaries);
+      var outline = new THREE.Line(outlineGeometry, outlineMaterial);
       scene.add(outline);
 
-      //2d method
-      var boundaryVertices = boundsOutline.vertices;
+      //triangulation method
+      var triangles = THREE.ShapeUtils.triangulateShape(boundsGeometry.vertices, []);
 
-      var boundary2dGeometry = new THREE.Geometry();
-      boundary2dGeometry.vertices = boundaryVertices;
-      var triangles = THREE.ShapeUtils.triangulateShape(boundary2dGeometry.vertices, []);
       for(var i = 0; i < triangles.length; i++){
-        boundary2dGeometry.faces.push(new THREE.Face3(triangles[i][0], triangles[i][2], triangles[i][1]));
+        boundsGeometry.faces.push(new THREE.Face3(triangles[i][0], triangles[i][2], triangles[i][1]));
       }
 
-      var boundary2dMaterial = new THREE.MeshBasicMaterial({color: 0x96fff7, transparent:true, opacity:0.3});
-      var boundary2dMesh = new THREE.Mesh(boundary2dGeometry, boundary2dMaterial);
+      var boundsMaterial = new THREE.MeshBasicMaterial({color: 0x96fff7, transparent:true, opacity:0.3});
+      var boundsMesh = new THREE.Mesh(boundsGeometry, boundsMaterial);
 
-      boundary2dMesh.material.side = THREE.DoubleSide;
-      scene.add(boundary2dMesh);
+      boundsMesh.material.side = THREE.DoubleSide;
+      scene.add(boundsMesh);
 
       //boundary label
       var labelPosition = new THREE.Vector3();
@@ -154,7 +136,7 @@ function init(){
       var label = new THREE.Sprite(material);
       label.position.set(labelPosition.x, labelPosition.y, labelPosition.z);
       label.scale.set(1000, 1000, 1000);
-      boundary2dMesh.add(label);
+      boundsMesh.add(label);
 
 
 
