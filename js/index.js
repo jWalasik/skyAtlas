@@ -2,7 +2,7 @@
 var displayStars = true,
     displayConLabels = true,
     displayBoundLabels = true,
-    minMag = 7,
+    minMag = 7.5,
     projector,
     mouse = {x: 0, y: 0},
     INTERSECTED;
@@ -105,18 +105,25 @@ function init(){
         boundsGeometry.faces.push(new THREE.Face3(triangles[i][0], triangles[i][2], triangles[i][1]));
       }
 
-      var boundsMaterial = new THREE.MeshBasicMaterial({color: 0x96fff7, transparent:true, opacity:0.3});
+      var boundsMaterial = new THREE.MeshBasicMaterial({color: 0x96fff7, transparent:true, opacity:0.0});
       var boundsMesh = new THREE.Mesh(boundsGeometry, boundsMaterial);
 
       boundsMesh.material.side = THREE.DoubleSide;
+      console.log(boundsMesh);
       scene.add(boundsMesh);
 
       //boundary label
-      var labelPosition = new THREE.Vector3();
-
-      labelPosition.x = findLabelPos(labelX);
-      labelPosition.y = findLabelPos(labelY);
-      labelPosition.z = findLabelPos(labelZ);
+      function getCenterPoint(boundsMesh){
+        var geometry = boundsMesh.geometry;
+        var target = new THREE.Vector3();
+        console.log(geometry)
+        geometry.computeBoundingBox();
+        center = geometry.boundingBox.getCenter(target);
+        console.log(center);
+        //mesh.localToWorld(center);
+        return center;
+      }
+      var labelPosition = getCenterPoint(boundsMesh);
       //create label in camvas
       var name = boundsName;
       var canvas = document.createElement('canvas');
@@ -132,6 +139,7 @@ function init(){
       texture.minFilter = THREE.LinearFilter;
       var material = new THREE.SpriteMaterial({ map:texture})
       material.transparent = true;
+      material.depthTest = false;
 
       var label = new THREE.Sprite(material);
       label.position.set(labelPosition.x, labelPosition.y, labelPosition.z);
@@ -359,6 +367,10 @@ function checkHighlight(){
 
     INTERSECTED.material.opacity = 0.25;
   }
+}
+//on click extrude boundary, find intersections, copy objects
+function openConstellation(){
+
 }
 } //init end
 window.onload = init;
