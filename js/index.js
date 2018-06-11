@@ -146,7 +146,25 @@ function init(){
       label.scale.set(1000, 1000, 1000);
       boundsMesh.add(label);
 
+      //APPEND stars
+      hyg.map(function(d){
+        var point = [];
 
+        var lambda = d.ra*Math.PI/180*15,
+            phi = d.dec*Math.PI/180,
+            cosPhi = Math.cos(phi);
+        var x = radius*cosPhi*Math.cos(lambda),
+            y = radius*cosPhi*Math.sin(lambda),
+            z = radius * Math.sin(phi);
+
+        point = [x, y];
+
+        if (isInside(point, boundsGeometry.vertices) == true{
+          vertices.push(x);
+          vertices.push(y);
+          vertices.push(z);
+        };
+      })
 
     });
     hyg.map(function(d){
@@ -368,8 +386,8 @@ function checkHighlight(){
     INTERSECTED.material.opacity = 0.25;
   }
 }
-//on click extrude boundary, find intersections, copy objects
-function openConstellation(){
+//check if point belongs to boundary
+function isInside(point, polygon){
 
 }
 } //init end
