@@ -69,13 +69,13 @@ function init(){
 
     //process contellation boundaries
     bounds.boundaries.map(function(d){
-      var points = [];
       var boundsName = d.shift();
       var boundsGeometry = new THREE.Geometry();
       var outlineGeometry = new THREE.Geometry();
       var labelX = [];
       var labelY = [];
       var labelZ = [];
+
       //extract vertices from database
       for(var i=0; i<d.length; i+=2){
         let point = new THREE.Vector3();
@@ -109,17 +109,17 @@ function init(){
       var boundsMesh = new THREE.Mesh(boundsGeometry, boundsMaterial);
 
       boundsMesh.material.side = THREE.DoubleSide;
-      console.log(boundsMesh);
+      //console.log(boundsMesh);
       scene.add(boundsMesh);
 
       //boundary label
       function getCenterPoint(boundsMesh){
         var geometry = boundsMesh.geometry;
         var target = new THREE.Vector3();
-        console.log(geometry)
+        //console.log(geometry)
         geometry.computeBoundingBox();
         center = geometry.boundingBox.getCenter(target);
-        console.log(center);
+
         //mesh.localToWorld(center);
         return center;
       }
@@ -146,27 +146,9 @@ function init(){
       label.scale.set(1000, 1000, 1000);
       boundsMesh.add(label);
 
-      //APPEND stars
-      hyg.map(function(d){
-        var point = [];
-
-        var lambda = d.ra*Math.PI/180*15,
-            phi = d.dec*Math.PI/180,
-            cosPhi = Math.cos(phi);
-        var x = radius*cosPhi*Math.cos(lambda),
-            y = radius*cosPhi*Math.sin(lambda),
-            z = radius * Math.sin(phi);
-
-        point = [x, y];
-
-        if (isInside(point, boundsGeometry.vertices) == true{
-          vertices.push(x);
-          vertices.push(y);
-          vertices.push(z);
-        };
-      })
 
     });
+
     hyg.map(function(d){
       var lambda = d.ra*Math.PI/180*15,
           phi = d.dec*Math.PI/180,
@@ -200,7 +182,6 @@ function init(){
         label.scale.set(1000, 1000, 1000);
         //scene.add(label);
       }
-    });
 
     starsGeometry.addAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
     starsGeometry.addAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
@@ -253,7 +234,7 @@ function init(){
 
     })  //lines.features.map end
 
-  }
+  })}
 
   //camera controls
   var trackballControls = new THREE.TrackballControls(camera);
@@ -286,13 +267,7 @@ function findLabelPos(coordArray){
   return mid;
 }
 
-//check if polygon vertices are clockwise
-function clockwise(points){
-  var edges=[];
-  points.forEach(function(d){
-    console.log(d);
-  })
-}
+
 
 // Converts a point [longitude, latitude] in degrees to a THREE.Vector3.
 function vertex(point) {
@@ -386,10 +361,7 @@ function checkHighlight(){
     INTERSECTED.material.opacity = 0.25;
   }
 }
-//check if point belongs to boundary
-function isInside(point, polygon){
 
-}
 } //init end
 window.onload = init;
 
