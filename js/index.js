@@ -2,7 +2,7 @@
 var displayStars = true,
     displayConLabels = true,
     displayBoundLabels = true,
-    minMag = 7,
+    minMag = 7.5,
     projector,
     mouse = {x: 0, y: 0},
     INTERSECTED;
@@ -69,13 +69,13 @@ function init(){
 
     //process contellation boundaries
     bounds.boundaries.map(function(d){
+      var points = [];
       var boundsName = d.shift();
       var boundsGeometry = new THREE.Geometry();
       var outlineGeometry = new THREE.Geometry();
       var labelX = [];
       var labelY = [];
       var labelZ = [];
-
       //extract vertices from database
       for(var i=0; i<d.length; i+=2){
         let point = new THREE.Vector3();
@@ -105,27 +105,11 @@ function init(){
         boundsGeometry.faces.push(new THREE.Face3(triangles[i][0], triangles[i][2], triangles[i][1]));
       }
 
-      var boundsMaterial = new THREE.MeshBasicMaterial({color: 0x96fff7, transparent:true, opacity:0.3});
+      var boundsMaterial = new THREE.MeshBasicMaterial({color: 0x96fff7, transparent:true, opacity:0.0});
       var boundsMesh = new THREE.Mesh(boundsGeometry, boundsMaterial);
 
       boundsMesh.material.side = THREE.DoubleSide;
-<<<<<<< HEAD
-      //console.log(boundsMesh);
-      scene.add(boundsMesh);
-
-      //boundary label
-      function getCenterPoint(boundsMesh){
-        var geometry = boundsMesh.geometry;
-        var target = new THREE.Vector3();
-        //console.log(geometry)
-        geometry.computeBoundingBox();
-        center = geometry.boundingBox.getCenter(target);
-
-        //mesh.localToWorld(center);
-        return center;
-      }
-      var labelPosition = getCenterPoint(boundsMesh);
-=======
+      console.log(boundsMesh);
       scene.add(boundsMesh);
 
       //boundary label
@@ -134,7 +118,6 @@ function init(){
       labelPosition.x = findLabelPos(labelX);
       labelPosition.y = findLabelPos(labelY);
       labelPosition.z = findLabelPos(labelZ);
->>>>>>> parent of e87174d... bounding box
       //create label in camvas
       var name = boundsName;
       var canvas = document.createElement('canvas');
@@ -150,6 +133,7 @@ function init(){
       texture.minFilter = THREE.LinearFilter;
       var material = new THREE.SpriteMaterial({ map:texture})
       material.transparent = true;
+      material.depthTest = false;
 
       var label = new THREE.Sprite(material);
       label.position.set(labelPosition.x, labelPosition.y, labelPosition.z);
@@ -157,8 +141,8 @@ function init(){
       boundsMesh.add(label);
 
 
-    });
 
+    });
     hyg.map(function(d){
       var lambda = d.ra*Math.PI/180*15,
           phi = d.dec*Math.PI/180,
@@ -192,6 +176,7 @@ function init(){
         label.scale.set(1000, 1000, 1000);
         //scene.add(label);
       }
+    });
 
     starsGeometry.addAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
     starsGeometry.addAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
@@ -244,7 +229,7 @@ function init(){
 
     })  //lines.features.map end
 
-  })}
+  }
 
   //camera controls
   var trackballControls = new THREE.TrackballControls(camera);
@@ -277,7 +262,13 @@ function findLabelPos(coordArray){
   return mid;
 }
 
-
+//check if polygon vertices are clockwise
+function clockwise(points){
+  var edges=[];
+  points.forEach(function(d){
+    console.log(d);
+  })
+}
 
 // Converts a point [longitude, latitude] in degrees to a THREE.Vector3.
 function vertex(point) {
@@ -371,10 +362,10 @@ function checkHighlight(){
     INTERSECTED.material.opacity = 0.25;
   }
 }
-<<<<<<< HEAD
+//on click extrude boundary, find intersections, copy objects
+function openConstellation(){
 
-=======
->>>>>>> parent of e87174d... bounding box
+}
 } //init end
 window.onload = init;
 
