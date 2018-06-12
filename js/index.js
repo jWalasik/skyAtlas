@@ -2,7 +2,7 @@
 var displayStars = true,
     displayConLabels = true,
     displayBoundLabels = true,
-    minMag = 7.5,
+    minMag = 7,
     projector,
     mouse = {x: 0, y: 0},
     INTERSECTED;
@@ -105,10 +105,11 @@ function init(){
         boundsGeometry.faces.push(new THREE.Face3(triangles[i][0], triangles[i][2], triangles[i][1]));
       }
 
-      var boundsMaterial = new THREE.MeshBasicMaterial({color: 0x96fff7, transparent:true, opacity:0.0});
+      var boundsMaterial = new THREE.MeshBasicMaterial({color: 0x96fff7, transparent:true, opacity:0.3});
       var boundsMesh = new THREE.Mesh(boundsGeometry, boundsMaterial);
 
       boundsMesh.material.side = THREE.DoubleSide;
+<<<<<<< HEAD
       //console.log(boundsMesh);
       scene.add(boundsMesh);
 
@@ -124,6 +125,16 @@ function init(){
         return center;
       }
       var labelPosition = getCenterPoint(boundsMesh);
+=======
+      scene.add(boundsMesh);
+
+      //boundary label
+      var labelPosition = new THREE.Vector3();
+
+      labelPosition.x = findLabelPos(labelX);
+      labelPosition.y = findLabelPos(labelY);
+      labelPosition.z = findLabelPos(labelZ);
+>>>>>>> parent of e87174d... bounding box
       //create label in camvas
       var name = boundsName;
       var canvas = document.createElement('canvas');
@@ -139,7 +150,6 @@ function init(){
       texture.minFilter = THREE.LinearFilter;
       var material = new THREE.SpriteMaterial({ map:texture})
       material.transparent = true;
-      material.depthTest = false;
 
       var label = new THREE.Sprite(material);
       label.position.set(labelPosition.x, labelPosition.y, labelPosition.z);
@@ -361,7 +371,10 @@ function checkHighlight(){
     INTERSECTED.material.opacity = 0.25;
   }
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> parent of e87174d... bounding box
 } //init end
 window.onload = init;
 
