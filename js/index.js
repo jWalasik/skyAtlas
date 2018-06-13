@@ -60,6 +60,7 @@ function init(){
     var vertices = [];
     var colors = [];
     var sizes = [];
+    var constellations =[];
     var uniforms = {
       color: { type: "c", value: new THREE.Color( 0xffffff ) },
     };
@@ -106,9 +107,9 @@ function init(){
       var boundsMesh = new THREE.Mesh(boundsGeometry, boundsMaterial);
 
       boundsMesh.material.side = THREE.DoubleSide;
-      console.log(boundsMesh);
+      boundsMesh.userData = {name: boundsName};
       scene.add(boundsMesh);
-
+      console.log(boundsMesh);
       //boundary label
       var labelPosition = new THREE.Vector3();
 
@@ -153,6 +154,7 @@ function init(){
       var rgb = new THREE.Color(starColor(d.ci));
       colors.push(rgb.r, rgb.g, rgb.b);
       sizes.push(scaleMag(d.mag));
+      constellations.push(d.con);
       //add labels
       if(d.proper !== ""){
         var canvas = document.createElement('canvas');
@@ -178,6 +180,7 @@ function init(){
     starsGeometry.addAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
     starsGeometry.addAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
     starsGeometry.addAttribute('size', new THREE.Float32BufferAttribute(sizes, 1));
+    starsGeometry.addAttribute('constellation', new THREE.Float32BufferAttribute(constellations, 1));
 
 
     var uniforms = {
@@ -197,7 +200,14 @@ function init(){
     });
 
     var starField = new THREE.Points(starsGeometry, starsMaterial);
-    scene.add(starField);
+    scene.traverse(function(node){
+      if (node instanceof THREE.Mesh){
+        console.log(starsGeometry);
+        node.add(starField);
+        console.log("star appended");
+      }
+    })
+
 
 
     //process constellation lines
