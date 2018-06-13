@@ -2,7 +2,7 @@
 var displayStars = true,
     displayConLabels = true,
     displayBoundLabels = true,
-    minMag = 3.5,
+    minMag = 8,
     projector,
     mouse = {x: 0, y: 0},
     INTERSECTED;
@@ -11,7 +11,7 @@ function init(){
   //globals
   var width = window.innerWidth,
     height = window.innerHeight,
-    radius = 8000,
+    radius = 10000,
     mesh,
     graticule,
 
@@ -33,7 +33,7 @@ function init(){
   document.body.appendChild(renderer.domElement);
 
   //add graticule
-  scene.add(graticule = wireframe(graticule10(), new THREE.LineBasicMaterial({color: 0xaaaaaa})));
+  scene.add(graticule = wireframe(graticule10(), new THREE.LineBasicMaterial({color: 0x444444})));
 
   //parse data
   queue()
@@ -176,11 +176,10 @@ function init(){
         //scene.add(label);
       }
     });
-
+    console.log(constellations);
     starsGeometry.addAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
     starsGeometry.addAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
     starsGeometry.addAttribute('size', new THREE.Float32BufferAttribute(sizes, 1));
-    starsGeometry.addAttribute('constellation', new THREE.Float32BufferAttribute(constellations, 1));
 
 
     var uniforms = {
@@ -200,6 +199,7 @@ function init(){
     });
 
     var starField = new THREE.Points(starsGeometry, starsMaterial);
+    console.log(starField);
     scene.traverse(function(node){
       if (node instanceof THREE.Mesh){
         console.log(starsGeometry);
@@ -228,7 +228,7 @@ function init(){
           linesGeometry.vertices.push(point);
         })
 
-        var linesMaterial = new THREE.LineBasicMaterial({color: 0x8cb4ff});
+        var linesMaterial = new THREE.LineBasicMaterial({color: 0x098bdc});
         var lines = new THREE.Line(linesGeometry, linesMaterial);
         scene.add(lines);
         linesGeometry = new THREE.Geometry();
