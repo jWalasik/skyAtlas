@@ -2,7 +2,7 @@
 var displayStars = true,
     displayConLabels = true,
     displayBoundLabels = true,
-    minMag = 7.5,
+    minMag = 3.5,
     projector,
     mouse = {x: 0, y: 0},
     INTERSECTED;
@@ -37,7 +37,7 @@ function init(){
 
   //parse data
   queue()
-    .defer(d3.csv, "https://gist.githubusercontent.com/elPaleniozord/433b888e3ed64da651f18d5c60682c8a/raw/76e8fa3fe6eb6aaf93154927788ecf6fd47e240c/hyg_data.csv", function (d){
+    .defer(d3.csv, "https://gist.githubusercontent.com/elPaleniozord/7c193d48ad36c2c572211e582a725551/raw/c9cfe6418c8103be86fa20867ae5379f0921f6e7/hyg_data.csv", function (d){
       if (d.mag < minMag){return d;}
     })
     .defer(d3.json, "https://gist.githubusercontent.com/elPaleniozord/bb775473088f3f60c5f3ca1afeb88a82/raw/e564adc14380c69c0b9012c1363750dbef2411f1/bounds.json")
@@ -55,9 +55,6 @@ function init(){
                       .domain([-2.5, 16])
                       .range([3.5, 0.01]);
 
-    var label = function(position){
-
-    }
     //define stars geometries, project them onto sphere
     var starsGeometry = new THREE.BufferGeometry();
     var vertices = [];
@@ -70,14 +67,14 @@ function init(){
     //process contellation boundaries
     bounds.boundaries.map(function(d){
       var points = [];
-      var boundsName = d.shift();
+      var boundsName = d[0];
       var boundsGeometry = new THREE.Geometry();
       var outlineGeometry = new THREE.Geometry();
       var labelX = [];
       var labelY = [];
       var labelZ = [];
       //extract vertices from database
-      for(var i=0; i<d.length; i+=2){
+      for(var i=1; i<d.length; i+=2){
         let point = new THREE.Vector3();
         var lambda = d[i]*Math.PI/180,
             phi = d[i+1]*Math.PI/180,
@@ -262,14 +259,6 @@ function findLabelPos(coordArray){
   return mid;
 }
 
-//check if polygon vertices are clockwise
-function clockwise(points){
-  var edges=[];
-  points.forEach(function(d){
-    console.log(d);
-  })
-}
-
 // Converts a point [longitude, latitude] in degrees to a THREE.Vector3.
 function vertex(point) {
   //console.log("point", point);
@@ -362,10 +351,7 @@ function checkHighlight(){
     INTERSECTED.material.opacity = 0.25;
   }
 }
-//on click extrude boundary, find intersections, copy objects
-function openConstellation(){
 
-}
 } //init end
 window.onload = init;
 
