@@ -2,7 +2,7 @@
 var displayStars = true,
     displayConLabels = true,
     displayBoundLabels = true,
-    minMag = 20,
+    minMag = 6,
     projector,
     mouse = {x: 0, y: 0},
     INTERSECTED;
@@ -19,7 +19,7 @@ function init(){
     scene = new THREE.Scene,
     camera = new THREE.PerspectiveCamera(70, width / height, 1, 100000),
     renderer = new THREE.WebGLRenderer({alpha: true});
-    control = new THREE.TrackballControls(camera),
+    //control = new THREE.TrackballControls(camera),
     clock = new THREE.Clock(),
     marker = 0,
     mouse=new THREE.Vector3();
@@ -141,7 +141,8 @@ function init(){
 
 
     });
-    hyg.map(function(d){
+    var processStars = hyg.map(function(d){
+
       var lambda = d.ra*Math.PI/180*15,
           phi = d.dec*Math.PI/180,
           cosPhi = Math.cos(phi);
@@ -199,17 +200,8 @@ function init(){
     });
 
     var starField = new THREE.Points(starsGeometry, starsMaterial);
-
-    scene.traverse(function(node){
-      if (node instanceof THREE.Mesh){
-
-        node.add(starField);
-
-      }
-    })
-
-
-
+    scene.add(starField);
+    console.log(starField);
     //process constellation lines
     lines.features.map(function(d){
 
@@ -239,26 +231,54 @@ function init(){
   }
 
   //camera controls
-  var trackballControls = new THREE.TrackballControls(camera);
+  var trackballControls = new THREE.TrackballControls(camera,renderer.domElement);
   trackballControls.rotateSpeed = 0.2;
   trackballControls.zoomSpeed = 1.0;
   trackballControls.panSpeed = 0.2;
   trackballControls.staticMoving = false;
-  trackballControls.noPan=false;
+  trackballControls.noPan=true;
 
   var gui = new dat.GUI();
 
   var controls = {
     toggleLabels: function(){
       scene.traverse(function(child){
-        console.log(child);
         if (child.type == 'Sprite'){
           child.visible = !child.visible;
         }
-    })
-  }};
+      })
+    },
+
+    toggleLines: function(){
+      scene.traverse(function(child){
+        if (child.type == 'Line'){
+          child.visible = !child.visible;
+        }
+      })
+    },
+
+    toggleStars: function(){
+      scene.traverse(function(child){
+        if (child.type == 'Points'){
+          console.log(child.geometry.attributes)
+          child.visible = !child.visible;
+        }
+      })
+    },
+
+    filterStars: minMag
+  };
 
 gui.add(controls, 'toggleLabels');
+gui.add(controls, 'toggleLines');
+gui.add(controls, 'toggleStars');
+gui.add(controls, "filterStars", 0, 20, 1).onFinishChange( function( value ) {
+
+					filterStars = parseInt( value );
+					minMag = parseInt(value);
+          console.log(scene);
+          
+				});
 
 
 //find coordinates for a label
