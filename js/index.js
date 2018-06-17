@@ -2,7 +2,7 @@
 var displayStars = true,
     displayConLabels = true,
     displayBoundLabels = true,
-    minMag = 8,
+    minMag = 20,
     projector,
     mouse = {x: 0, y: 0},
     INTERSECTED;
@@ -109,7 +109,7 @@ function init(){
       boundsMesh.material.side = THREE.DoubleSide;
       boundsMesh.userData = {name: boundsName};
       scene.add(boundsMesh);
-      console.log(boundsMesh);
+      //console.log(boundsMesh);
       //boundary label
       var labelPosition = new THREE.Vector3();
 
@@ -176,7 +176,7 @@ function init(){
         //scene.add(label);
       }
     });
-    console.log(constellations);
+    //console.log(constellations);
     starsGeometry.addAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
     starsGeometry.addAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
     starsGeometry.addAttribute('size', new THREE.Float32BufferAttribute(sizes, 1));
@@ -199,12 +199,12 @@ function init(){
     });
 
     var starField = new THREE.Points(starsGeometry, starsMaterial);
-    console.log(starField);
+
     scene.traverse(function(node){
       if (node instanceof THREE.Mesh){
-        console.log(starsGeometry);
+
         node.add(starField);
-        console.log("star appended");
+
       }
     })
 
@@ -249,15 +249,17 @@ function init(){
   var gui = new dat.GUI();
 
   var controls = {
-    toggleObjects: function(){
+    toggleLabels: function(){
       scene.traverse(function(child){
         console.log(child);
-        child.visible = true;});
-      scene.traverse(function(child){child.visible = false;});
-    }
-  };
+        if (child.type == 'Sprite'){
+          child.visible = !child.visible;
+        }
+    })
+  }};
 
-gui.add(controls, 'toggleObjects');
+gui.add(controls, 'toggleLabels');
+
 
 //find coordinates for a label
 function findLabelPos(coordArray){
@@ -336,6 +338,7 @@ projector = new THREE.Projector();
 
 //event listeners
 document.addEventListener('mousemove', onDocumentMouseMove, false);
+document.addEventListener('mouseclick', onDocumentMouseClick)
 
 function checkHighlight(){
   var vector = new THREE.Vector3(mouse.x, mouse.y, 1);
