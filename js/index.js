@@ -2,7 +2,7 @@
 var displayStars = true,
     displayConLabels = true,
     displayBoundLabels = true,
-    minMag = 6,
+    minMag = 20,
     projector,
     mouse = {x: 0, y: 0},
     INTERSECTED;
@@ -272,12 +272,13 @@ function init(){
 gui.add(controls, 'toggleLabels');
 gui.add(controls, 'toggleLines');
 gui.add(controls, 'toggleStars');
-gui.add(controls, "filterStars", 0, 20, 1).onFinishChange( function( value ) {
+gui.add(controls, "filterStars", 0, 120000, 1).onFinishChange( function( value ) {
 
-					filterStars = parseInt( value );
-					minMag = parseInt(value);
-          console.log(scene);
-          
+					scene.traverse(function(child){
+            if (child.type == 'Points'){
+              child.geometry.setDrawRange(0, value);
+            }
+          })
 				});
 
 
