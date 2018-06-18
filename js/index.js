@@ -37,7 +37,7 @@ function init(){
 
   //parse data
   queue()
-    .defer(d3.csv, "https://gist.githubusercontent.com/elPaleniozord/7c193d48ad36c2c572211e582a725551/raw/c9cfe6418c8103be86fa20867ae5379f0921f6e7/hyg_data.csv", function (d){
+    .defer(d3.csv, "https://gist.githubusercontent.com/elPaleniozord/5d96f2f5cce92366b06bea32a2625d2e/raw/8504f231ea5ee5fdef47371232c8c55256b8f045/hyg_data_sortMag.csv", function (d){
       if (d.mag < minMag){return d;}
     })
     .defer(d3.json, "https://gist.githubusercontent.com/elPaleniozord/bb775473088f3f60c5f3ca1afeb88a82/raw/e564adc14380c69c0b9012c1363750dbef2411f1/bounds.json")
@@ -272,7 +272,7 @@ function init(){
 gui.add(controls, 'toggleLabels');
 gui.add(controls, 'toggleLines');
 gui.add(controls, 'toggleStars');
-gui.add(controls, "filterStars", 0, 120000, 1).onFinishChange( function( value ) {
+gui.add(controls, "filterStars", 0, 120000, 1).onChange( function( value ) {
 
 					scene.traverse(function(child){
             if (child.type == 'Points'){
