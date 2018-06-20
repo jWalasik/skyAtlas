@@ -2,10 +2,11 @@
 var displayStars = true,
     displayConLabels = true,
     displayBoundLabels = true,
-    minMag = 20,
+    minMag = 21,
     projector,
     mouse = {x: 0, y: 0},
-    INTERSECTED;
+    INTERSECTED,
+    starDatabase=[];
 
 function init(){
   //globals
@@ -37,8 +38,8 @@ function init(){
 
   //parse data
   queue()
-    .defer(d3.csv, "https://gist.githubusercontent.com/elPaleniozord/5d96f2f5cce92366b06bea32a2625d2e/raw/8504f231ea5ee5fdef47371232c8c55256b8f045/hyg_data_sortMag.csv", function (d){
-      if (d.mag < minMag){return d;}
+    .defer(d3.csv, "https://gist.githubusercontent.com/elPaleniozord/5d96f2f5cce92366b06bea32a2625d2e/raw/8504f231ea5ee5fdef47371232c8c55256b8f045/hyg_data_sortMag.csv", function(d){
+      starDatabase.push(d);
     })
     .defer(d3.json, "https://gist.githubusercontent.com/elPaleniozord/bb775473088f3f60c5f3ca1afeb88a82/raw/e564adc14380c69c0b9012c1363750dbef2411f1/bounds.json")
     .defer(d3.json, "https://gist.githubusercontent.com/elPaleniozord/ed1dd65a955c2c7e1bb6cbc30feb523f/raw/9f2735f48f6f477064f9e151fe73cc7b0361bf2e/lines.json")
@@ -141,7 +142,7 @@ function init(){
 
 
     });
-    var processStars = hyg.map(function(d){
+    var processStars = starDatabase.map(function(d){
 
       var lambda = d.ra*Math.PI/180*15,
           phi = d.dec*Math.PI/180,
@@ -174,7 +175,7 @@ function init(){
         var label = new THREE.Sprite(material);
         label.position.set(radius*cosPhi*Math.cos(lambda),radius*cosPhi*Math.sin(lambda), radius * Math.sin(phi));
         label.scale.set(1000, 1000, 1000);
-        //scene.add(label);
+        scene.add(label);
       }
     });
     //console.log(constellations);
@@ -354,12 +355,10 @@ function render(){
   requestAnimationFrame(render);
   renderer.render(scene, camera);
 }
-//
-projector = new THREE.Projector();
 
 //event listeners
 document.addEventListener('mousemove', onDocumentMouseMove, false);
-document.addEventListener('mouseclick', onDocumentMouseClick)
+document.addEventListener('click', onDocumentMouseClick);
 
 function checkHighlight(){
   var vector = new THREE.Vector3(mouse.x, mouse.y, 1);
@@ -397,4 +396,27 @@ function onDocumentMouseMove(event){
 // update the mouse variable
   mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
   mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+}
+
+function onDocumentMouseClick(event){
+  console.log(INTERSECTED.userData.name);
+  makeDetailed();
+}
+
+
+
+//DETAILED VIEW
+var detailedScene = new THREE.Scene();
+
+//process data
+var makeDetailed = function(){
+  var filteredStars =[]
+  //filter stars
+  starDatabase.map(function(d){
+    if(d.con == INTERSECTED.userData.name && d.mag<minMag){
+      filteredStars.push(d);
+
+    }
+  })
+  console.log(filteredStars);
 }
