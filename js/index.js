@@ -8,6 +8,15 @@ var displayStars = true,
     INTERSECTED,
     starDatabase=[];
 
+    //translate color index to actuall color
+    var starColor = d3.scale.linear()
+                      .domain([-1, 0.5, 0.73, 1.05, 1.25, 1.60, 2])
+                      .range(['#68b1ff', '#93e4ff', '#d8f5ff', '#FFFFFF', '#fffad8', '#ffdda8', '#ffb5b5']);
+    //inverse size scalling with magnitude
+    var scaleMag = d3.scale.linear()
+                      .domain([-2.5, 20])
+                      .range([3.5, 0.005]);
+
 function init(){
   //globals
   var width = window.innerWidth,
@@ -47,14 +56,7 @@ function init(){
 
   function processData(error, hyg, bounds, lines){
     //process star data
-    //translate color index to actuall color
-    var starColor = d3.scale.linear()
-                      .domain([-1, 0.5, 0.73, 1.05, 1.25, 1.60, 2])
-                      .range(['#68b1ff', '#93e4ff', '#d8f5ff', '#FFFFFF', '#fff8c9', '#ffcf84', '#ff8787']);
-    //inverse size scalling with magnitude
-    var scaleMag = d3.scale.linear()
-                      .domain([-2.5, 16])
-                      .range([3.5, 0.01]);
+
 
     //define stars geometries, project them onto sphere
     var starsGeometry = new THREE.BufferGeometry();
@@ -155,7 +157,11 @@ function init(){
       vertices.push(z);
       var rgb = new THREE.Color(starColor(d.ci));
       colors.push(rgb.r, rgb.g, rgb.b);
-      sizes.push(scaleMag(d.mag));
+      if(d.mag<2.6){
+        sizes.push((scaleMag(d.mag))*2.0);
+      }else{
+        sizes.push(scaleMag(d.mag));
+      }
       constellations.push(d.con);
       //add labels
       if(d.proper !== ""){
@@ -175,7 +181,7 @@ function init(){
         var label = new THREE.Sprite(material);
         label.position.set(radius*cosPhi*Math.cos(lambda),radius*cosPhi*Math.sin(lambda), radius * Math.sin(phi));
         label.scale.set(1000, 1000, 1000);
-        scene.add(label);
+        //scene.add(label);
       }
     });
     //console.log(constellations);
@@ -353,6 +359,9 @@ function render(){
   checkHighlight();
 
   requestAnimationFrame(render);
+  if(detailedView){
+    renderer.render(detailedScene, camera);
+  }
   renderer.render(scene, camera);
 }
 
@@ -406,17 +415,51 @@ function onDocumentMouseClick(event){
 
 
 //DETAILED VIEW
-var detailedScene = new THREE.Scene();
+var detailedScene = new THREE.Scene,
+    detailedCamera = new THREE.PerspectiveCamera(70, width/height, 1, 100000),
+    renderer = new THREE.WebGLRenderer({alpha: true});
 
+detailedScene.add(detailedCamera);
+camera.lookAT(new THREE.Vector3(0, 0, 0))
 //process data
 var makeDetailed = function(){
-  var filteredStars =[]
-  //filter stars
+  let vertices = [],
+      colors = [],
+      sizes = [],
+      starsGeometryFiltered = new THREE.BufferGeometry();
+  //stars
   starDatabase.map(function(d){
     if(d.con == INTERSECTED.userData.name && d.mag<minMag){
-      filteredStars.push(d);
+      vertices.push(d.ra*15*200, d.dec*1*200, 1000);
+      let rgb = new THREE.Color(starColor(d.ci));
+      colors.push(rgb.r, rgb.g, rgb.b);
+      sizes.push((scaleMag(d.mag))*5);
+      if(d.proper !== ""){
+        console.log(d.proper);
+      }
 
     }
   })
-  console.log(filteredStars);
+  starsGeometryFiltered.addAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+  starsGeometryFiltered.addAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+  starsGeometryFiltered.addAttribute('size', new THREE.Float32BufferAttribute(sizes, 1));
+
+  var uniforms = {
+      texture: {value: new THREE.TextureLoader().load('D:/Programowanie/projekty/three_project/textures/lensflare0_alpha.png')},
+      scale: {type: 'f', value: window.innerHeight/2}
+    };
+
+  var starsMaterial = new THREE.ShaderMaterial({
+    uniforms: uniforms,
+    vertexShader: document.getElementById('vertexshader').textContent,
+    fragmentShader: document.getElementById('fragmentshader').textContent,
+    blending: THREE.AdditiveBlending,
+    depthTest: false,
+    transparent: true,
+    vertexColors: true,
+    alphaTest: 0.5
+  });
+
+  var starFieldFiltered = new THREE.Points(starsGeometryFiltered, starsMaterial);
+  detailedScene.add(starFieldFiltered);
 }

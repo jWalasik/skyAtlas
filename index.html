@@ -34,7 +34,7 @@
     void main() {
         vColor = color;
         vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
-        gl_PointSize = size*(150.0) * ((scale / -mvPosition.z));
+        gl_PointSize = size*(120.0) * ((scale / -mvPosition.z));
         gl_Position = projectionMatrix * mvPosition;
     }
   </script>
@@ -58,6 +58,10 @@
 			</span></span>
 		</div>
   </div>
+
+  <!--MODALS-->
+  <div id="name-container"></div>
+  <div id="description-contrainer"></div>
 
 </body>
 
