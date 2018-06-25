@@ -6,7 +6,12 @@ var displayStars = true,
     projector,
     mouse = {x: 0, y: 0},
     INTERSECTED,
-    starDatabase=[];
+    starDatabase=[],
+    boundaryVertices=[],
+    linesVertices=[],
+    width = window.innerWidth,
+    height = window.innerHeight,
+    detailedView = false;
 
     //translate color index to actuall color
     var starColor = d3.scale.linear()
@@ -19,9 +24,7 @@ var displayStars = true,
 
 function init(){
   //globals
-  var width = window.innerWidth,
-    height = window.innerHeight,
-    radius = 10000,
+  var radius = 10000,
     mesh,
     graticule,
 
@@ -70,7 +73,7 @@ function init(){
 
     //process contellation boundaries
     bounds.boundaries.map(function(d){
-      var points = [];
+      boundaryVertices.push(d);
       var boundsName = d[0];
       var boundsGeometry = new THREE.Geometry();
       var outlineGeometry = new THREE.Geometry();
@@ -79,6 +82,7 @@ function init(){
       var labelZ = [];
       //extract vertices from database
       for(var i=1; i<d.length; i+=2){
+        boundaryVertices.push(d[i], d[i+1]);
         let point = new THREE.Vector3();
         var lambda = d[i]*Math.PI/180,
             phi = d[i+1]*Math.PI/180,
@@ -359,10 +363,13 @@ function render(){
   checkHighlight();
 
   requestAnimationFrame(render);
-  if(detailedView){
-    renderer.render(detailedScene, camera);
+  if(detailedView === true){
+    renderer.render(detailedScene, detailedCamera);
   }
-  renderer.render(scene, camera);
+  else {
+    renderer.render(scene, camera);
+  }
+
 }
 
 //event listeners
@@ -409,6 +416,7 @@ function onDocumentMouseMove(event){
 
 function onDocumentMouseClick(event){
   console.log(INTERSECTED.userData.name);
+  detailedView = true;
   makeDetailed();
 }
 
@@ -416,11 +424,12 @@ function onDocumentMouseClick(event){
 
 //DETAILED VIEW
 var detailedScene = new THREE.Scene,
-    detailedCamera = new THREE.PerspectiveCamera(70, width/height, 1, 100000),
+    detailedCamera = new THREE.PerspectiveCamera(70, width/height, 1, 6000),
     renderer = new THREE.WebGLRenderer({alpha: true});
 
 detailedScene.add(detailedCamera);
-camera.lookAT(new THREE.Vector3(0, 0, 0))
+detailedCamera.position.set(0, 0, 0);
+detailedCamera.lookAt(new THREE.Vector3(37.9, 222.676, 3000));
 //process data
 var makeDetailed = function(){
   let vertices = [],
@@ -430,10 +439,10 @@ var makeDetailed = function(){
   //stars
   starDatabase.map(function(d){
     if(d.con == INTERSECTED.userData.name && d.mag<minMag){
-      vertices.push(d.ra*15*200, d.dec*1*200, 1000);
+      vertices.push(d.ra*15, d.dec*1, 3000);
       let rgb = new THREE.Color(starColor(d.ci));
       colors.push(rgb.r, rgb.g, rgb.b);
-      sizes.push((scaleMag(d.mag))*5);
+      sizes.push((scaleMag(d.mag))*1);
       if(d.proper !== ""){
         console.log(d.proper);
       }
@@ -462,4 +471,7 @@ var makeDetailed = function(){
 
   var starFieldFiltered = new THREE.Points(starsGeometryFiltered, starsMaterial);
   detailedScene.add(starFieldFiltered);
+
+  //boundary
+  console.log(boundaryVertices)
 }
