@@ -11,7 +11,8 @@ var displayStars = true,
     linesVertices=[],
     width = window.innerWidth,
     height = window.innerHeight,
-    detailedView = false;
+    detailedView = false,
+    radius = 10000;
 
     //translate color index to actuall color
     var starColor = d3.scale.linear()
@@ -24,9 +25,8 @@ var displayStars = true,
 
 function init(){
   //globals
-  var radius = 10000,
-    mesh,
-    graticule,
+  var mesh,
+      graticule,
 
   //standard three.js stuff
     scene = new THREE.Scene,
@@ -101,7 +101,7 @@ function init(){
       //draw boundary outline
       var outlineMaterial = new THREE.LineBasicMaterial({color: 0xfbff3d});
       var outline = new THREE.Line(outlineGeometry, outlineMaterial);
-      scene.add(outline);
+
 
       //triangulation method
       var triangles = THREE.ShapeUtils.triangulateShape(boundsGeometry.vertices, []);
@@ -116,6 +116,7 @@ function init(){
       boundsMesh.material.side = THREE.DoubleSide;
       boundsMesh.userData = {name: boundsName};
       scene.add(boundsMesh);
+      boundsMesh.add(outline);
       //console.log(boundsMesh);
       //boundary label
       var labelPosition = new THREE.Vector3();
@@ -424,12 +425,12 @@ function onDocumentMouseClick(event){
 
 //DETAILED VIEW
 var detailedScene = new THREE.Scene,
-    detailedCamera = new THREE.PerspectiveCamera(70, width/height, 1, 6000),
+    detailedCamera = new THREE.PerspectiveCamera(70, width / height, 1, 100000),
     renderer = new THREE.WebGLRenderer({alpha: true});
 
 detailedScene.add(detailedCamera);
 detailedCamera.position.set(0, 0, 0);
-detailedCamera.lookAt(new THREE.Vector3(37.9, 222.676, 3000));
+detailedCamera.lookAt(new THREE.Vector3(mouse.x, mouse.y, 3000));
 //process data
 var makeDetailed = function(){
   let vertices = [],
@@ -439,16 +440,28 @@ var makeDetailed = function(){
   //stars
   starDatabase.map(function(d){
     if(d.con == INTERSECTED.userData.name && d.mag<minMag){
-      vertices.push(d.ra*15, d.dec*1, 3000);
-      let rgb = new THREE.Color(starColor(d.ci));
-      colors.push(rgb.r, rgb.g, rgb.b);
-      sizes.push((scaleMag(d.mag))*1);
+      //if processing major star create unique object
       if(d.proper !== ""){
-        console.log(d.proper);
-      }
+        var majorStar = new THREE.Geometry();
 
-    }
-  })
+      }
+      //else use vertex shader method
+      else{
+        var lambda = d.ra*Math.PI/180*15,
+            phi = d.dec*Math.PI/180,
+            cosPhi = Math.cos(phi);
+        var x = radius*cosPhi*Math.cos(lambda),
+            y = radius*cosPhi*Math.sin(lambda),
+            z = radius * Math.sin(phi);
+        vertices.push(x);
+        vertices.push(y);
+        vertices.push(z);
+        let rgb = new THREE.Color(starColor(d.ci));
+        colors.push(rgb.r, rgb.g, rgb.b);
+        sizes.push((scaleMag(d.mag))*1);
+      }
+    }//filter by name/mag end
+  })//database processing end
   starsGeometryFiltered.addAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
   starsGeometryFiltered.addAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
   starsGeometryFiltered.addAttribute('size', new THREE.Float32BufferAttribute(sizes, 1));
@@ -473,5 +486,7 @@ var makeDetailed = function(){
   detailedScene.add(starFieldFiltered);
 
   //boundary
-  console.log(boundaryVertices)
+  var boundsDetailed = INTERSECTED.children[0].clone();
+  detailedScene.add(boundsDetailed);
+  console.log(INTERSECTED);
 }
