@@ -385,9 +385,12 @@ function checkHighlight(){
 
   //var arrow = new THREE.ArrowHelper( vector, camera.position, 100, 0xffffff );
   //scene.add( arrow );
-
-
-  var intersects = ray.intersectObjects(scene.children);
+  var intersects;
+  if(detailedView){
+    intersects = ray.intersectObjects(detailedScene.children)
+  }else{
+    intersects = ray.intersectObjects(scene.children);
+  }
 
   //if there is at least one intersection
   if(intersects.length>0){
@@ -430,9 +433,10 @@ var detailedScene = new THREE.Scene,
 
 detailedScene.add(detailedCamera);
 detailedCamera.position.set(0, 0, 0);
-detailedCamera.lookAt(new THREE.Vector3(mouse.x, mouse.y, 3000));
+
 //process data
 var makeDetailed = function(){
+
   let vertices = [],
       colors = [],
       sizes = [],
@@ -444,6 +448,7 @@ var makeDetailed = function(){
       if(d.proper !== ""){
         var majorStarGeo = new THREE.Geometry();
         var majorStarMap = new THREE.TextureLoader().load('D:/Programowanie/projekty/three_project/textures/lensflare0_alpha.png');
+        majorStarMap.add
         var lambda = d.ra*Math.PI/180*15,
             phi = d.dec*Math.PI/180,
             cosPhi = Math.cos(phi);
@@ -455,7 +460,7 @@ var makeDetailed = function(){
 
         var majorStarMat = new THREE.PointsMaterial({color: new THREE.Color(starColor(d.ci)), size: 1000.0, blending: THREE.AdditiveBlending, transparent: true, map: majorStarMap});
         var majorStar = new THREE.Points(majorStarGeo, majorStarMat);
-
+        majorStar.userData = d.proper;
         detailedScene.add(majorStar);
         console.log(majorStar)
       }
@@ -502,5 +507,6 @@ var makeDetailed = function(){
   //boundary
   var boundsDetailed = INTERSECTED.children[0].clone();
   detailedScene.add(boundsDetailed);
-
+  console.log(boundsDetailed);
+  detailedCamera.lookAt(boundsDetailed.geometry.boundingSphere.center);
 }
