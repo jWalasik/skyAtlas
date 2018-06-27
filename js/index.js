@@ -213,14 +213,12 @@ function init(){
 
     var starField = new THREE.Points(starsGeometry, starsMaterial);
     scene.add(starField);
-    console.log(starField);
+
     //process constellation lines
     lines.features.map(function(d){
-
-
       var linesGeometry = new THREE.Geometry();
-      d.geometry.coordinates.map(function(d){
-        d.map(function(d){
+      d.geometry.coordinates.map(function(coords){
+        coords.map(function(d){
           let point = new THREE.Vector3();
           var lambda = d[0]*Math.PI/180,
               phi = d[1]*Math.PI/180,
@@ -234,6 +232,8 @@ function init(){
 
         var linesMaterial = new THREE.LineBasicMaterial({color: 0x098bdc});
         var lines = new THREE.Line(linesGeometry, linesMaterial);
+        lines.userData = d.id;
+
         scene.add(lines);
         linesGeometry = new THREE.Geometry();
       })  //coordinates mapping end
@@ -264,6 +264,7 @@ function init(){
     toggleLines: function(){
       scene.traverse(function(child){
         if (child.type == 'Line'){
+
           child.visible = !child.visible;
         }
       })
@@ -272,7 +273,7 @@ function init(){
     toggleStars: function(){
       scene.traverse(function(child){
         if (child.type == 'Points'){
-          console.log(child.geometry.attributes)
+
           child.visible = !child.visible;
         }
       })
@@ -419,7 +420,9 @@ function onDocumentMouseMove(event){
 }
 
 function onDocumentMouseClick(event){
-  console.log(INTERSECTED.userData.name);
+  //prevent function execution if dragging
+  var start = mouse.x;
+  //create detailed scene
   detailedView = true;
   makeDetailed();
 }
@@ -436,11 +439,15 @@ detailedCamera.position.set(0, 0, 0);
 
 //process data
 var makeDetailed = function(){
-
   let vertices = [],
       colors = [],
       sizes = [],
       starsGeometryFiltered = new THREE.BufferGeometry();
+
+  //name
+
+  //description
+
   //stars
   starDatabase.map(function(d){
     if(d.con == INTERSECTED.userData.name && d.mag<minMag){
@@ -507,6 +514,9 @@ var makeDetailed = function(){
   //boundary
   var boundsDetailed = INTERSECTED.children[0].clone();
   detailedScene.add(boundsDetailed);
-  console.log(boundsDetailed);
+
   detailedCamera.lookAt(boundsDetailed.geometry.boundingSphere.center);
+
+  //Lines
+  console.log(INTERSECTED);
 }
