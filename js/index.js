@@ -442,8 +442,22 @@ var makeDetailed = function(){
     if(d.con == INTERSECTED.userData.name && d.mag<minMag){
       //if processing major star create unique object
       if(d.proper !== ""){
-        var majorStar = new THREE.Geometry();
+        var majorStarGeo = new THREE.Geometry();
+        var majorStarMap = new THREE.TextureLoader().load('D:/Programowanie/projekty/three_project/textures/lensflare0_alpha.png');
+        var lambda = d.ra*Math.PI/180*15,
+            phi = d.dec*Math.PI/180,
+            cosPhi = Math.cos(phi);
+        var x = radius*cosPhi*Math.cos(lambda),
+            y = radius*cosPhi*Math.sin(lambda),
+            z = radius * Math.sin(phi);
 
+        majorStarGeo.vertices.push(new THREE.Vector3(x,y,z));
+
+        var majorStarMat = new THREE.PointsMaterial({color: new THREE.Color(starColor(d.ci)), size: 1000.0, blending: THREE.AdditiveBlending, transparent: true, map: majorStarMap});
+        var majorStar = new THREE.Points(majorStarGeo, majorStarMat);
+
+        detailedScene.add(majorStar);
+        console.log(majorStar)
       }
       //else use vertex shader method
       else{
@@ -488,5 +502,5 @@ var makeDetailed = function(){
   //boundary
   var boundsDetailed = INTERSECTED.children[0].clone();
   detailedScene.add(boundsDetailed);
-  console.log(INTERSECTED);
+
 }
