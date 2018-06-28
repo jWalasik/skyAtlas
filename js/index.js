@@ -233,8 +233,12 @@ function init(){
         var linesMaterial = new THREE.LineBasicMaterial({color: 0x098bdc});
         var lines = new THREE.Line(linesGeometry, linesMaterial);
         lines.userData = d.id;
+        scene.traverse(function(child){
+          if(child.userData.name == d.id){
+            child.add(lines);
+          }
+        })
 
-        scene.add(lines);
         linesGeometry = new THREE.Geometry();
       })  //coordinates mapping end
 
@@ -518,5 +522,6 @@ var makeDetailed = function(){
   detailedCamera.lookAt(boundsDetailed.geometry.boundingSphere.center);
 
   //Lines
-  console.log(INTERSECTED);
+  linesDetailed = INTERSECTED.children[2].clone();
+  detailedScene.add(linesDetailed);
 }
