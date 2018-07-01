@@ -7,8 +7,6 @@ var displayStars = true,
     mouse = {x: 0, y: 0},
     INTERSECTED,
     starDatabase=[],
-    boundaryVertices=[],
-    linesVertices=[],
     width = window.innerWidth,
     height = window.innerHeight,
     detailedView = false,
@@ -73,7 +71,6 @@ function init(){
 
     //process contellation boundaries
     bounds.boundaries.map(function(d){
-      boundaryVertices.push(d);
       var boundsName = d[0];
       var boundsGeometry = new THREE.Geometry();
       var outlineGeometry = new THREE.Geometry();
@@ -82,7 +79,6 @@ function init(){
       var labelZ = [];
       //extract vertices from database
       for(var i=1; i<d.length; i+=2){
-        boundaryVertices.push(d[i], d[i+1]);
         let point = new THREE.Vector3();
         var lambda = d[i]*Math.PI/180,
             phi = d[i+1]*Math.PI/180,
@@ -525,13 +521,14 @@ var makeDetailed = function(){
   console.log(INTERSECTED.children);
   linesDetailed = INTERSECTED.children[2].clone();
   //linesDetailed.material.lineWidth = 100; //sadly line width is not supported on window
-  console.log(linesDetailed);
+  console.log(INTERSECTED);
   document.getElementById('name-container').innerHTML = linesDetailed.userData[1];
   detailedScene.add(linesDetailed);
 }
 
 //wiki lookup
-function getWikiData(){
-  let abv = "And";
-  let pathToDet = encodeURI()
+function getWikiData(name){
+  var url = 'https://en.wikipedia.org/w/api.php?action=query&titles='+name+'_(constellation)&prop=revisions&rvprop=content&format=json&formatversion=2';
+  console.log(url);
 }
+getWikiData("Andromeda");
