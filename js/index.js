@@ -43,7 +43,7 @@ function init(){
 
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(width, height);
-  document.body.appendChild(renderer.domElement);
+  document.getElementById('WebGL-Output').appendChild(renderer.domElement);
 
   //add graticule
   scene.add(graticule = wireframe(graticule10(), new THREE.LineBasicMaterial({color: 0x444444})));
@@ -54,7 +54,7 @@ function init(){
       starDatabase.push(d);
     })
     .defer(d3.json, "https://gist.githubusercontent.com/elPaleniozord/bb775473088f3f60c5f3ca1afeb88a82/raw/e564adc14380c69c0b9012c1363750dbef2411f1/bounds.json")
-    .defer(d3.json, "https://gist.githubusercontent.com/elPaleniozord/ed1dd65a955c2c7e1bb6cbc30feb523f/raw/9f2735f48f6f477064f9e151fe73cc7b0361bf2e/lines.json")
+    .defer(d3.json, "https://gist.githubusercontent.com/elPaleniozord/ed1dd65a955c2c7e1bb6cbc30feb523f/raw/5335cccd7dc3dad6a634aa5a34aeab3fb6a1f4a5/lines.json")
     .await(processData);
 
   function processData(error, hyg, bounds, lines){
@@ -234,7 +234,7 @@ function init(){
         var lines = new THREE.Line(linesGeometry, linesMaterial);
         lines.userData = d.id;
         scene.traverse(function(child){
-          if(child.userData.name == d.id){
+          if(child.userData.name == d.id[0]){
             child.add(lines);
           }
         })
@@ -473,7 +473,7 @@ var makeDetailed = function(){
         var majorStar = new THREE.Points(majorStarGeo, majorStarMat);
         majorStar.userData = d.proper;
         detailedScene.add(majorStar);
-        console.log(majorStar)
+
       }
       //else use vertex shader method
       else{
@@ -522,6 +522,16 @@ var makeDetailed = function(){
   detailedCamera.lookAt(boundsDetailed.geometry.boundingSphere.center);
 
   //Lines
+  console.log(INTERSECTED.children);
   linesDetailed = INTERSECTED.children[2].clone();
+  //linesDetailed.material.lineWidth = 100; //sadly line width is not supported on window
+  console.log(linesDetailed);
+  document.getElementById('name-container').innerHTML = linesDetailed.userData[1];
   detailedScene.add(linesDetailed);
+}
+
+//wiki lookup
+function getWikiData(){
+  let abv = "And";
+  let pathToDet = encodeURI()
 }
