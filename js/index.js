@@ -212,7 +212,8 @@ function init(){
 
     //process constellation lines
     lines.features.map(function(d){
-      var linesGeometry = new THREE.Geometry();
+      let linesMerged = new THREE.Geometry();
+      let linesGeometry = new THREE.Geometry();
       d.geometry.coordinates.map(function(coords){
         coords.map(function(d){
           let point = new THREE.Vector3();
@@ -222,18 +223,18 @@ function init(){
           point.x = radius*cosPhi*Math.cos(lambda);
           point.y = radius*cosPhi*Math.sin(lambda);
           point.z = radius * Math.sin(phi);
-
           linesGeometry.vertices.push(point);
         })
 
         var linesMaterial = new THREE.LineBasicMaterial({color: 0x098bdc});
         var lines = new THREE.Line(linesGeometry, linesMaterial);
         lines.userData = d.id;
+
         scene.traverse(function(child){
           if(child.userData.name == d.id[0]){
             child.add(lines);
           }
-        })
+        })//scene traveser end
 
         linesGeometry = new THREE.Geometry();
       })  //coordinates mapping end
@@ -529,6 +530,12 @@ var makeDetailed = function(){
 //wiki lookup
 function getWikiData(name){
   var url = 'https://en.wikipedia.org/w/api.php?action=query&titles='+name+'_(constellation)&prop=revisions&rvprop=content&format=json&formatversion=2';
-  console.log(url);
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", url, true);
+  xhr.send();
+  xhr.onreadystatechange = function(){
+    console.log(xhr);
+  }
+
 }
 getWikiData("Andromeda");
