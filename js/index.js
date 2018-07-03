@@ -375,9 +375,7 @@ function render(){
 
 }
 
-//event listeners
-document.addEventListener('mousemove', onDocumentMouseMove, false);
-document.addEventListener('click', onDocumentMouseClick);
+
 
 function checkHighlight(){
   var vector = new THREE.Vector3(mouse.x, mouse.y, 1);
@@ -408,6 +406,14 @@ function checkHighlight(){
 }
 
 } //init end
+//event listeners
+var start = {x: 0, y: 0};
+var end = {x:0, y:0};
+console.log(end)
+document.addEventListener('mousemove', onDocumentMouseMove, false);
+document.addEventListener('click', onDocumentMouseClick);
+document.addEventListener('mousedown', ()=>start = {x: mouse.x, y: mouse.y});
+document.addEventListener('mouseup', ()=>end = {x: mouse.x, y: mouse.y});
 window.onload = init;
 
 function onDocumentMouseMove(event){
@@ -422,10 +428,12 @@ function onDocumentMouseMove(event){
 
 function onDocumentMouseClick(event){
   //prevent function execution if dragging
-  var start = mouse.x;
-  //create detailed scene
-  detailedView = true;
-  makeDetailed();
+  if (start.x == end.x && start.y == end.y){
+    //make detailed scene
+    detailedView = true;
+    makeDetailed();
+  }
+
 }
 
 
@@ -451,7 +459,7 @@ var makeDetailed = function(){
 
   //stars
   starDatabase.map(function(d){
-    if(d.con == INTERSECTED.userData.name && d.mag<minMag){
+    if(d.con == INTERSECTED.userData.name){
       //if processing major star create unique object
       if(d.proper !== ""){
         var majorStarGeo = new THREE.Geometry();
