@@ -519,23 +519,31 @@ var makeDetailed = function(){
   detailedCamera.lookAt(boundsDetailed.geometry.boundingSphere.center);
 
   //Lines
-  console.log(INTERSECTED.children);
+
   linesDetailed = INTERSECTED.children[2].clone();
   //linesDetailed.material.lineWidth = 100; //sadly line width is not supported on window
-  console.log(INTERSECTED);
+
+  //append name and get description from wikipedia
+  var ahref = linesDetailed.userData[1];
+  ahref = ahref.replace(/ /g,"_"); //replace space with underscore
   document.getElementById('name-container').innerHTML = linesDetailed.userData[1];
+  console.log(ahref);
+  getWikiData(ahref);
   detailedScene.add(linesDetailed);
 }
 
 //wiki lookup
 function getWikiData(name){
-  var url = 'https://en.wikipedia.org/w/api.php?action=query&titles='+name+'_(constellation)&prop=revisions&rvprop=content&format=json&formatversion=2';
-  var xhr = new XMLHttpRequest();
-  xhr.open("GET", url, true);
-  xhr.send();
-  xhr.onreadystatechange = function(){
-    console.log(xhr);
-  }
+  var url = 'https://en.wikipedia.org/w/api.php?action=query&titles='+name+'_(constellation)&prop=extracts&origin=*&rvprop=content&format=json&formatversion=2';
+  const endpoint = url;
+
+  fetch(endpoint)
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+      document.getElementById('description-container').innerHTML = data.query.pages[0].extract;
+    })
+    .catch(() => console.log("error"));
+
 
 }
-getWikiData("Andromeda");

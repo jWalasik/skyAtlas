@@ -26,3 +26,6 @@ body {
   font-family: "Righteous";
   font-size: 26px;
 }
+#description-container {
+  color: #098bdc;
+}
