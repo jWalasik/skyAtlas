@@ -533,11 +533,11 @@ var makeDetailed = function(){
 }
 
 //wiki lookup
-function getWikiData(name){
-  var url = 'https://en.wikipedia.org/w/api.php?action=query&titles='+name+'_(constellation)&prop=extracts&origin=*&rvprop=content&format=json&formatversion=2';
+async function getWikiData(name){
+  var url = 'https://en.wikipedia.org/w/api.php?action=query&titles='+name+'_(constellation)&prop=extracts&origin=*&rvprop=content&format=json&formatversion=2&redirects';
   const endpoint = url;
 
-  fetch(endpoint)
+  await fetch(endpoint)
     .then(response => response.json())
     .then(data => {
       console.log(data);
