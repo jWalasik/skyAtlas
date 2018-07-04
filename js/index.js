@@ -10,7 +10,8 @@ var displayStars = true,
     width = window.innerWidth,
     height = window.innerHeight,
     detailedView = false,
-    radius = 10000;
+    radius = 10000,
+    camera = new THREE.PerspectiveCamera(70, width / height, 1, 100000);
 
     //translate color index to actuall color
     var starColor = d3.scale.linear()
@@ -28,9 +29,8 @@ function init(){
 
   //standard three.js stuff
     scene = new THREE.Scene,
-    camera = new THREE.PerspectiveCamera(70, width / height, 1, 100000),
+
     renderer = new THREE.WebGLRenderer({alpha: true});
-    //control = new THREE.TrackballControls(camera),
     clock = new THREE.Clock(),
     marker = 0,
     mouse=new THREE.Vector3();
@@ -244,6 +244,7 @@ function init(){
   }
 
   //camera controls
+  console.log(camera);
   var trackballControls = new THREE.TrackballControls(camera,renderer.domElement);
   trackballControls.rotateSpeed = 0.2;
   trackballControls.zoomSpeed = 1.0;
@@ -367,7 +368,7 @@ function render(){
 
   requestAnimationFrame(render);
   if(detailedView === true){
-    renderer.render(detailedScene, detailedCamera);
+    renderer.render(detailedScene, camera);
   }
   else {
     renderer.render(scene, camera);
@@ -433,10 +434,7 @@ function onDocumentMouseClick(event){
     detailedView = true;
     makeDetailed();
   }
-
 }
-
-
 
 //DETAILED VIEW
 var detailedScene = new THREE.Scene,
@@ -444,7 +442,7 @@ var detailedScene = new THREE.Scene,
     renderer = new THREE.WebGLRenderer({alpha: true});
 
 detailedScene.add(detailedCamera);
-detailedCamera.position.set(0, 0, 0);
+detailedCamera.position.set(1000, 1000, -3000);
 
 //process data
 var makeDetailed = function(){
@@ -452,10 +450,6 @@ var makeDetailed = function(){
       colors = [],
       sizes = [],
       starsGeometryFiltered = new THREE.BufferGeometry();
-
-  //name
-
-  //description
 
   //stars
   starDatabase.map(function(d){
@@ -535,7 +529,7 @@ var makeDetailed = function(){
   var ahref = linesDetailed.userData[1];
   ahref = ahref.replace(/ /g,"_"); //replace space with underscore
   document.getElementById('name-container').innerHTML = linesDetailed.userData[1];
-  console.log(ahref);
+
   getWikiData(ahref);
   detailedScene.add(linesDetailed);
 }
@@ -548,7 +542,7 @@ async function getWikiData(name){
   await fetch(endpoint)
     .then(response => response.json())
     .then(data => {
-      console.log(data);
+
       document.getElementById('description-container').innerHTML = data.query.pages[0].extract;
     })
     .catch(() => console.log("error"));
