@@ -11,7 +11,7 @@ var displayStars = true,
     height = window.innerHeight,
     detailedView = false,
     radius = 10000,
-    camera = new THREE.PerspectiveCamera(70, width / height, 1, 100000);
+    camera = new THREE.PerspectiveCamera(70, width/10 / (height/10), 1, 100000);
 
     //translate color index to actuall color
     var starColor = d3.scale.linear()
@@ -371,6 +371,7 @@ function render(){
     renderer.render(detailedScene, camera);
   }
   else {
+
     renderer.render(scene, camera);
   }
 
@@ -381,28 +382,38 @@ function render(){
 function checkHighlight(){
   var vector = new THREE.Vector3(mouse.x, mouse.y, 1);
   vector.unproject(camera);
-
   var ray = new THREE.Raycaster(camera.position, vector.normalize());
+  ray.params.Points.threshold = 100;
+
 
   //var arrow = new THREE.ArrowHelper( vector, camera.position, 100, 0xffffff );
   //scene.add( arrow );
   var intersects;
   if(detailedView){
-    intersects = ray.intersectObjects(detailedScene.children)
+
+    intersects = ray.intersectObjects(detailedScene.children);
   }else{
+
     intersects = ray.intersectObjects(scene.children);
   }
 
   //if there is at least one intersection
-  if(intersects.length>0){
+  if(intersects.length>0 && detailedView==false){
+    console.log("normal");
     //remove highlight from previous boundary
     if(INTERSECTED && intersects[0].object != INTERSECTED){
       INTERSECTED.material.opacity = 0.0;
     }
     INTERSECTED = intersects[0].object;
-    //console.log(INTERSECTED);
-
     INTERSECTED.material.opacity = 0.25;
+  }
+  else if(intersects.length>0 && typeof intersects[0].object.userData == "string"){
+    console.log(intersects[0].object);
+    if(INTERSECTED && intersects[0].object != INTERSECTED){
+      INTERSECTED.material.size = 1000.0;
+    }
+    INTERSECTED = intersects[0].object;
+    INTERSECTED.material.size = 2000.0;
   }
 }
 
@@ -410,7 +421,7 @@ function checkHighlight(){
 //event listeners
 var start = {x: 0, y: 0};
 var end = {x:0, y:0};
-console.log(end)
+
 document.addEventListener('mousemove', onDocumentMouseMove, false);
 document.addEventListener('click', onDocumentMouseClick);
 document.addEventListener('mousedown', ()=>start = {x: mouse.x, y: mouse.y});
@@ -442,10 +453,11 @@ var detailedScene = new THREE.Scene,
     renderer = new THREE.WebGLRenderer({alpha: true});
 
 detailedScene.add(detailedCamera);
-detailedCamera.position.set(1000, 1000, -3000);
+detailedCamera.position.set(0, 0, 0);
 
 //process data
 var makeDetailed = function(){
+
   let vertices = [],
       colors = [],
       sizes = [],
@@ -468,11 +480,17 @@ var makeDetailed = function(){
 
         majorStarGeo.vertices.push(new THREE.Vector3(x,y,z));
 
-        var majorStarMat = new THREE.PointsMaterial({color: new THREE.Color(starColor(d.ci)), size: 1000.0, blending: THREE.AdditiveBlending, transparent: true, map: majorStarMap});
+        var majorStarMat = new THREE.PointsMaterial({
+          color: new THREE.Color(starColor(d.ci)),
+          size: 1000.0,
+          blending: THREE.AdditiveBlending,
+          transparent: true,
+          map: majorStarMap,
+        });
         var majorStar = new THREE.Points(majorStarGeo, majorStarMat);
         majorStar.userData = d.proper;
         detailedScene.add(majorStar);
-
+        console.log(majorStar);
       }
       //else use vertex shader method
       else{
