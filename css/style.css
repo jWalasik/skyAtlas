@@ -34,3 +34,13 @@ body {
   top:0;
   left:0;
 }
+#object{
+  color: white;
+  position: absolute;
+  bottom: 6%;
+}
+#coordinates{
+  position: absolute;
+  bottom: 3%;
+  color:green;
+}

@@ -383,14 +383,14 @@ function checkHighlight(){
   var vector = new THREE.Vector3(mouse.x, mouse.y, 1);
   vector.unproject(camera);
   var ray = new THREE.Raycaster(camera.position, vector.normalize());
-  ray.params.Points.threshold = 100;
+
 
 
   //var arrow = new THREE.ArrowHelper( vector, camera.position, 100, 0xffffff );
   //scene.add( arrow );
   var intersects;
   if(detailedView){
-
+    ray.params.Points.threshold = 100;
     intersects = ray.intersectObjects(detailedScene.children);
   }else{
 
@@ -399,21 +399,22 @@ function checkHighlight(){
 
   //if there is at least one intersection
   if(intersects.length>0 && detailedView==false){
-    console.log("normal");
+
     //remove highlight from previous boundary
     if(INTERSECTED && intersects[0].object != INTERSECTED){
       INTERSECTED.material.opacity = 0.0;
     }
     INTERSECTED = intersects[0].object;
     INTERSECTED.material.opacity = 0.25;
+    document.getElementById("object").innerHTML = intersects[0].object.children[2].userData[1];
   }
   else if(intersects.length>0 && typeof intersects[0].object.userData == "string"){
-    console.log(intersects[0].object);
     if(INTERSECTED && intersects[0].object != INTERSECTED){
       INTERSECTED.material.size = 1000.0;
     }
     INTERSECTED = intersects[0].object;
     INTERSECTED.material.size = 2000.0;
+    document.getElementById("object").innerHTML = intersects[0].object.userData;
   }
 }
 
@@ -490,7 +491,6 @@ var makeDetailed = function(){
         var majorStar = new THREE.Points(majorStarGeo, majorStarMat);
         majorStar.userData = d.proper;
         detailedScene.add(majorStar);
-        console.log(majorStar);
       }
       //else use vertex shader method
       else{
