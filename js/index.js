@@ -294,6 +294,7 @@ gui.add(controls, "filterStars", 0, 120000, 1).onChange( function( value ) {
               child.geometry.setDrawRange(0, value);
             }
           })
+          detailed
 				});
 
 
@@ -378,7 +379,7 @@ function render(){
 }
 
 
-
+const 
 function checkHighlight(){
   var vector = new THREE.Vector3(mouse.x, mouse.y, 1);
   vector.unproject(camera);
@@ -410,10 +411,10 @@ function checkHighlight(){
   }
   else if(intersects.length>0 && typeof intersects[0].object.userData == "string"){
     if(INTERSECTED && intersects[0].object != INTERSECTED){
-      INTERSECTED.material.size = 1000.0;
+      INTERSECTED.material.size = ;
     }
     INTERSECTED = intersects[0].object;
-    INTERSECTED.material.size = 2000.0;
+    INTERSECTED.material.size = size*1.5;
     document.getElementById("object").innerHTML = intersects[0].object.userData;
   }
 }
@@ -442,9 +443,15 @@ function onDocumentMouseMove(event){
 function onDocumentMouseClick(event){
   //prevent function execution if dragging
   if (start.x == end.x && start.y == end.y){
-    //make detailed scene
-    detailedView = true;
-    makeDetailed();
+    //if lvl2 scene is rendered create scene lvl3
+    if(detailedView){
+      console.log(INTERSECTED);
+    }
+    //otherwise create lvl2 scene
+    else{
+      detailedView = true;
+      makeDetailed();
+    }
   }
 }
 
@@ -550,6 +557,15 @@ var makeDetailed = function(){
 
   getWikiData(ahref);
   detailedScene.add(linesDetailed);
+}
+
+//SCENE lvl3
+var createLvl3 = function(star){
+  let starGeometry = new THREE.SphereGeometry();
+
+  let starMaterial = new THREE.MeshBasicMaterial();
+
+  let star = new THREE.Mesh();
 }
 
 //wiki lookup
