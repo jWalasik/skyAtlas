@@ -11,7 +11,10 @@ var displayStars = true,
     height = window.innerHeight,
     detailedView = false,
     radius = 10000,
-    camera = new THREE.PerspectiveCamera(70, width/10 / (height/10), 1, 100000);
+    camera = new THREE.PerspectiveCamera(70, width/10 / (height/10), 1, 100000),
+    sceneLvl1 = new THREE.Scene(),
+    sceneLvl2 = new THREE.Scene(),
+    sceneLvl3 = new THREE.Scene();
 
     //translate color index to actuall color
     var starColor = d3.scale.linear()
@@ -446,6 +449,7 @@ function onDocumentMouseClick(event){
     //if lvl2 scene is rendered create scene lvl3
     if(detailedView){
       console.log(INTERSECTED);
+      createLvl3(INTERSECTED);
     }
     //otherwise create lvl2 scene
     else{
@@ -560,11 +564,16 @@ var makeDetailed = function(){
 
 //SCENE lvl3
 var createLvl3 = function(star){
-  let starGeometry = new THREE.SphereGeometry();
+  var starSurfaceMap = new THREE.TextureLoader().load('D:/Programowanie/projekty/three_project/textures/2k_sun.png');
+  console.log(star);
+  let starGeometry = new THREE.SphereGeometry(star.material.size, 100, 100);
 
-  let starMaterial = new THREE.MeshBasicMaterial();
 
-  let star = new THREE.Mesh();
+  let starMaterial = new THREE.MeshBasicMaterial({ color: star.material.color, wireframe:false, map: starSurfaceMap});
+
+  let starMesh = new THREE.Mesh(starGeometry, starMaterial);
+  starMesh.position.set(0,0,0);
+  detailedScene.add(starMesh);
 }
 
 //wiki lookup
@@ -579,6 +588,13 @@ async function getWikiData(name){
       document.getElementById('description-container').innerHTML = data.query.pages[0].extract;
     })
     .catch(() => console.log("error"));
-
-
+}
+//Return
+var goBack = function(){
+  if(lvl2 == true){
+    scene = sceneLvl1
+  }
+  else if( lvl3 == true){
+    scene = sceneLvl2
+  }
 }
