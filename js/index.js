@@ -240,7 +240,7 @@ function init(){
       })  //coordinates mapping end
 
     })  //lines.features.map end
-
+    console.log(scene);
   }
 
   //camera controls
@@ -377,18 +377,12 @@ function render(){
   }
 
 }
-
-
-const 
+var resized = false;
 function checkHighlight(){
   var vector = new THREE.Vector3(mouse.x, mouse.y, 1);
   vector.unproject(camera);
   var ray = new THREE.Raycaster(camera.position, vector.normalize());
 
-
-
-  //var arrow = new THREE.ArrowHelper( vector, camera.position, 100, 0xffffff );
-  //scene.add( arrow );
   var intersects;
   if(detailedView){
     ray.params.Points.threshold = 100;
@@ -397,7 +391,6 @@ function checkHighlight(){
 
     intersects = ray.intersectObjects(scene.children);
   }
-
   //if there is at least one intersection
   if(intersects.length>0 && detailedView==false){
 
@@ -409,12 +402,19 @@ function checkHighlight(){
     INTERSECTED.material.opacity = 0.25;
     document.getElementById("object").innerHTML = intersects[0].object.children[2].userData[1];
   }
+  //check if intersected object is major star
   else if(intersects.length>0 && typeof intersects[0].object.userData == "string"){
-    if(INTERSECTED && intersects[0].object != INTERSECTED){
-      INTERSECTED.material.size = ;
+    if(resized == true){
+      resized = false;
+      INTERSECTED.material.size /=1.5;
     }
     INTERSECTED = intersects[0].object;
-    INTERSECTED.material.size = size*1.5;
+    if(resized == false){
+      resized = true;
+      var size = intersects[0].object.material.size;
+      INTERSECTED.material.size = size*1.5;
+    }
+
     document.getElementById("object").innerHTML = intersects[0].object.userData;
   }
 }
@@ -487,10 +487,9 @@ var makeDetailed = function(){
             z = radius * Math.sin(phi);
 
         majorStarGeo.vertices.push(new THREE.Vector3(x,y,z));
-
         var majorStarMat = new THREE.PointsMaterial({
           color: new THREE.Color(starColor(d.ci)),
-          size: 1000.0,
+          size: (scaleMag(d.mag)*400),
           blending: THREE.AdditiveBlending,
           transparent: true,
           map: majorStarMap,
