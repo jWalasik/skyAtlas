@@ -1,29 +1,20 @@
+var sceneLvl1 = new THREE.Scene(),
+    sceneLvl2 = new THREE.Scene(),
+    sceneLvl3 = new THREE.Scene();
+
+
 //controls
-var displayStars = true,
-    displayConLabels = true,
-    displayBoundLabels = true,
-    minMag = 21,
-    projector,
+var minMag = 21,
     mouse = {x: 0, y: 0},
     INTERSECTED,
     starDatabase=[],
     width = window.innerWidth,
     height = window.innerHeight,
     detailedView = false,
-    radius = 10000,
-    camera = new THREE.PerspectiveCamera(70, width/10 / (height/10), 1, 100000),
-    sceneLvl1 = new THREE.Scene(),
-    sceneLvl2 = new THREE.Scene(),
-    sceneLvl3 = new THREE.Scene();
+    radius = 12000,
+    camera = new THREE.PerspectiveCamera(70, width/10 / (height/10), 1, 100000);
 
-    //translate color index to actuall color
-    var starColor = d3.scale.linear()
-                      .domain([-1, 0.5, 0.73, 1.05, 1.25, 1.60, 2])
-                      .range(['#68b1ff', '#93e4ff', '#d8f5ff', '#FFFFFF', '#fffad8', '#ffdda8', '#ffb5b5']);
-    //inverse size scalling with magnitude
-    var scaleMag = d3.scale.linear()
-                      .domain([-2.5, 20])
-                      .range([3.5, 0.005]);
+
 
 function init(){
   //globals
@@ -39,7 +30,7 @@ function init(){
     mouse=new THREE.Vector3();
     camera.position.x = 2000;
     camera.position.y = 2000;
-    camera.position.z = -5000;
+    camera.position.z = 2000;
     camera.lookAt(new THREE.Vector3(0, 0, 0));
 
   renderer.setPixelRatio(window.devicePixelRatio);
@@ -54,7 +45,7 @@ function init(){
     .defer(d3.csv, "https://gist.githubusercontent.com/elPaleniozord/5d96f2f5cce92366b06bea32a2625d2e/raw/8504f231ea5ee5fdef47371232c8c55256b8f045/hyg_data_sortMag.csv", function(d){
       starDatabase.push(d);
     })
-    .defer(d3.json, "https://gist.githubusercontent.com/elPaleniozord/bb775473088f3f60c5f3ca1afeb88a82/raw/e564adc14380c69c0b9012c1363750dbef2411f1/bounds.json")
+    .defer(d3.json, "https://gist.githubusercontent.com/elPaleniozord/bb775473088f3f60c5f3ca1afeb88a82/raw/ee14ae29a1eb9f0615f1927ec398250883dd5a30/bounds.json")
     .defer(d3.json, "https://gist.githubusercontent.com/elPaleniozord/ed1dd65a955c2c7e1bb6cbc30feb523f/raw/5335cccd7dc3dad6a634aa5a34aeab3fb6a1f4a5/lines.json")
     .await(processData);
 
@@ -114,6 +105,7 @@ function init(){
 
       boundsMesh.material.side = THREE.DoubleSide;
       boundsMesh.userData = {name: boundsName};
+
       scene.add(boundsMesh);
       boundsMesh.add(outline);
       //console.log(boundsMesh);
@@ -231,23 +223,28 @@ function init(){
 
         var linesMaterial = new THREE.LineBasicMaterial({color: 0x098bdc});
         var lines = new THREE.Line(linesGeometry, linesMaterial);
-        lines.userData = d.id;
 
+        lines.userData = d.id;
         scene.traverse(function(child){
-          if(child.userData.name == d.id[0]){
+        if(child.userData.name == d.id[0]){
             child.add(lines);
           }
+        else if(child.userData.name == "Ser1" && d.id[0] == "Ser"){
+          child.add(lines);
+        }
+        else if(child.userData.name == "Ser2" && d.id[0] == "Ser"){
+          child.add(lines);
+        }
         })//scene traveser end
 
         linesGeometry = new THREE.Geometry();
       })  //coordinates mapping end
 
     })  //lines.features.map end
-    console.log(scene);
+
   }
 
   //camera controls
-  console.log(camera);
   var trackballControls = new THREE.TrackballControls(camera,renderer.domElement);
   trackballControls.rotateSpeed = 0.2;
   trackballControls.zoomSpeed = 1.0;
@@ -301,28 +298,6 @@ gui.add(controls, "filterStars", 0, 120000, 1).onChange( function( value ) {
 				});
 
 
-//find coordinates for a label
-function findLabelPos(coordArray){
-
-  var min = Math.min(...coordArray),
-      max = Math.max(...coordArray),
-      mid = min + (max-min)/2;
-
-  return mid;
-}
-
-// Converts a point [longitude, latitude] in degrees to a THREE.Vector3.
-function vertex(point) {
-  //console.log("point", point);
-  var lambda = point[0] * Math.PI / 180,
-      phi = point[1] * Math.PI / 180,
-      cosPhi = Math.cos(phi);
-  return new THREE.Vector3(
-    radius * cosPhi * Math.cos(lambda),
-    radius * cosPhi * Math.sin(lambda),
-    radius * Math.sin(phi)
-  );
-}
 
 // Converts a GeoJSON MultiLineString in spherical coordinates to a THREE.LineSegments.
 function wireframe(multilinestring, material) {
@@ -403,6 +378,7 @@ function checkHighlight(){
     }
     INTERSECTED = intersects[0].object;
     INTERSECTED.material.opacity = 0.25;
+
     document.getElementById("object").innerHTML = intersects[0].object.children[2].userData[1];
   }
   //check if intersected object is major star
@@ -564,15 +540,36 @@ var makeDetailed = function(){
 
 //SCENE lvl3
 var createLvl3 = function(star){
-  var starSurfaceMap = new THREE.TextureLoader().load('D:/Programowanie/projekty/three_project/textures/2k_sun.png');
+  var starSurfaceMap = new THREE.TextureLoader().load('D:/Programowanie/projekty/three_project/textures/surface.png'),
+      lensflare = new THREE.TextureLoader().load('D:/Programowanie/projekty/three_project/textures/lensflare0_alpha.png'),
+      corona = new THREE.TextureLoader().load('D:/Programowanie/projekty/three_project/textures/corona.png');
+
   console.log(star);
   let starGeometry = new THREE.SphereGeometry(star.material.size, 100, 100);
 
 
-  let starMaterial = new THREE.MeshBasicMaterial({ color: star.material.color, wireframe:false, map: starSurfaceMap});
+  //let starMaterial = new THREE.MeshBasicMaterial({ color: star.material.color, transparent:false, wireframe:false, map: starSurfaceMap});
+  var attributes = {};
+
+  var uniforms ={
+    tOne:{ type: "t", value: lensflare },
+    tSec:{ type: "t", value: corona }
+  };
+  var starMaterial = new THREE.ShaderMaterial({
+    uniforms: uniforms,
+    attributes: attributes,
+    vertexShader: document.getElementById('starShaderVert').textContent,
+    fragmentShader: document.getElementById('starShaderFrag').textContent,
+    blending: THREE.AdditiveBlending,
+    depthTest: false,
+    transparent: true,
+    vertexColors: true,
+    alphaTest: 0.5
+  });
 
   let starMesh = new THREE.Mesh(starGeometry, starMaterial);
   starMesh.position.set(0,0,0);
+
   detailedScene.add(starMesh);
 }
 
