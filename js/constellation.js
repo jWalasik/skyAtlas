@@ -89,7 +89,7 @@ var makeConstellation = function(){
   ahref = ahref.replace(/ /g,"_"); //replace space with underscore
   document.getElementById('name-container').innerHTML = linesDetailed.userData[1];
 
-  getWikiData(ahref);
+  getWikiData(ahref+'_(constellation)');
   scene.add(linesDetailed);
   sceneLvl2 = scene;
 }

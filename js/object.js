@@ -1,5 +1,13 @@
 //SCENE lvl3
 var makeObject = function(object){
+
+  //append name and get description from wikipedia
+  var ahref = object.userData;
+  //ahref = ahref.replace(/ /g,"_"); //replace space with underscore
+  document.getElementById('name-container').innerHTML = object.userData;
+
+  getWikiData(ahref);
+
   let scene = new THREE.Scene();
   var starSurfaceMap = new THREE.TextureLoader().load('D:/Programowanie/projekty/three_project/textures/surface.png'),
       lensflare = new THREE.TextureLoader().load('D:/Programowanie/projekty/three_project/textures/lensflare0_alpha.png'),

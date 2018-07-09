@@ -1,6 +1,6 @@
 //wiki lookup
 async function getWikiData(name){
-  var url = 'https://en.wikipedia.org/w/api.php?action=query&titles='+name+'_(constellation)&prop=extracts&origin=*&rvprop=content&format=json&formatversion=2&redirects';
+  var url = 'https://en.wikipedia.org/w/api.php?action=query&titles='+name+'&prop=extracts&origin=*&rvprop=content&format=json&formatversion=2&redirects';
   const endpoint = url;
 
   await fetch(endpoint)
