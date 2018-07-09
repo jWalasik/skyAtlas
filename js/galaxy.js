@@ -1,0 +1,193 @@
+var makeGalaxy = function(error, hyg, bounds, lines){
+  //process star data
+  console.log("parsed")
+  //scene
+  let scene = new THREE.Scene();
+
+  //add graticule
+  scene.add(graticule = wireframe(graticule10(), new THREE.LineBasicMaterial({color: 0x444444})));
+
+  //define stars geometries, project them onto sphere
+  var starsGeometry = new THREE.BufferGeometry();
+  var vertices = [];
+  var colors = [];
+  var sizes = [];
+  var constellations =[];
+  var uniforms = {
+    color: { type: "c", value: new THREE.Color( 0xffffff ) },
+  };
+
+  //process contellation boundaries
+  bounds.boundaries.map(function(d){
+    var boundsName = d[0];
+    var boundsGeometry = new THREE.Geometry();
+    var outlineGeometry = new THREE.Geometry();
+    var labelX = [];
+    var labelY = [];
+    var labelZ = [];
+    //extract vertices from database
+    for(var i=1; i<d.length; i+=2){
+      let point = new THREE.Vector3();
+      var lambda = d[i]*Math.PI/180,
+          phi = d[i+1]*Math.PI/180,
+          cosPhi = Math.cos(phi);
+      point.x = radius*cosPhi*Math.cos(lambda);
+      point.y = radius*cosPhi*Math.sin(lambda);
+      point.z = radius * Math.sin(phi);
+
+      boundsGeometry.vertices.push(point);
+      outlineGeometry.vertices.push(point);
+      //label coordinates
+      labelX.push(point.x);
+      labelY.push(point.y);
+      labelZ.push(point.z);
+    }
+    //draw boundary outline
+    var outlineMaterial = new THREE.LineBasicMaterial({color: 0xfbff3d});
+    var outline = new THREE.Line(outlineGeometry, outlineMaterial);
+
+
+    //triangulation method
+    var triangles = THREE.ShapeUtils.triangulateShape(boundsGeometry.vertices, []);
+
+    for(var i = 0; i < triangles.length; i++){
+      boundsGeometry.faces.push(new THREE.Face3(triangles[i][0], triangles[i][2], triangles[i][1]));
+    }
+
+    var boundsMaterial = new THREE.MeshBasicMaterial({color: 0x96fff7, transparent:true, opacity:0.0});
+    var boundsMesh = new THREE.Mesh(boundsGeometry, boundsMaterial);
+
+    boundsMesh.material.side = THREE.DoubleSide;
+    boundsMesh.userData = {name: boundsName};
+
+    scene.add(boundsMesh);
+    boundsMesh.add(outline);
+    //console.log(boundsMesh);
+    //boundary label
+    var labelPosition = new THREE.Vector3();
+
+    labelPosition.x = findLabelPos(labelX);
+    labelPosition.y = findLabelPos(labelY);
+    labelPosition.z = findLabelPos(labelZ);
+    //create label in camvas
+    var name = boundsName;
+    var canvas = document.createElement('canvas');
+    var context = canvas.getContext('2d');
+    var textWidth = (context.measureText(boundsName)).width;
+    context.font = "Bold 40px Arial";
+    context.fillStyle = "rgba(130, 255, 240, 1)";
+    context.fillText(boundsName, textWidth/2.5, 60);
+
+    //create texture
+    var texture = new THREE.Texture(canvas);
+    texture.needsUpdate = true;
+    texture.minFilter = THREE.LinearFilter;
+    var material = new THREE.SpriteMaterial({ map:texture})
+    material.transparent = true;
+    material.depthTest = false;
+
+    var label = new THREE.Sprite(material);
+    label.position.set(labelPosition.x, labelPosition.y, labelPosition.z);
+    label.scale.set(1000, 1000, 1000);
+    boundsMesh.add(label);
+  });
+
+  var processStars = starDatabase.map(function(d){
+
+    var lambda = d.ra*Math.PI/180*15,
+        phi = d.dec*Math.PI/180,
+        cosPhi = Math.cos(phi);
+    var x = radius*cosPhi*Math.cos(lambda),
+        y = radius*cosPhi*Math.sin(lambda),
+        z = radius * Math.sin(phi);
+    vertices.push(x);
+    vertices.push(y);
+    vertices.push(z);
+    var rgb = new THREE.Color(starColor(d.ci));
+    colors.push(rgb.r, rgb.g, rgb.b);
+    if(d.mag<2.6){
+      sizes.push((scaleMag(d.mag))*2.0);
+    }else{
+      sizes.push(scaleMag(d.mag));
+    }
+    constellations.push(d.con);
+    //add labels
+    if(d.proper !== ""){
+      var canvas = document.createElement('canvas');
+      var context = canvas.getContext('2d');
+      var textWidth = (context.measureText(d.proper)).width;
+      context.font = "Bold 40px Arial";
+      context.fillStyle = "rgba(255, 255, 255, 1)";
+      context.fillText(d.proper, textWidth/2.5, 60);
+
+      var texture = new THREE.Texture(canvas);
+      texture.needsUpdate = true;
+      texture.minFilter = THREE.LinearFilter;
+      var material = new THREE.SpriteMaterial({ map:texture})
+      material.transparent = true;
+
+      var label = new THREE.Sprite(material);
+      label.position.set(radius*cosPhi*Math.cos(lambda),radius*cosPhi*Math.sin(lambda), radius * Math.sin(phi));
+      label.scale.set(1000, 1000, 1000);
+      //scene.add(label);
+    }
+  });
+  //console.log(constellations);
+  starsGeometry.addAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+  starsGeometry.addAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+  starsGeometry.addAttribute('size', new THREE.Float32BufferAttribute(sizes, 1));
+
+
+  var uniforms = {
+      texture: {value: new THREE.TextureLoader().load('D:/Programowanie/projekty/three_project/textures/lensflare0_alpha.png')},
+      scale: {type: 'f', value: window.innerHeight/2}
+    };
+
+  var starsMaterial = new THREE.ShaderMaterial({
+    uniforms: uniforms,
+    vertexShader: document.getElementById('vertexshader').textContent,
+    fragmentShader: document.getElementById('fragmentshader').textContent,
+    blending: THREE.AdditiveBlending,
+    depthTest: false,
+    transparent: true,
+    vertexColors: true,
+    alphaTest: 0.5
+  });
+
+  var starField = new THREE.Points(starsGeometry, starsMaterial);
+  scene.add(starField);
+
+  //process constellation lines
+  lines.features.map(function(d){
+    let linesMerged = new THREE.Geometry();
+    let linesGeometry = new THREE.Geometry();
+    d.geometry.coordinates.map(function(coords){
+      coords.map(function(d){
+        let point = new THREE.Vector3();
+        var lambda = d[0]*Math.PI/180,
+            phi = d[1]*Math.PI/180,
+            cosPhi = Math.cos(phi);
+        point.x = radius*cosPhi*Math.cos(lambda);
+        point.y = radius*cosPhi*Math.sin(lambda);
+        point.z = radius * Math.sin(phi);
+        linesGeometry.vertices.push(point);
+      })
+
+      var linesMaterial = new THREE.LineBasicMaterial({color: 0x098bdc});
+      var lines = new THREE.Line(linesGeometry, linesMaterial);
+
+      lines.userData = d.id;
+      scene.traverse(function(child){
+        if(child.userData.name == d.id[0]){
+          child.add(lines);
+        }
+      })//scene traveser end
+
+      linesGeometry = new THREE.Geometry();
+    })  //coordinates mapping end
+
+  })  //lines.features.map end
+
+  sceneLvl1 = scene;
+  console.log(sceneLvl1)
+}
