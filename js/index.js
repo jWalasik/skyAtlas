@@ -26,6 +26,7 @@ queue()
   .await(makeGalaxy);
 
 function init(){
+  getLocation();
   //THREE.js declarations
   var renderer = new THREE.WebGLRenderer({alpha: true});
   renderer.setPixelRatio(window.devicePixelRatio);
@@ -42,7 +43,10 @@ function init(){
   trackballControls.panSpeed = 0.2;
   trackballControls.staticMoving = false;
   trackballControls.noPan=true;
-
+  trackballControls.target.set(121.53750345563013,94.77202661772007,11999.010246608865);
+  camera.position.set(0,0,0)
+  camera.rotation.set(1,1,1);
+  console.log(camera)
   //GUI CONTROLS
   var gui = new dat.GUI();
   var controls = {

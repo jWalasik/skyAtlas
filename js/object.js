@@ -15,7 +15,7 @@ var makeObject = function(object){
 
   console.log(object);
   let starGeometry = new THREE.SphereGeometry(object.material.size, 100, 100);
-  let starMaterial = new THREE.MeshBasicMaterial({color: object.material.color})
+  let starMaterial = new THREE.MeshBasicMaterial({color: object.material.color, wireframe: true})
 
   let starMesh = new THREE.Mesh(starGeometry, starMaterial);
   starMesh.position.set(0,0,0);
