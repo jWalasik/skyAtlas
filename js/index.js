@@ -14,7 +14,8 @@ var minMag = 21,
     height = window.innerHeight,
     detailedView = false,
     radius = 12000,
-    camera = new THREE.PerspectiveCamera(70, width/10 / (height/10), 1, 100000);
+    camera = new THREE.PerspectiveCamera(70, width/10 / (height/10), 1, 100000),
+    realtime = false;
 
 //parse data
 queue()
@@ -25,8 +26,9 @@ queue()
   .defer(d3.json, "https://gist.githubusercontent.com/elPaleniozord/ed1dd65a955c2c7e1bb6cbc30feb523f/raw/9dd2837035dde1554f20157be681d71d54a26c58/lines.json")
   .await(makeGalaxy);
 
+getLocation();
+
 function init(){
-  getLocation();
   //THREE.js declarations
   var renderer = new THREE.WebGLRenderer({alpha: true});
   renderer.setPixelRatio(window.devicePixelRatio);
@@ -35,7 +37,8 @@ function init(){
 
   var clock = new THREE.Clock;
 
-  camera.position.set(-4000,-6000,5000);
+  //camera.lookAt(-3541.9769550248348, -4404.814978829795, 10585.461929096418) //CENTER AT POLARIS
+  //camera.lookAt(1566.0144637680896, 8187.788531389899, 8631.785311539508); //CENTER AT CAPELLA
   //TrackballControls
   var trackballControls = new THREE.TrackballControls(camera,renderer.domElement);
   trackballControls.rotateSpeed = 0.2;
@@ -43,10 +46,8 @@ function init(){
   trackballControls.panSpeed = 0.2;
   trackballControls.staticMoving = false;
   trackballControls.noPan=true;
-  trackballControls.target.set(121.53750345563013,94.77202661772007,11999.010246608865);
-  camera.position.set(0,0,0)
-  camera.rotation.set(1,1,1);
-  console.log(camera)
+
+
   //GUI CONTROLS
   var gui = new dat.GUI();
   var controls = {
@@ -96,9 +97,14 @@ function init(){
   function render(){
     //chose scene to render
     scene = window["sceneLvl"+lvl];
-
-    var delta = clock.getDelta();
-    trackballControls.update(delta);
+    
+    if(realtime){
+      computeZenith();
+    }
+    else{
+      var delta = clock.getDelta();
+      trackballControls.update(delta);
+    }
 
     checkHighlight();
 
@@ -131,6 +137,7 @@ function onDocumentMouseMove(event){
 }
 
 function onDocumentMouseClick(event){
+  realtime = false;
   //prevent function execution if dragging
   if (start.x == end.x && start.y == end.y){
     //if lvl2 scene is rendered create scene lvl3

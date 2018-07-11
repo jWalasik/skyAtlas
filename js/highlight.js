@@ -21,7 +21,7 @@ function checkHighlight(){
     }
     INTERSECTED = intersects[0].object;
     INTERSECTED.material.opacity = 0.25;
-    document.getElementById("object").innerHTML = intersects[0].object.children[2].userData[1];
+    //document.getElementById("object").innerHTML = intersects[0].object.children[2].userData[1];
   }
   //check if intersected object is major star
   else if(intersects.length>0 && typeof intersects[0].object.userData == "string"){

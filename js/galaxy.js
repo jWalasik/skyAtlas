@@ -1,7 +1,5 @@
 var makeGalaxy = function(error, hyg, bounds, lines){
-  //process star data
-  console.log("parsed")
-  //scene
+  //process data
   let scene = new THREE.Scene();
 
   //add graticule
@@ -189,5 +187,4 @@ var makeGalaxy = function(error, hyg, bounds, lines){
   })  //lines.features.map end
 
   sceneLvl1 = scene;
-  console.log(sceneLvl1)
 }
