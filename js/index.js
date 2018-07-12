@@ -47,7 +47,6 @@ function init(){
   trackballControls.staticMoving = false;
   trackballControls.noPan=true;
 
-
   //GUI CONTROLS
   var gui = new dat.GUI();
   var controls = {
@@ -97,14 +96,10 @@ function init(){
   function render(){
     //chose scene to render
     scene = window["sceneLvl"+lvl];
-    
-    if(realtime){
-      computeZenith();
-    }
-    else{
-      var delta = clock.getDelta();
-      trackballControls.update(delta);
-    }
+
+    var delta = clock.getDelta();
+    trackballControls.update(delta);
+
 
     checkHighlight();
 
@@ -120,7 +115,7 @@ var end = {x:0, y:0};
 
 document.addEventListener('mousemove', onDocumentMouseMove, false);
 document.addEventListener('click', onDocumentMouseClick);
-document.addEventListener('mousedown', ()=>start = {x: mouse.x, y: mouse.y});
+document.addEventListener('mousedown', ()=>{start = {x: mouse.x, y: mouse.y}});
 document.addEventListener('mouseup', ()=>end = {x: mouse.x, y: mouse.y});
 document.getElementById('return').addEventListener('click', goBack);
 
@@ -137,7 +132,6 @@ function onDocumentMouseMove(event){
 }
 
 function onDocumentMouseClick(event){
-  realtime = false;
   //prevent function execution if dragging
   if (start.x == end.x && start.y == end.y){
     //if lvl2 scene is rendered create scene lvl3
