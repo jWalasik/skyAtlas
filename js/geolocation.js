@@ -22,8 +22,8 @@ function computeZenith() {
 
     var lst = (100.46 + 0.985647 * jd + long + 15*(ut+test))%360; //d-number of days since j2000 epoch, long-longitude, ut - universal time
     test += 0;
-    var zenith = vertex([lat, -lst]);
-    console.log(lst);
+    var zenith = vertex([-lat, -lst]);
+    //console.log(lst);
     return zenith;
 //6977.505643669164, y: -3537.6415427577203, z: 9099.423460171516 = Alkaid
     //camera.lookAt(zenith);

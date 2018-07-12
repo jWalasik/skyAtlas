@@ -37,7 +37,9 @@ function init(){
 
   var clock = new THREE.Clock;
 
-  //camera.lookAt(-3541.9769550248348, -4404.814978829795, 10585.461929096418) //CENTER AT POLARIS
+  camera.position.set(0,0,-1);
+
+  camera.lookAt(-3541.9769550248348, -4404.814978829795, 10585.461929096418) //CENTER AT POLARIS
   //camera.lookAt(1566.0144637680896, 8187.788531389899, 8631.785311539508); //CENTER AT CAPELLA
   //TrackballControls
   var trackballControls = new THREE.TrackballControls(camera,renderer.domElement);
@@ -50,6 +52,10 @@ function init(){
   //GUI CONTROLS
   var gui = new dat.GUI();
   var controls = {
+    zenithTracking: function(){
+      realtime = !realtime;
+    },
+
     toggleLabels: function(){
       scene.traverse(function(child){
         if (child.type == 'Sprite'){
@@ -79,6 +85,7 @@ function init(){
     filterStars: minMag
   };
 
+  gui.add(controls, 'zenithTracking');
   gui.add(controls, 'toggleLabels');
   gui.add(controls, 'toggleLines');
   gui.add(controls, 'toggleStars');
@@ -96,7 +103,7 @@ function init(){
   function render(){
     //chose scene to render
     scene = window["sceneLvl"+lvl];
-
+    
     var delta = clock.getDelta();
     trackballControls.update(delta);
 
