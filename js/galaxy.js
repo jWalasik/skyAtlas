@@ -137,7 +137,7 @@ var makeGalaxy = function(error, hyg, bounds, lines){
 
 
   var uniforms = {
-      texture: {value: new THREE.TextureLoader().load('/textures/lensflare0_alpha.png')},
+      texture: {value: new THREE.TextureLoader().load('textures/lensflare0_alpha.png')},
       scale: {type: 'f', value: window.innerHeight/2}
     };
 
