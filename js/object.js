@@ -9,9 +9,9 @@ var makeObject = function(object){
   getWikiData(ahref);
 
   let scene = new THREE.Scene();
-  var starSurfaceMap = new THREE.TextureLoader().load('D:/Programowanie/projekty/three_project/textures/surface.png'),
-      lensflare = new THREE.TextureLoader().load('D:/Programowanie/projekty/three_project/textures/lensflare0_alpha.png'),
-      corona = new THREE.TextureLoader().load('D:/Programowanie/projekty/three_project/textures/corona.png');
+  var starSurfaceMap = new THREE.TextureLoader().load('/textures/surface.png'),
+      lensflare = new THREE.TextureLoader().load('/textures/lensflare0_alpha.png'),
+      corona = new THREE.TextureLoader().load('/textures/corona.png');
 
   console.log(object);
   let starGeometry = new THREE.SphereGeometry(object.material.size, 100, 100);
