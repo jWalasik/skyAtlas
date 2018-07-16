@@ -100,10 +100,10 @@ function init(){
 
   render();
   //RENDERING FUNCTION
-  function render(){
+  function render(){    
     //chose scene to render
     scene = window["sceneLvl"+lvl];
-    
+
     var delta = clock.getDelta();
     trackballControls.update(delta);
 
