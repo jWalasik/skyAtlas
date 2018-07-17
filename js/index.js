@@ -47,7 +47,7 @@ function init(){
   trackballControls.zoomSpeed = 1.0;
   trackballControls.panSpeed = 0.2;
   trackballControls.staticMoving = false;
-  trackballControls.noPan=true;
+  trackballControls.noPan=false;
 
   //GUI CONTROLS
   var gui = new dat.GUI();
@@ -100,7 +100,7 @@ function init(){
 
   render();
   //RENDERING FUNCTION
-  function render(){    
+  function render(){
     //chose scene to render
     scene = window["sceneLvl"+lvl];
 

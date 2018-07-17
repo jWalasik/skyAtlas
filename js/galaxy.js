@@ -185,6 +185,7 @@ var makeGalaxy = function(error, hyg, bounds, lines){
     })  //coordinates mapping end
 
   })  //lines.features.map end
-
+  var axes = new THREE.AxesHelper(12000);
+  scene.add(axes);
   sceneLvl1 = scene;
 }

@@ -28,11 +28,12 @@ function computeZenith() {
     var zenith = vertex([lst, lat]); //translate
 
     scene.add(zenithObj)
-    var pos = vertex([lst, lat]);
-    zenithObj.position.x = pos.x;
-    zenithObj.position.y = pos.y;
-    zenithObj.position.z = pos.z;
-    test+=0.25;
+
+    zenithObj.position.x = zenith.x;
+    zenithObj.position.y = zenith.y;
+    zenithObj.position.z = zenith.z;
+    rotateSphere(lst, lat);
+    //test+=0.25;
     return zenith;
 //6977.505643669164, y: -3537.6415427577203, z: 9099.423460171516 = Alkaid
     //camera.lookAt(zenith);
@@ -42,3 +43,11 @@ function computeZenith() {
 //var jd =  //julian date epoch
 //var declination = position.coords.latitude;
 //var sidereal = 0;
+function rotateSphere(long, lat){
+  var c = scene.rotation.y;
+  var d = -long * (Math.PI / 180)%(2 * Math.PI);
+  var e = Math.PI / 2 * -1;
+  scene.rotation.y = c % (2 * Math.PI);
+  scene.rotation.x = lat * (Math.PI / 180) % Math.PI;
+  scene.rotation.z = 360-(d+e);
+}
