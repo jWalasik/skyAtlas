@@ -114,7 +114,7 @@
     c.xyz = clamp(c.xyz, 0.0, 1.0);
     if (alpha >= 0.99)
     {
-        c.xyz -= (alpha - 0.99) * 150.0;
+        c.a = 0.0;
     }
      gl_FragColor = c;
   }
