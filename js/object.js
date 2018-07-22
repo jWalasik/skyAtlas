@@ -1,6 +1,7 @@
 var uniform = {
   time: { type: 'f', value: 0.1 },
-  resolution: { type: "v2", value: new THREE.Vector2()}
+  resolution: { type: "v2", value: new THREE.Vector2()},
+  color: { type: 'v3', value: new THREE.Vector3()}
 }
 //SCENE lvl3
 var makeObject = function(object){
@@ -18,6 +19,10 @@ var makeObject = function(object){
 
   uniform.resolution.value.x = 1; // window.innerWidth;
   uniform.resolution.value.y = 1; // window.innerHeight;
+  uniform.color.value.x = object.material.color.r;
+  uniform.color.value.y = object.material.color.g;
+  uniform.color.value.z = object.material.color.b;
+  console.log(uniform.color);
 
   var coronaMateraial = new THREE.ShaderMaterial({
     uniforms: uniform,
@@ -30,15 +35,14 @@ var makeObject = function(object){
   var corona = new THREE.Mesh(new THREE.PlaneGeometry(700,700,1,1), coronaMateraial);
 
   scene.add(corona);
-  console.log(scene);
+
   var starSurfaceMap = new THREE.TextureLoader().load('textures/surface.png'),
       lensflare = new THREE.TextureLoader().load('textures/lensflare0_alpha.png'),
       corona = new THREE.TextureLoader().load('textures/corona.png');
 
-  console.log(object);
   let starGeometry = new THREE.SphereGeometry(object.material.size, 20, 20);
   let starMaterial = new THREE.MeshBasicMaterial({color: object.material.color, wireframe: true})
-
+  //1, 0.9098039215686274, 0.7333333333333333
   let starMesh = new THREE.Mesh(starGeometry, starMaterial);
   starMesh.position.set(0,0,0);
 

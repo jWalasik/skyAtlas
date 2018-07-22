@@ -65,6 +65,7 @@
   precision highp int;
   uniform float time;
   uniform vec2 resolution;
+  uniform vec3 color;
   varying vec2 vUv;
   float random(in vec2 _st)
   {
@@ -114,9 +115,9 @@
     c.xyz = clamp(c.xyz, 0.0, 1.0);
     if (alpha >= 0.99)
     {
-        c.a = 0.0;
+        c.a = alpha; //middle section trasnsparency
     }
-     gl_FragColor = c;
+     gl_FragColor = vec4(color, c.a);
   }
   </script>
 <!--BLACK MAGICS END-->
