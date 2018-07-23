@@ -5,6 +5,7 @@ var scene = new THREE.Scene();
     lvl = 1;
 
 
+
 //controls
 var minMag = 21,
     mouse = {x: 0, y: 0},
@@ -29,6 +30,7 @@ queue()
 getLocation();
 
 function init(){
+
   //THREE.js declarations
   var renderer = new THREE.WebGLRenderer({alpha: true});
   renderer.setPixelRatio(window.devicePixelRatio);
@@ -119,8 +121,8 @@ function init(){
 var start = {x: 0, y: 0};
 var end = {x:0, y:0};
 
-document.addEventListener('mousemove', onDocumentMouseMove, false);
-document.addEventListener('click', onDocumentMouseClick);
+document.getElementById('WebGL-Output').addEventListener('mousemove', onDocumentMouseMove, false);
+document.getElementById('WebGL-Output').addEventListener('click', onDocumentMouseClick);
 document.addEventListener('mousedown', ()=>{start = {x: mouse.x, y: mouse.y}});
 document.addEventListener('mouseup', ()=>end = {x: mouse.x, y: mouse.y});
 document.getElementById('return').addEventListener('click', goBack);

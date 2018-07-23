@@ -29,10 +29,9 @@ var makeObject = function(object){
     vertexShader: document.getElementById('starShaderVert').textContent,
     fragmentShader: document.getElementById('starShaderFrag').textContent,
     side: THREE.DoubleSide,
-    transparent: true,
-    alphaTest: 1
+    transparent: true
   });
-  var corona = new THREE.Mesh(new THREE.PlaneGeometry(700,700,1,1), coronaMateraial);
+  var corona = new THREE.Mesh(new THREE.PlaneGeometry(2000,2000,1,1), coronaMateraial);
 
   scene.add(corona);
 
@@ -46,7 +45,7 @@ var makeObject = function(object){
   let starMesh = new THREE.Mesh(starGeometry, starMaterial);
   starMesh.position.set(0,0,0);
 
-  scene.add(starMesh);
+  //scene.add(starMesh);
 
   sceneLvl3 = scene;
 }

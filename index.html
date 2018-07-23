@@ -55,7 +55,7 @@
   #define PI 3.14159265359
   #define TWO_PI 6.28318530718
   #define SQ3 1.73205080757
-  #define SIZE 100.0
+  #define SIZE 400.0
   #define I_R 100.0
   #define F_R 400.0
   #define SPEED 0.4
@@ -103,7 +103,7 @@
   }
   void main()
   {
-    float size = 400.0;
+    float size = 600.0;
     vec2 uv = (vUv.xy * size - resolution.xy * size * 0.5) / resolution.y;
     vec4 c = vec4(0.0);
     float len = length(uv);
