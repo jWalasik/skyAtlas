@@ -28,27 +28,20 @@ queue()
 getLocation();
 
 function init(){
-  setupControls();
+
   //THREE.js declarations
   var renderer = new THREE.WebGLRenderer({alpha: true});
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(width, height);
   document.getElementById('WebGL-Output').appendChild(renderer.domElement);
 
+  setupCameras(renderer);
+  selectCam();
   var clock = new THREE.Clock;
 
-  //camera.position.set(0,0,-1);
+  camera.position.set(0,0,1);
 
   //camera.lookAt(-3541.9769550248348, -4404.814978829795, 10585.461929096418) //CENTER AT POLARIS
-  //camera.lookAt(1566.0144637680896, 8187.788531389899, 8631.785311539508); //CENTER AT CAPELLA
-  //TrackballControls
-  /*var trackballControls = new THREE.TrackballControls(camera,renderer.domElement);
-  trackballControls.rotateSpeed = 0.2;
-  trackballControls.zoomSpeed = 1.0;
-  trackballControls.panSpeed = 0.2;
-  trackballControls.staticMoving = false;
-  trackballControls.noPan=false;
-  */
 
   //GUI CONTROLS
   var gui = new dat.GUI();
@@ -102,10 +95,9 @@ function init(){
   render();
   //RENDERING FUNCTION
   function render(){
-    selectCam();
     //chose scene to render
     scene = window["sceneLvl"+lvl];
-    console.log(trackballControls)
+
     var delta = clock.getDelta();
     trackballControls.update(delta);
     uniform.time.value += 0.02;

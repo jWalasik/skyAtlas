@@ -77,7 +77,7 @@ var makeConstellation = function(){
   //boundary
   var boundsDetailed = INTERSECTED.children[0].clone();
   scene.add(boundsDetailed);
-
+  selectCam();
   camera.lookAt(boundsDetailed.geometry.boundingSphere.center);
 
   //Lines
