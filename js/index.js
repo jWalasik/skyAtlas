@@ -1,9 +1,9 @@
-var scene = new THREE.Scene();
+var scene = new THREE.Scene(),
     sceneLvl1 = new THREE.Scene(),
     sceneLvl2 = new THREE.Scene(),
     sceneLvl3 = new THREE.Scene(),
-    lvl = 1;
-
+    lvl = 1,
+    trackballControls;
 //controls
 var minMag = 21,
     mouse = {x: 0, y: 0},
@@ -39,7 +39,7 @@ function init(){
   selectCam();
   var clock = new THREE.Clock;
 
-  camera.position.set(0,0,1);
+  //camera.position.set(0,0,1);
 
   //camera.lookAt(-3541.9769550248348, -4404.814978829795, 10585.461929096418) //CENTER AT POLARIS
 

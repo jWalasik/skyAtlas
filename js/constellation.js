@@ -1,3 +1,4 @@
+var center;
 
 var makeConstellation = function(){
   let scene = new THREE.Scene();
@@ -47,7 +48,7 @@ var makeConstellation = function(){
         vertices.push(z);
         let rgb = new THREE.Color(starColor(d.ci));
         colors.push(rgb.r, rgb.g, rgb.b);
-        sizes.push((scaleMag(d.mag))*1);
+        sizes.push((scaleMag(d.mag))*2);
       }
     }//filter by name/mag end
   })//database processing end
@@ -78,18 +79,32 @@ var makeConstellation = function(){
   var boundsDetailed = INTERSECTED.children[0].clone();
   scene.add(boundsDetailed);
   selectCam();
-  camera.lookAt(boundsDetailed.geometry.boundingSphere.center);
+  center = boundsDetailed.geometry.boundingSphere.center;
 
   //Lines
   linesDetailed = INTERSECTED.children[2].clone();
-  //linesDetailed.material.lineWidth = 100; //sadly line width is not supported on window
+  //linesDetailed.material.lineWidth = 100; //sadly line width is not supported on windows
+  scene.add(linesDetailed);
+
+  //3d to 2d
+  var plane = new THREE.Plane().setFromCoplanarPoints(pointA, pointB, pointC)
+  fillGeometry(geometry);
+
+  var positionAttr = geometry.getAttibute("position");
+  for (var i = 0; i < positionAttr.array.length; i+=3){
+    var point = new THREE.Vector3(positionAttr.array[i],positionAttr.array[i+1],positionAttr.array[i+2]);
+    var projectedPoint = plane.projectPoint();
+    positionAttr.array[i] = projectedPoint.x;
+    positionAttr.array[i+1] = projectedPoint.y;
+    positionAttr.array[i+2] = projectedPoint.z;
+  }
+  positionAttr.needsUpdate = true;
 
   //append name and get description from wikipedia
   var ahref = linesDetailed.userData[1];
   ahref = ahref.replace(/ /g,"_"); //replace space with underscore
   document.getElementById('name-container').innerHTML = linesDetailed.userData[1];
-
   getWikiData(ahref+'_(constellation)');
-  scene.add(linesDetailed);
+
   sceneLvl2 = scene;
 }
