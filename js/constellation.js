@@ -21,7 +21,7 @@ var makeConstellation = function(){
             cosPhi = Math.cos(phi);
         var x = radius*cosPhi*Math.cos(lambda),
             y = radius*cosPhi*Math.sin(lambda),
-            z = radius * Math.sin(phi);
+            z = 0;
 
         majorStarGeo.vertices.push(new THREE.Vector3(x,y,z));
         var majorStarMat = new THREE.PointsMaterial({
@@ -73,10 +73,12 @@ var makeConstellation = function(){
   });
 
   var starFieldFiltered = new THREE.Points(starsGeometryFiltered, starsMaterial);
+  starFieldFiltered.scale.z = 0.0001;
   scene.add(starFieldFiltered);
 
   //boundary
   var boundsDetailed = INTERSECTED.children[0].clone();
+  boundsDetailed.scale.z = 0.0001;
   scene.add(boundsDetailed);
   selectCam();
   center = boundsDetailed.geometry.boundingSphere.center;
@@ -84,9 +86,13 @@ var makeConstellation = function(){
   //Lines
   linesDetailed = INTERSECTED.children[2].clone();
   //linesDetailed.material.lineWidth = 100; //sadly line width is not supported on windows
+  linesDetailed.scale.z = 0.0001;
+
   scene.add(linesDetailed);
+  console.log(linesDetailed)
 
   //3d to 2d
+/*
   var plane = new THREE.Plane().setFromCoplanarPoints(pointA, pointB, pointC)
   fillGeometry(geometry);
 
@@ -99,6 +105,7 @@ var makeConstellation = function(){
     positionAttr.array[i+2] = projectedPoint.z;
   }
   positionAttr.needsUpdate = true;
+  */
 
   //append name and get description from wikipedia
   var ahref = linesDetailed.userData[1];
