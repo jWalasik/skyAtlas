@@ -46,6 +46,8 @@ var makeObject = function(object){
   starMesh.position.set(0,0,0);
 
   //scene.add(starMesh);
+  //skybox
+  scene.add(initSky());
 
   sceneLvl3 = scene;
 }

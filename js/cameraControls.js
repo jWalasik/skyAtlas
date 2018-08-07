@@ -9,7 +9,7 @@ function setupCameras(renderer){
   lvl1Controls.zoomSpeed = 1.0;
   lvl1Controls.panSpeed = 0.2;
   lvl1Controls.staticMoving = false;
-  lvl1Controls.noPan=false;
+  lvl1Controls.noPan=true;
 
   //camera centered at zenith
   centeredCamera = new THREE.PerspectiveCamera(70, width/10 / (height/10), 1, 100000);
@@ -32,9 +32,10 @@ function setupCameras(renderer){
   lvl2Controls.noPan=true;
 
   //centered at star, rotation and zoom enabled
-  lvl3Camera = new THREE.PerspectiveCamera(70, width/10 / (height/10), 1, 100000);
+  lvl3Camera = new THREE.PerspectiveCamera(90, width/10 / (height/10), 1, 100000);
   lvl3Camera.name = "lvl3Camera";
   lvl3Controls = new THREE.TrackballControls(lvl3Camera);
+  lvl3Controls.maxDistance = 30000;
 }
 
 function selectCam(){
