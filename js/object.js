@@ -32,7 +32,7 @@ var makeObject = function(object){
     transparent: true
   });
   var corona = new THREE.Mesh(new THREE.PlaneGeometry(2000,2000,1,1), coronaMateraial);
-
+  corona.name = "corona";
   scene.add(corona);
 
   var starSurfaceMap = new THREE.TextureLoader().load('textures/surface.png'),
@@ -45,9 +45,16 @@ var makeObject = function(object){
   let starMesh = new THREE.Mesh(starGeometry, starMaterial);
   starMesh.position.set(0,0,0);
 
-  //scene.add(starMesh);
+  selectCam();
   //skybox
   scene.add(initSky());
 
+  //gyroscope
+
   sceneLvl3 = scene;
+}
+
+function updateObject(star){
+  console.log(star)
+  star.lookAt(camera.position);
 }

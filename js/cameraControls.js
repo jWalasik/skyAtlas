@@ -17,7 +17,6 @@ function setupCameras(renderer){
 
   //centered at constellation, single axis rotation, zoom enabled
   lvl2Camera = new THREE.PerspectiveCamera(15, width/30 / (height/30), 1, 100000);
-
   lvl2Camera.name = "lvl2Camera";
   lvl2Controls = new THREE.TrackballControls(lvl2Camera);
   lvl2Controls.rotateSpeed = 0.05;
@@ -32,14 +31,16 @@ function setupCameras(renderer){
   lvl2Controls.noPan=true;
 
   //centered at star, rotation and zoom enabled
-  lvl3Camera = new THREE.PerspectiveCamera(90, width/10 / (height/10), 1, 100000);
+  lvl3Camera = new THREE.PerspectiveCamera(70, width/10 / (height/10), 1, 100000);
   lvl3Camera.name = "lvl3Camera";
+  lvl3Camera.position.set(0,0,1);
   lvl3Controls = new THREE.TrackballControls(lvl3Camera);
-  lvl3Controls.maxDistance = 30000;
+  lvl3Controls.minDistance = 1000;
+  lvl3Controls.maxDistance = 15000;
 }
 
 function selectCam(){
   camera = window["lvl"+lvl+"Camera"];
   trackballControls = window["lvl"+lvl+"Controls"];
-  console.log(trackballControls)
+  console.log(lvl)
 }

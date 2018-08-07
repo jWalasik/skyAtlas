@@ -97,6 +97,10 @@ function init(){
   function render(){
     //chose scene to render
     scene = window["sceneLvl"+lvl];
+    console.log(scene);
+    if(lvl==3){
+      updateObject(scene.getObjectByName( "corona" ));
+    }
 
     var delta = clock.getDelta();
     trackballControls.update(delta);
