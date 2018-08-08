@@ -8,6 +8,7 @@ var makeConstellation = function(){
       sizes = [],
       starsGeometryFiltered = new THREE.BufferGeometry();
 
+  let size = 10000;
   //stars
   starDatabase.map(function(d){
     if(d.con == INTERSECTED.userData.name){
@@ -21,7 +22,7 @@ var makeConstellation = function(){
             cosPhi = Math.cos(phi);
         var x = radius*cosPhi*Math.cos(lambda),
             y = radius*cosPhi*Math.sin(lambda),
-            z = 0;
+            z = radius * Math.sin(phi);
 
         majorStarGeo.vertices.push(new THREE.Vector3(x,y,z));
         var majorStarMat = new THREE.PointsMaterial({
@@ -73,12 +74,10 @@ var makeConstellation = function(){
   });
 
   var starFieldFiltered = new THREE.Points(starsGeometryFiltered, starsMaterial);
-  starFieldFiltered.scale.z = 0.0001;
   scene.add(starFieldFiltered);
 
   //boundary
   var boundsDetailed = INTERSECTED.children[0].clone();
-  boundsDetailed.scale.z = 0.0001;
   scene.add(boundsDetailed);
   selectCam();
   center = boundsDetailed.geometry.boundingSphere.center;
@@ -86,10 +85,19 @@ var makeConstellation = function(){
   //Lines
   linesDetailed = INTERSECTED.children[2].clone();
   //linesDetailed.material.lineWidth = 100; //sadly line width is not supported on windows
-  linesDetailed.scale.z = 0.0001;
 
   scene.add(linesDetailed);
   console.log(linesDetailed)
+
+  var planeGeo = new THREE.PlaneGeometry(size, size);
+  var planeMat = new THREE.MeshBasicMaterial({color:0x000000, side: THREE.DoubleSide});
+  var plane = new THREE.Mesh(planeGeo, planeMat);
+  plane.position.set(0,0,0);
+
+  //2d Geometry
+  console.log(starDatabase)
+
+  scene.add(plane);
 
   //3d to 2d
 /*

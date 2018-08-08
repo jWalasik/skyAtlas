@@ -4,7 +4,8 @@ function setupCameras(renderer){
   lvl1Camera = new THREE.PerspectiveCamera(70, width/10 / (height/10), 1, 100000);
   lvl1Camera.position.set(0,0,1)
   lvl1Camera.name = "lvl1Camera";
-  lvl1Controls = new THREE.TrackballControls(lvl1Camera);
+  console.log(renderer.domElement)
+  lvl1Controls = new THREE.TrackballControls(lvl1Camera, renderer.domElement);
   lvl1Controls.rotateSpeed = 0.2;
   lvl1Controls.zoomSpeed = 1.0;
   lvl1Controls.panSpeed = 0.2;
@@ -42,5 +43,6 @@ function setupCameras(renderer){
 function selectCam(){
   camera = window["lvl"+lvl+"Camera"];
   trackballControls = window["lvl"+lvl+"Controls"];
-  console.log(lvl)
+
+  console.log(trackballControls.domElement)
 }

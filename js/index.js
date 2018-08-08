@@ -34,7 +34,6 @@ function init(){
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(width, height);
   document.getElementById('WebGL-Output').appendChild(renderer.domElement);
-
   setupCameras(renderer);
   selectCam();
   var clock = new THREE.Clock;
@@ -97,7 +96,6 @@ function init(){
   function render(){
     //chose scene to render
     scene = window["sceneLvl"+lvl];
-    console.log(scene);
     if(lvl==3){
       updateObject(scene.getObjectByName( "corona" ));
     }
