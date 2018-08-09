@@ -34,8 +34,10 @@ function init(){
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(width, height);
   document.getElementById('WebGL-Output').appendChild(renderer.domElement);
+  console.log(document.getElementById('WebGL-Output').getElementsByTagName( 'canvas' )[0])
   setupCameras(renderer);
   selectCam();
+
   var clock = new THREE.Clock;
 
   //camera.position.set(0,0,1);

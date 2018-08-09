@@ -4,14 +4,14 @@ function setupCameras(renderer){
   lvl1Camera = new THREE.PerspectiveCamera(70, width/10 / (height/10), 1, 100000);
   lvl1Camera.position.set(0,0,1)
   lvl1Camera.name = "lvl1Camera";
-  console.log(renderer.domElement)
-  lvl1Controls = new THREE.TrackballControls(lvl1Camera, renderer.domElement);
+  console.log(renderer)
+  lvl1Controls = new THREE.TrackballControls(lvl1Camera, document.getElementById('WebGL-Output').getElementsByTagName( 'canvas' )[0]);
   lvl1Controls.rotateSpeed = 0.2;
   lvl1Controls.zoomSpeed = 1.0;
   lvl1Controls.panSpeed = 0.2;
   lvl1Controls.staticMoving = false;
   lvl1Controls.noPan=true;
-
+  trackballControls = lvl1Controls
   //camera centered at zenith
   centeredCamera = new THREE.PerspectiveCamera(70, width/10 / (height/10), 1, 100000);
   var centeredCameraControls = new THREE.TrackballControls(centeredCamera);
@@ -42,7 +42,6 @@ function setupCameras(renderer){
 
 function selectCam(){
   camera = window["lvl"+lvl+"Camera"];
-  trackballControls = window["lvl"+lvl+"Controls"];
+  //trackballControls = lvl1Controls;
 
-  console.log(trackballControls.domElement)
 }
