@@ -45,7 +45,6 @@ var makeObject = function(object){
   let starMesh = new THREE.Mesh(starGeometry, starMaterial);
   starMesh.position.set(0,0,0);
 
-  selectCam();
   //skybox
   scene.add(initSky());
 
@@ -55,6 +54,6 @@ var makeObject = function(object){
 }
 
 function updateObject(star){
-  console.log(star)
+  
   star.lookAt(camera.position);
 }

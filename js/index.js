@@ -34,9 +34,11 @@ function init(){
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(width, height);
   document.getElementById('WebGL-Output').appendChild(renderer.domElement);
-  console.log(document.getElementById('WebGL-Output').getElementsByTagName( 'canvas' )[0])
-  setupCameras(renderer);
-  selectCam();
+
+  camera = new THREE.PerspectiveCamera(70, width/10 / (height/10), 1, 100000);
+  camera.position.set(0,0,1)
+
+  trackballControls = new THREE.TrackballControls(camera, renderer.domElement);
 
   var clock = new THREE.Clock;
 
