@@ -6,5 +6,4 @@ var goBack = function(){
   else if( lvl == 3){
     lvl = 2
   }
-  selectCam();
 }

@@ -185,6 +185,6 @@ var makeGalaxy = function(error, hyg, bounds, lines){
     })  //coordinates mapping end
 
   })  //lines.features.map end
-  
+  console.log()
   sceneLvl1 = scene;
 }

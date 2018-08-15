@@ -53,7 +53,6 @@ var makeObject = function(object){
   sceneLvl3 = scene;
 }
 
-function updateObject(star){
-  
-  star.lookAt(camera.position);
+function updateObject(object){
+  object.lookAt(camera.position);
 }
