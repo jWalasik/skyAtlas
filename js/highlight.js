@@ -3,18 +3,20 @@ function checkHighlight(){
   var vector = new THREE.Vector3(mouse.x, mouse.y, 1);
   vector.unproject(camera);
   var ray = new THREE.Raycaster(camera.position, vector.normalize());
+
+  var intersects;
   if(lvl == 1){
     ray.params.Points.threshold = 1; //raycaster precision
+    intersects = ray.intersectObjects(scene.children);
   }
   else if(lvl ==2){
     ray.params.Points.threshold = 100;
+    intersects = ray.intersectObjects(scene.children[0].children);
   }
 
-  var intersects;
-  intersects = ray.intersectObjects(scene.children);
+  console.log(intersects)
   //if there is at least one intersection
-  if(intersects.length>0 && lvl == 1){
-
+  if(lvl == 1 && intersects.length>0){
     //remove highlight from previous boundary
     if(INTERSECTED && intersects[0].object != INTERSECTED){
       INTERSECTED.material.opacity = 0.0;
@@ -24,7 +26,8 @@ function checkHighlight(){
     //document.getElementById("object").innerHTML = intersects[0].object.children[2].userData[1];
   }
   //check if intersected object is major star
-  else if(intersects.length>0 && typeof intersects[0].object.userData == "string"){
+  else if(lvl==2 && intersects.length>0 && typeof intersects[0].object.userData == "string"){
+
     if(resized == true){
       resized = false;
       INTERSECTED.material.size /=1.5;

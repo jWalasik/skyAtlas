@@ -93,12 +93,12 @@ var makeConstellation = function(){
   //lines
   var linesGeometry = new THREE.Geometry();
   for (var i=2; i<INTERSECTED.children.length; i++){
-    console.log(INTERSECTED.children.length)
     line = INTERSECTED.children[i].clone();
     container.add(line);
   }
-
+  console.log(container.position);
   new THREE.Box3().setFromObject(container).getCenter(container.position).multiplyScalar(-1);
+  console.log(container.position);
   center = boundsDetailed.geometry.boundingSphere.center;
 
   //append name and get description from wikipedia
