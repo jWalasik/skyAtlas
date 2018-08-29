@@ -14,7 +14,6 @@ function checkHighlight(){
     intersects = ray.intersectObjects(scene.children[0].children);
   }
 
-  console.log(intersects)
   //if there is at least one intersection
   if(lvl == 1 && intersects.length>0){
     //remove highlight from previous boundary
