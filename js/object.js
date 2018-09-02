@@ -26,8 +26,8 @@ var makeObject = function(object){
 
   var coronaMateraial = new THREE.ShaderMaterial({
     uniforms: uniform,
-    vertexShader: document.getElementById('starShaderVert').textContent,
-    fragmentShader: document.getElementById('starShaderFrag').textContent,
+    vertexShader: document.getElementById('haloShaderVert').textContent,
+    fragmentShader: document.getElementById('haloShaderFrag').textContent,
     side: THREE.DoubleSide,
     transparent: true
   });
