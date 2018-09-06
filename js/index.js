@@ -38,7 +38,8 @@ function init(){
   camera = new THREE.PerspectiveCamera(70, width/10 / (height/10), 1, 100000);
   camera.position.set(0,0,1)
 
-  trackballControls = new THREE.TrackballControls(camera, renderer.domElement);
+  trackballControls = new THREE.DeviceOrientationControls(camera);
+  //trackballControls = new THREE.TrackballControls(camera, renderer.domElement);
 
   var clock = new THREE.Clock;
 
