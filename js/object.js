@@ -3,6 +3,15 @@ var uniform = {
   resolution: { type: "v2", value: new THREE.Vector2()},
   color: { type: 'v3', value: new THREE.Vector3()}
 }
+
+var surfaceUniform = {
+  time: { type: 'f', value: 0.1 },
+  resolution: { type: "v2", value: new THREE.Vector2()},
+  color: { type: 'v3', value: new THREE.Vector3()},
+  texture: {type: 't', value: THREE.ImageUtils.loadTexture('textures/surface.png')}
+}
+
+
 //SCENE lvl3
 var makeObject = function(object){
 
@@ -22,28 +31,36 @@ var makeObject = function(object){
   uniform.color.value.x = object.material.color.r;
   uniform.color.value.y = object.material.color.g;
   uniform.color.value.z = object.material.color.b;
-  console.log(uniform.color);
 
-  var coronaMateraial = new THREE.ShaderMaterial({
+  var coronaMaterial = new THREE.ShaderMaterial({
     uniforms: uniform,
     vertexShader: document.getElementById('haloShaderVert').textContent,
     fragmentShader: document.getElementById('haloShaderFrag').textContent,
     side: THREE.DoubleSide,
     transparent: true
   });
-  var corona = new THREE.Mesh(new THREE.PlaneGeometry(2000,2000,1,1), coronaMateraial);
+  var corona = new THREE.Mesh(new THREE.PlaneGeometry(2000,2000,1,1), coronaMaterial);
   corona.name = "corona";
   scene.add(corona);
 
-  var starSurfaceMap = new THREE.TextureLoader().load('textures/surface.png'),
-      lensflare = new THREE.TextureLoader().load('textures/lensflare0_alpha.png'),
-      corona = new THREE.TextureLoader().load('textures/corona.png');
+  //surface
+  surfaceUniform.resolution.x = 1;
+  surfaceUniform.resolution.y = 1;
+  surfaceUniform.color.value.x = object.material.color.r;
+  surfaceUniform.color.value.y = object.material.color.g;
+  surfaceUniform.color.value.z = object.material.color.b;
+  surfaceUniform.texture.value.wrapS = surfaceUniform.texture.value.wrapT = THREE.RepeatWrapping;
 
-  let starGeometry = new THREE.SphereGeometry(object.material.size, 20, 20);
-  let starMaterial = new THREE.MeshBasicMaterial({color: object.material.color, wireframe: true})
-  //1, 0.9098039215686274, 0.7333333333333333
-  let starMesh = new THREE.Mesh(starGeometry, starMaterial);
-  starMesh.position.set(0,0,0);
+  var surfaceMat = new THREE.ShaderMaterial({
+    uniforms: uniform,
+    vertexShader: document.getElementById('surfaceShaderVert').textContent,
+    fragmentShader: document.getElementById('surfaceShaderFrag').textContent,
+    side: THREE.DoubleSide,
+    transparent: true
+  });
+  var surface = new THREE.Mesh(new THREE.PlaneGeometry(2000,2000,1,1), surfaceMat);
+  surface.name = "surface";
+  scene.add(surface);
 
   //skybox
   scene.add(initSky());
