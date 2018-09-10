@@ -7,9 +7,8 @@ function initSky(){
 	var materialArray = [];
 	for (var i = 0; i<6; i++){
 		materialArray.push(new THREE.MeshBasicMaterial({
-			map: THREE.ImageUtils.loadTexture( prefix + directions[i] + suffix ),
+			map: new THREE.TextureLoader().load( prefix + directions[i] + suffix ),
 			side: THREE.BackSide,
-			alpha: 1.0,
 			depthWrite: false,
 			depthTest: false,
 		}));

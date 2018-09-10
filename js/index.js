@@ -39,7 +39,7 @@ function init(){
   camera.position.set(0,0,1)
 
   //trackballControls = new THREE.DeviceOrientationControls(camera);
-  
+
   trackballControls = new THREE.TrackballControls(camera, renderer.domElement);
 
   var clock = new THREE.Clock;
@@ -109,6 +109,7 @@ function init(){
     var delta = clock.getDelta();
     trackballControls.update(delta);
     uniform.time.value += 0.02;
+    surfaceUniform.time.value +=1;
     checkHighlight();
 
     requestAnimationFrame(render);

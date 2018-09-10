@@ -7,8 +7,8 @@ var uniform = {
 var surfaceUniform = {
   time: { type: 'f', value: 0.1 },
   resolution: { type: "v2", value: new THREE.Vector2()},
-  color: { type: 'v3', value: new THREE.Vector3()},
-  texture: {type: 't', value: THREE.ImageUtils.loadTexture('textures/surface.png')}
+  //color: { type: 'v3', value: new THREE.Vector3()},
+  iChannel0: {type: 't', value: new THREE.TextureLoader().load('textures/surface.png')}
 }
 
 
@@ -44,12 +44,9 @@ var makeObject = function(object){
   scene.add(corona);
 
   //surface
-  surfaceUniform.resolution.x = 1;
-  surfaceUniform.resolution.y = 1;
-  surfaceUniform.color.value.x = object.material.color.r;
-  surfaceUniform.color.value.y = object.material.color.g;
-  surfaceUniform.color.value.z = object.material.color.b;
-  surfaceUniform.texture.value.wrapS = surfaceUniform.texture.value.wrapT = THREE.RepeatWrapping;
+  surfaceUniform.resolution.value.x = 1; // window.innerWidth;
+  surfaceUniform.resolution.value.y = 1;
+  surfaceUniform.iChannel0.value.wrapS = surfaceUniform.iChannel0.value.wrapT = THREE.RepeatWrapping;
 
   var surfaceMat = new THREE.ShaderMaterial({
     uniforms: uniform,
