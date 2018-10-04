@@ -6,9 +6,11 @@ var uniform = {
 
 var surfaceUniform = {
   time: { type: 'f', value: 0.1 },
+  speed: { type: 'f', value: 0.02},
   resolution: { type: "v2", value: new THREE.Vector2()},
-  //color: { type: 'v3', value: new THREE.Vector3()},
-  iChannel0: {type: 't', value: new THREE.TextureLoader().load('textures/surface.png')}
+  color: { type: 'v3', value: new THREE.Vector3()},
+  veinColor: { type: 'v3', value: new THREE.Vector3(1,1,1)},
+  iChannel0: {type: 't', value: new THREE.TextureLoader().load('textures/noise.png')}
 }
 
 
@@ -43,23 +45,26 @@ var makeObject = function(object){
   corona.name = "corona";
   scene.add(corona);
 
-  //surface
-  /*
+  //star body
   surfaceUniform.resolution.value.x = 1; // window.innerWidth;
   surfaceUniform.resolution.value.y = 1;
   surfaceUniform.iChannel0.value.wrapS = surfaceUniform.iChannel0.value.wrapT = THREE.RepeatWrapping;
-
+  surfaceUniform.color.value.x = object.material.color.r;
+  surfaceUniform.color.value.y = object.material.color.g;
+  surfaceUniform.color.value.z = object.material.color.b;
+  console.log(surfaceUniform.color);
+  console.log(uniform.color);
   var surfaceMat = new THREE.ShaderMaterial({
-    uniforms: uniform,
-    vertexShader: document.getElementById('surfaceShaderVert').textContent,
-    fragmentShader: document.getElementById('surfaceShaderFrag').textContent,
+    uniforms: surfaceUniform,
+    vertexShader: document.getElementById('bodyShaderVert').textContent,
+    fragmentShader: document.getElementById('bodyShaderFrag').textContent,
     side: THREE.DoubleSide,
     transparent: true
   });
-  var surface = new THREE.Mesh(new THREE.PlaneGeometry(2000,2000,1,1), surfaceMat);
+  var surface = new THREE.Mesh(new THREE.SphereGeometry(2000,2000,1,1), surfaceMat);
   surface.name = "surface";
   scene.add(surface);
-  */
+
   //skybox
   scene.add(initSky());
 

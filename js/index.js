@@ -109,7 +109,7 @@ function init(){
     var delta = clock.getDelta();
     trackballControls.update(delta);
     uniform.time.value += 0.02;
-    surfaceUniform.time.value +=1;
+    surfaceUniform.time.value +=0.02;
     checkHighlight();
 
     requestAnimationFrame(render);
