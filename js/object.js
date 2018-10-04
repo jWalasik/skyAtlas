@@ -61,7 +61,7 @@ var makeObject = function(object){
     side: THREE.DoubleSide,
     transparent: true
   });
-  var surface = new THREE.Mesh(new THREE.SphereGeometry(185,100,100), surfaceMat);
+  var surface = new THREE.Mesh(new THREE.SphereGeometry(185,50,50), surfaceMat);
   surface.name = "surface";
   scene.add(surface);
 
