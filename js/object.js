@@ -44,6 +44,7 @@ var makeObject = function(object){
   scene.add(corona);
 
   //surface
+  /*
   surfaceUniform.resolution.value.x = 1; // window.innerWidth;
   surfaceUniform.resolution.value.y = 1;
   surfaceUniform.iChannel0.value.wrapS = surfaceUniform.iChannel0.value.wrapT = THREE.RepeatWrapping;
@@ -58,7 +59,7 @@ var makeObject = function(object){
   var surface = new THREE.Mesh(new THREE.PlaneGeometry(2000,2000,1,1), surfaceMat);
   surface.name = "surface";
   scene.add(surface);
-
+  */
   //skybox
   scene.add(initSky());
 
