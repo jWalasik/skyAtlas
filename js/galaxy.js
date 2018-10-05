@@ -4,7 +4,26 @@ var makeGalaxy = function(error, hyg, bounds, lines){
 
   //add graticule
   scene.add(graticule = wireframe(graticule10(), new THREE.LineBasicMaterial({color: 0x444444})));
+  //add zenith
+  var canvas = document.createElement('canvas');
+  var context = canvas.getContext('2d');
+  var textWidth = (context.measureText("Zenith")).width;
+  context.font = "Bold 40px Arial";
+  context.fillStyle = "rgba(130, 255, 240, 1)";
+  context.fillText("Zenith", textWidth/2.5, 60);
 
+  //create texture
+  var texture = new THREE.Texture(canvas);
+  texture.needsUpdate = true;
+  texture.minFilter = THREE.LinearFilter;
+  var material = new THREE.SpriteMaterial({ map:texture})
+  material.transparent = true;
+  material.depthTest = false;
+
+  var zenithMarker = new THREE.Sprite(material);
+  zenithMarker.name = "zenith";
+  console.log(zenithMarker);
+  scene.add(zenithMarker);
   //define stars geometries, project them onto sphere
   var starsGeometry = new THREE.BufferGeometry();
   var vertices = [];

@@ -1,23 +1,7 @@
 var coords;
 var test = 0;
 
-var canvas = document.createElement('canvas');
-var context = canvas.getContext('2d');
-var textWidth = (context.measureText("Zenith")).width;
-context.font = "Bold 40px Arial";
-context.fillStyle = "rgba(130, 255, 240, 1)";
-context.fillText("Zenith", textWidth/2.5, 60);
 
-//create texture
-var texture = new THREE.Texture(canvas);
-texture.needsUpdate = true;
-texture.minFilter = THREE.LinearFilter;
-var material = new THREE.SpriteMaterial({ map:texture})
-material.transparent = true;
-material.depthTest = false;
-
-var zenithMarker = new THREE.Sprite(material);
-//scene.add(zenithMarker);
 //console.log(scene);
 //get lat/long coordinates
 function getLocation() {
@@ -41,10 +25,11 @@ function computeZenith() {
 
     var lst = (100.4606184 + 0.9856473662862 * jd + long + 15 * ut+test)%360; //d-number of days since j2000 epoch, long-longitude, ut - universal time
     var zenith = vertex([lst, lat]); //translate
-    scene.add(zenithMarker)
-    zenithMarker.position.x = 0;
-    zenithMarker.position.y = 0;
-    zenithMarker.position.z = 0;
+
+    scene.getObjectByName("zenith").position.x = zenith.x;
+    scene.getObjectByName("zenith").position.y = zenith.y;
+    scene.getObjectByName("zenith").position.z = zenith.z;
+
     //rotateSphere(lst, lat);
     //test+=0.25;
     return zenith;
