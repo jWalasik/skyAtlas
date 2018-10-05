@@ -1,9 +1,24 @@
 var coords;
 var test = 0;
-var zenithGeometry = new THREE.BoxGeometry( 1000, 1000, 1000 );
-var zenithMaterial = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
-var zenithObj = new THREE.Mesh( zenithGeometry, zenithMaterial );
 
+var canvas = document.createElement('canvas');
+var context = canvas.getContext('2d');
+var textWidth = (context.measureText("Zenith")).width;
+context.font = "Bold 40px Arial";
+context.fillStyle = "rgba(130, 255, 240, 1)";
+context.fillText("Zenith", textWidth/2.5, 60);
+
+//create texture
+var texture = new THREE.Texture(canvas);
+texture.needsUpdate = true;
+texture.minFilter = THREE.LinearFilter;
+var material = new THREE.SpriteMaterial({ map:texture})
+material.transparent = true;
+material.depthTest = false;
+
+var zenithMarker = new THREE.Sprite(material);
+//scene.add(zenithMarker);
+//console.log(scene);
 //get lat/long coordinates
 function getLocation() {
     if (navigator.geolocation) {
@@ -26,13 +41,11 @@ function computeZenith() {
 
     var lst = (100.4606184 + 0.9856473662862 * jd + long + 15 * ut+test)%360; //d-number of days since j2000 epoch, long-longitude, ut - universal time
     var zenith = vertex([lst, lat]); //translate
-
-    scene.add(zenithObj)
-
-    zenithObj.position.x = zenith.x;
-    zenithObj.position.y = zenith.y;
-    zenithObj.position.z = zenith.z;
-    rotateSphere(lst, lat);
+    scene.add(zenithMarker)
+    zenithMarker.position.x = 0;
+    zenithMarker.position.y = 0;
+    zenithMarker.position.z = 0;
+    //rotateSphere(lst, lat);
     //test+=0.25;
     return zenith;
 //6977.505643669164, y: -3537.6415427577203, z: 9099.423460171516 = Alkaid
