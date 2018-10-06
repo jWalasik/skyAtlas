@@ -28,7 +28,7 @@ function computeZenith() {
 
     scene.getObjectByName("zenith").position.x = zenith.x;
     scene.getObjectByName("zenith").position.y = zenith.y;
-    scene.getObjectByName("zenith").position.z = zenith.z;
+    scene.getObjectByName("zenith").position.z = zenith.z-200;
 
     //rotateSphere(lst, lat);
     //test+=0.25;

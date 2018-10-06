@@ -8,9 +8,9 @@ var makeGalaxy = function(error, hyg, bounds, lines){
   var canvas = document.createElement('canvas');
   var context = canvas.getContext('2d');
   var textWidth = (context.measureText("Zenith")).width;
-  context.font = "Bold 40px Arial";
-  context.fillStyle = "rgba(130, 255, 240, 1)";
-  context.fillText("Zenith", textWidth/2.5, 60);
+  context.font = "Bold 60px Arial";
+  context.fillStyle = "rgba(255, 153, 51, 1)";
+  context.fillText("Zenith", textWidth/8.5, 60);
 
   //create texture
   var texture = new THREE.Texture(canvas);
@@ -18,12 +18,18 @@ var makeGalaxy = function(error, hyg, bounds, lines){
   texture.minFilter = THREE.LinearFilter;
   var material = new THREE.SpriteMaterial({ map:texture})
   material.transparent = true;
-  material.depthTest = false;
+  material.depthTest = true;
 
   var zenithMarker = new THREE.Sprite(material);
+  zenithMarker.scale.set(1000, 1000, 1000);
   zenithMarker.name = "zenith";
-  console.log(zenithMarker);
-  scene.add(zenithMarker);
+  zenithMarker.position.x = 6977.0;
+  zenithMarker.position.y = -3537.0;
+  zenithMarker.position.z = 9099.0;
+
+  graticule.add(zenithMarker);
+   //Polaris
+  console.log(zenithMarker)
   //define stars geometries, project them onto sphere
   var starsGeometry = new THREE.BufferGeometry();
   var vertices = [];

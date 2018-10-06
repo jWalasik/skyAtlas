@@ -29,7 +29,7 @@ function checkHighlight(){
 
     if(resized == true){
       resized = false;
-      INTERSECTED.material.size /=1.5;
+      INTERSECTED.material.size /= 1.5;
     }
     INTERSECTED = intersects[0].object;
     if(resized == false){
