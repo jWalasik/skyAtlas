@@ -107,7 +107,7 @@ var makeConstellation = function(){
   document.getElementById('name-container').innerHTML = INTERSECTED.children[2].userData[1];
   getWikiData(ahref+'_(constellation)');
 
-  scene.add(container)
-  sceneLvl2 = scene;
+  scene.add(container);
 
+  sceneLvl2 = scene;
 }

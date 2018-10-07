@@ -112,6 +112,7 @@ function init(){
     surfaceUniform.time.value +=0.07;
     checkHighlight();
 
+    //console.log(camera.position)
     requestAnimationFrame(render);
     renderer.render(scene, camera);
   } //render end

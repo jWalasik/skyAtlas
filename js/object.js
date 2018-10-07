@@ -67,9 +67,7 @@ var makeObject = function(object){
 
   //skybox
   scene.add(initSky());
-
-  //gyroscope
-
+  
   sceneLvl3 = scene;
 }
 
