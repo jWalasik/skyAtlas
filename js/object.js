@@ -16,7 +16,7 @@ var surfaceUniform = {
 
 //SCENE lvl3
 var makeObject = function(object){
-
+  name = document.getElementById('name-container').innerHTML;
   //append name and get description from wikipedia
   var ahref = object.userData;
   //ahref = ahref.replace(/ /g,"_"); //replace space with underscore
@@ -52,8 +52,7 @@ var makeObject = function(object){
   surfaceUniform.color.value.x = object.material.color.r;
   surfaceUniform.color.value.y = object.material.color.g;
   surfaceUniform.color.value.z = object.material.color.b;
-  console.log(surfaceUniform.color);
-  console.log(uniform.color);
+
   var surfaceMat = new THREE.ShaderMaterial({
     uniforms: surfaceUniform,
     vertexShader: document.getElementById('bodyShaderVert').textContent,
@@ -67,7 +66,7 @@ var makeObject = function(object){
 
   //skybox
   scene.add(initSky());
-  
+
   sceneLvl3 = scene;
 }
 

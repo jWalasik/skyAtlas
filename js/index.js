@@ -3,7 +3,8 @@ var scene = new THREE.Scene(),
     sceneLvl2 = new THREE.Scene(),
     sceneLvl3 = new THREE.Scene(),
     lvl = 1,
-    trackballControls;
+    trackballControls,
+    name;
 //controls
 var minMag = 21,
     mouse = {x: 0, y: 0},
@@ -102,7 +103,10 @@ function init(){
   function render(){
     //chose scene to render
     scene = window["sceneLvl"+lvl];
-    if(lvl==3){
+    if(lvl == 2){
+      //scene.getObjectByName("container").quaternion.copy( camera.quaternion );
+    }
+    else if(lvl == 3){
       updateObject(scene.getObjectByName( "corona" ));
     }
 

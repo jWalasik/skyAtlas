@@ -1,4 +1,5 @@
 var center;
+var cameraPos = new THREE.Quaternion();
 
 var makeConstellation = function(){
   let scene = new THREE.Scene();
@@ -96,10 +97,8 @@ var makeConstellation = function(){
     line = INTERSECTED.children[i].clone();
     container.add(line);
   }
-  console.log(container.position);
+  
   new THREE.Box3().setFromObject(container).getCenter(container.position).multiplyScalar(-1);
-  console.log(container.position);
-  center = boundsDetailed.geometry.boundingSphere.center;
 
   //append name and get description from wikipedia
   var ahref = INTERSECTED.children[2].userData[1];
@@ -108,6 +107,6 @@ var makeConstellation = function(){
   getWikiData(ahref+'_(constellation)');
 
   scene.add(container);
-
+  container.name = "container";
   sceneLvl2 = scene;
 }
