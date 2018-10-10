@@ -2,6 +2,8 @@ var makeGalaxy = function(error, hyg, bounds, lines){
   //process data
   let scene = new THREE.Scene();
 
+  var galaxy = new THREE.Object3D();
+  galaxy.name = "galaxy";
   //add graticule
   scene.add(graticule = wireframe(graticule10(), new THREE.LineBasicMaterial({color: 0x444444})));
   //add zenith
@@ -27,9 +29,10 @@ var makeGalaxy = function(error, hyg, bounds, lines){
   zenithMarker.position.y = -3537.0;
   zenithMarker.position.z = 9099.0;
 
-  graticule.add(zenithMarker);
-   //Polaris
-  console.log(zenithMarker)
+  galaxy.add(zenithMarker)
+  console.log(zenithMarker.position)
+  //graticule.add(zenithMarker);
+
   //define stars geometries, project them onto sphere
   var starsGeometry = new THREE.BufferGeometry();
   var vertices = [];
@@ -69,7 +72,6 @@ var makeGalaxy = function(error, hyg, bounds, lines){
     var outlineMaterial = new THREE.LineBasicMaterial({color: 0xfbff3d});
     var outline = new THREE.Line(outlineGeometry, outlineMaterial);
 
-
     //triangulation method
     var triangles = THREE.ShapeUtils.triangulateShape(boundsGeometry.vertices, []);
 
@@ -83,7 +85,8 @@ var makeGalaxy = function(error, hyg, bounds, lines){
     boundsMesh.material.side = THREE.DoubleSide;
     boundsMesh.userData = {name: boundsName};
 
-    scene.add(boundsMesh);
+    galaxy.add(boundsMesh);
+    //scene.add(boundsMesh);
     boundsMesh.add(outline);
     //console.log(boundsMesh);
     //boundary label
@@ -178,7 +181,8 @@ var makeGalaxy = function(error, hyg, bounds, lines){
   });
 
   var starField = new THREE.Points(starsGeometry, starsMaterial);
-  scene.add(starField);
+  galaxy.add(starField);
+  //scene.add(starField);
 
   //process constellation lines
   lines.features.map(function(d){
@@ -193,6 +197,7 @@ var makeGalaxy = function(error, hyg, bounds, lines){
         point.x = radius*cosPhi*Math.cos(lambda);
         point.y = radius*cosPhi*Math.sin(lambda);
         point.z = radius * Math.sin(phi);
+
         linesGeometry.vertices.push(point);
       })
 
@@ -200,7 +205,7 @@ var makeGalaxy = function(error, hyg, bounds, lines){
       var lines = new THREE.Line(linesGeometry, linesMaterial);
 
       lines.userData = d.id;
-      scene.traverse(function(child){
+      galaxy.traverse(function(child){
         if(child.userData.name == d.id[0]){
           child.add(lines);
         }
@@ -210,6 +215,9 @@ var makeGalaxy = function(error, hyg, bounds, lines){
     })  //coordinates mapping end
 
   })  //lines.features.map end
-  console.log()
+
+  scene.add(galaxy);
+  var axesHelp = new THREE.AxesHelper(15000);
+  scene.add(axesHelp);
   sceneLvl1 = scene;
 }

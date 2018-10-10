@@ -97,7 +97,7 @@ var makeConstellation = function(){
     line = INTERSECTED.children[i].clone();
     container.add(line);
   }
-  
+
   new THREE.Box3().setFromObject(container).getCenter(container.position).multiplyScalar(-1);
 
   //append name and get description from wikipedia
@@ -109,4 +109,5 @@ var makeConstellation = function(){
   scene.add(container);
   container.name = "container";
   sceneLvl2 = scene;
+  console.log(camera)
 }
