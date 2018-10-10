@@ -9,10 +9,12 @@ function getLocation() {
           realtime = true;
           coords = p.coords;
 
-          const skyCenter = new THREE.Vector3(0,11000,0);
-          console.log(computeZenith())
-          scene.getObjectByName("galaxy").quaternion.setFromUnitVectors(computeZenith(), skyCenter.clone().normalize());
-          console.log(scene.getObjectByName("galaxy").children[0].position)
+          var skyCenter = new THREE.Vector3(0,12000,0);
+
+          console.log(scene.getObjectByName("galaxy").quaternion)
+
+          scene.getObjectByName("galaxy").quaternion.setFromUnitVectors(computeZenith().normalize(), skyCenter.clone().normalize());
+
         });
     } else {
         x.innerHTML = "Geolocation is not supported by this browser.";

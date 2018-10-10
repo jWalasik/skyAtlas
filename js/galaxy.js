@@ -219,5 +219,14 @@ var makeGalaxy = function(error, hyg, bounds, lines){
   scene.add(galaxy);
   var axesHelp = new THREE.AxesHelper(15000);
   scene.add(axesHelp);
+
+  var box = new THREE.BoxGeometry(100,100,100);
+  var mat = new THREE.MeshBasicMaterial({color: 0xf70025});
+  var cube = new THREE.Mesh(box, mat);
+  galaxy.add(cube);
+  cube.position.x = 0;
+  cube.position.y = 12000;
+  cube.position.z = 0;
+
   sceneLvl1 = scene;
 }
