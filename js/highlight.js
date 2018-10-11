@@ -3,11 +3,10 @@ function checkHighlight(){
   var vector = new THREE.Vector3(mouse.x, mouse.y, 1);
   vector.unproject(camera);
   var ray = new THREE.Raycaster(camera.position, vector.normalize());
-
   var intersects;
   if(lvl == 1){
     ray.params.Points.threshold = 1; //raycaster precision
-    intersects = ray.intersectObjects(scene.children, true);
+    intersects = ray.intersectObjects(intersections);
   }
   else if(lvl ==2){
     ray.params.Points.threshold = 100;

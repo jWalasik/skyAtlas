@@ -14,7 +14,6 @@ var makeConstellation = function(){
 
   //stars
   starDatabase.map(function(d){
-
     if(d.con == INTERSECTED.userData.name){
       //if processing major star create unique object
       if(d.proper !== ""){

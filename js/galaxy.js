@@ -1,7 +1,7 @@
 var makeGalaxy = function(error, hyg, bounds, lines){
   //process data
   let scene = new THREE.Scene();
-
+  
   var galaxy = new THREE.Object3D();
   galaxy.name = "galaxy";
   scene.add(galaxy);
@@ -85,9 +85,9 @@ var makeGalaxy = function(error, hyg, bounds, lines){
 
     boundsMesh.material.side = THREE.DoubleSide;
     boundsMesh.userData = {name: boundsName};
-
+    intersections.push(boundsMesh);
     galaxy.add(boundsMesh);
-    //scene.add(boundsMesh);
+
     boundsMesh.add(outline);
     //console.log(boundsMesh);
     //boundary label
