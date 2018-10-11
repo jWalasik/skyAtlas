@@ -7,7 +7,7 @@ function checkHighlight(){
   var intersects;
   if(lvl == 1){
     ray.params.Points.threshold = 1; //raycaster precision
-    intersects = ray.intersectObjects(scene.children);
+    intersects = ray.intersectObjects(scene.children, true);
   }
   else if(lvl ==2){
     ray.params.Points.threshold = 100;

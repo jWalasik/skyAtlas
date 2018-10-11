@@ -10,7 +10,7 @@ function getLocation() {
           coords = p.coords;
 
           var skyCenter = new THREE.Vector3(0,12000,0);
-
+          
           console.log(scene.getObjectByName("galaxy").quaternion)
 
           scene.getObjectByName("galaxy").quaternion.setFromUnitVectors(computeZenith().normalize(), skyCenter.clone().normalize());

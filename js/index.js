@@ -99,6 +99,7 @@ function init(){
 	  });
 
   render();
+  
   //RENDERING FUNCTION
   function render(){
     //chose scene to render
