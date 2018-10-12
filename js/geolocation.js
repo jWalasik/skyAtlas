@@ -9,8 +9,10 @@ function getLocation() {
           realtime = true;
           coords = p.coords;
           var skyCenter = new THREE.Vector3(0,12000,0);
+          setTimeout(function(){
+            scene.getObjectByName("galaxy").quaternion.setFromUnitVectors(computeZenith().normalize(), skyCenter.clone().normalize());
+          }, 5000);
 
-          scene.getObjectByName("galaxy").quaternion.setFromUnitVectors(computeZenith().normalize(), skyCenter.clone().normalize());
 
         });
     } else {
