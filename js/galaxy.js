@@ -1,7 +1,7 @@
 var makeGalaxy = function(error, hyg, bounds, lines){
   //process data
   let scene = new THREE.Scene();
-  
+
   var galaxy = new THREE.Object3D();
   galaxy.name = "galaxy";
   scene.add(galaxy);
@@ -220,4 +220,5 @@ var makeGalaxy = function(error, hyg, bounds, lines){
 
 
   sceneLvl1 = scene;
+  camera.translateZ(-5000);
 }

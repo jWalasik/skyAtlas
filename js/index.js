@@ -8,7 +8,7 @@ var scene = new THREE.Scene(),
 //controls
 var minMag = 21,
     mouse = {x: 0, y: 0},
-    intersections=[], //store objects to pick by raycaster
+    intersections=[],
     INTERSECTED,
     starDatabase=[],
     width = window.innerWidth,

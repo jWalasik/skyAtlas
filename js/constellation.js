@@ -8,12 +8,12 @@ var makeConstellation = function(){
       colors = [],
       sizes = [],
       starsGeometryFiltered = new THREE.BufferGeometry();
-  console.log(INTERSECTED)
 
   var container = new THREE.Object3D();
 
   //stars
   starDatabase.map(function(d){
+    intersections2 = [];
     if(d.con == INTERSECTED.userData.name){
       //if processing major star create unique object
       if(d.proper !== ""){
@@ -40,7 +40,6 @@ var makeConstellation = function(){
         var majorStar = new THREE.Points(majorStarGeo, majorStarMat);
         majorStar.userData = d.proper;
         container.add(majorStar);
-
       }
       //else use vertex shader method
       else{
