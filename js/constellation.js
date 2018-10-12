@@ -107,5 +107,6 @@ var makeConstellation = function(){
   scene.add(container);
   container.name = "container";
   sceneLvl2 = scene;
-  console.log(camera)
+  console.log(camera.position)
+  
 }

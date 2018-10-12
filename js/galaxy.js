@@ -215,10 +215,14 @@ var makeGalaxy = function(error, hyg, bounds, lines){
       linesGeometry = new THREE.Geometry();
     })  //coordinates mapping end
 
-  })  //lines.features.map end
-
-
+  })  //lines.features.map end89
 
   sceneLvl1 = scene;
-  camera.translateZ(-5000);
+
+  var geometry = new THREE.BoxGeometry( 300, 300, 300 );
+var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+var cube = new THREE.Mesh( geometry, material );
+cube.name = "cube"
+scene.add( cube );
+
 }
