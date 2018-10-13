@@ -107,6 +107,14 @@ var makeConstellation = function(){
   scene.add(container);
   container.name = "container";
   sceneLvl2 = scene;
-  console.log(camera.position)
-  
+  //console.log(camera.position)
+
+  //centering
+  let vector = new THREE.Vector3(0,0,0);
+  let direction = vector.clone().sub(camera.position).normalize();
+  console.log("\n dir: ",direction, '\n vector: ', vector, '\n container: ', container.position, '\n camera: ', camera.position)
+  vector.add(direction.clone().multiplyScalar(-1));
+  console.log("\n dir: ",direction, '\n vector: ', vector, '\n container: ', container.position, '\n camera: ', camera.position)
+  container.quaternion.setFromUnitVectors(container.position.normalize(), vector.normalize());
+  console.log("\n dir: ",direction, '\n vector: ', vector, '\n container: ', container.position, '\n camera: ', camera.position)
 }

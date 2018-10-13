@@ -219,10 +219,4 @@ var makeGalaxy = function(error, hyg, bounds, lines){
 
   sceneLvl1 = scene;
 
-  var geometry = new THREE.BoxGeometry( 300, 300, 300 );
-var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
-var cube = new THREE.Mesh( geometry, material );
-cube.name = "cube"
-scene.add( cube );
-
 }
