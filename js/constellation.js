@@ -95,9 +95,9 @@ var makeConstellation = function(){
     line = INTERSECTED.children[i].clone();
     container.add(line);
   }
-
+  console.log(container.position)
   new THREE.Box3().setFromObject(container).getCenter(container.position).multiplyScalar(-1);
-
+  console.log(container.position)
   //append name and get description from wikipedia
   var ahref = INTERSECTED.children[2].userData[1];
   ahref = ahref.replace(/ /g,"_"); //replace space with underscore
@@ -111,10 +111,11 @@ var makeConstellation = function(){
 
   //centering
   let vector = new THREE.Vector3(0,0,0);
-  let direction = vector.clone().sub(camera.position).normalize();
+  let direction = vector.clone().add(camera.position).normalize();
   console.log("\n dir: ",direction, '\n vector: ', vector, '\n container: ', container.position, '\n camera: ', camera.position)
-  vector.add(direction.clone().multiplyScalar(-1));
+  vector.add(direction.clone().multiplyScalar(1));
   console.log("\n dir: ",direction, '\n vector: ', vector, '\n container: ', container.position, '\n camera: ', camera.position)
   container.quaternion.setFromUnitVectors(container.position.normalize(), vector.normalize());
   console.log("\n dir: ",direction, '\n vector: ', vector, '\n container: ', container.position, '\n camera: ', camera.position)
+  new THREE.Box3().setFromObject(container).getCenter(container.position).multiplyScalar(-1);
 }

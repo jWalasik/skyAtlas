@@ -111,6 +111,7 @@ function init(){
 
   //RENDERING FUNCTION
   function render(){
+
     //chose scene to render
     scene = window["sceneLvl"+lvl];
     if(lvl == 2){
@@ -128,6 +129,7 @@ function init(){
 
     //console.log(camera.position)
     requestAnimationFrame(render);
+    
     renderer.render(scene, camera);
   } //render end
 }//init end
