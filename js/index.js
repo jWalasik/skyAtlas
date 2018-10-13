@@ -16,7 +16,8 @@ var minMag = 21,
     detailedView = false,
     radius = 12000,
     camera = new THREE.PerspectiveCamera(70, width/10 / (height/10), 1, 100000),
-    realtime = false;
+    realtime = false,
+    scrollFlag = 0;
 
 //parse data
 queue()
@@ -129,7 +130,7 @@ function init(){
 
     //console.log(camera.position)
     requestAnimationFrame(render);
-    
+
     renderer.render(scene, camera);
   } //render end
 }//init end
@@ -144,6 +145,7 @@ document.getElementById('WebGL-Output').addEventListener('click', onDocumentMous
 document.addEventListener('mousedown', ()=>{start = {x: mouse.x, y: mouse.y}});
 document.addEventListener('mouseup', ()=>end = {x: mouse.x, y: mouse.y});
 document.getElementById('return').addEventListener('click', goBack);
+document.getElementById('scroll').addEventListener('click', scroll);
 
 window.onload = init;
 

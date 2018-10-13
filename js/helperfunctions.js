@@ -124,3 +124,18 @@ const fitCameraToObject = function ( camera, object, offset, controls ) {
 
    }
 }
+
+function scroll(){
+  //focus on map
+  if(scrollFlag == 0){
+    window.scrollBy(0, (window.innerHeight-10));
+    document.getElementById('scroll').style.top = 0;
+    scrollFlag = 1
+  }
+  else{
+    scrollFlag = 0;
+    window.scrollTo(0,0);
+    document.getElementById('scroll').style.top = '90%';
+  }
+  //focus on text
+}
