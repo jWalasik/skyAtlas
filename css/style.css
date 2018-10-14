@@ -29,12 +29,26 @@ body {
 #description-container {
   color: #098bdc;
 }
-#return{
+button{
   position: absolute;
-  top:0;
-  left:0;
+  top:2%;
+  left:2%;
+  background-color: #098bdc;
+  color: white;
+  border: none;
+  text-align: center;
+  font-size: 36px;
+  cursor: pointer;
+  display: inline-block;
+  padding: 10px 27px;
+  transition: 0.3s;
+  visibility: hidden;
+}
+button:hover{
+  background-color: #00cc66;
 }
 #scroll{
+  transform: rotate(-90deg);
   position: fixed;
   top: 90%;
   left: auto;

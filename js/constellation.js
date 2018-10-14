@@ -11,6 +11,9 @@ var makeConstellation = function(){
 
   var container = new THREE.Object3D();
 
+  document.getElementsByTagName("button")[0].style.visibility = "visible";
+  document.getElementsByTagName("button")[1].style.visibility = "visible";
+
   //stars
   starDatabase.map(function(d){
     intersections2 = [];
@@ -96,7 +99,7 @@ var makeConstellation = function(){
     container.add(line);
   }
   console.log(container)
-  new THREE.Box3().setFromObject(container).getCenter(container.position).multiplyScalar(-1);
+  new THREE.Box3().setFromObject(container).getCenter(container.position);
   console.log(container)
   //append name and get description from wikipedia
   var ahref = INTERSECTED.children[2].userData[1];
@@ -113,11 +116,11 @@ var makeConstellation = function(){
   let vector = new THREE.Vector3(0,0,0);
   let direction = vector.clone().add(camera.position).normalize();
 
-  vector.add(direction.clone().multiplyScalar(1));
+  vector.add(direction.clone().multiplyScalar(-1));
 
   container.quaternion.setFromUnitVectors(container.position.normalize(), vector.normalize());
 
-  new THREE.Box3().setFromObject(container).getCenter(container.position);
-  console.log("\n dir: ",direction, '\n vector: ', vector, '\n container: ', container.position, '\n camera: ', camera.position)
-  //camera
+  new THREE.Box3().setFromObject(container).getCenter(container.position).multiplyScalar(-1);
+  //console.log("\n dir: ",direction, '\n vector: ', vector, '\n container: ', container.position, '\n camera: ', camera.position)
+  camera.translateZ(8000)
 }
