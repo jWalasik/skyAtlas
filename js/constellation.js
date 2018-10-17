@@ -122,5 +122,9 @@ var makeConstellation = function(){
 
   new THREE.Box3().setFromObject(container).getCenter(container.position).multiplyScalar(-1);
   //console.log("\n dir: ",direction, '\n vector: ', vector, '\n container: ', container.position, '\n camera: ', camera.position)
-  camera.translateZ(8000)
+  camera.translateZ(8000);
+  if(typeof window.orientation !== 'undefined'){
+    trackballControls = new THREE.TrackballControls(camera, renderer.domElement);
+  }
+
 }
