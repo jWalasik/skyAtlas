@@ -2,13 +2,14 @@ var center;
 var cameraPos = new THREE.Quaternion();
 
 var makeConstellation = function(){
-  let scene = new THREE.Scene();
+  var scene = new THREE.Scene();
 
-  let vertices = [],
+  var vertices = [],
       colors = [],
       sizes = [],
       starsGeometryFiltered = new THREE.BufferGeometry();
-
+  
+  //container for transformations
   var container = new THREE.Object3D();
 
   document.getElementsByTagName("button")[0].style.visibility = "visible";
@@ -22,8 +23,7 @@ var makeConstellation = function(){
       if(d.proper !== ""){
         var majorStarGeo = new THREE.Geometry();
         var majorStarMap = new THREE.TextureLoader().load('textures/lensflare0_alpha.png');
-        //3D
-
+        //2d to 3d coordinates
         var lambda = d.ra*Math.PI/180*15, //arc length, range 360 deg
             phi = d.dec*Math.PI/180,      //arc length, range 90 deg
             cosPhi = Math.cos(phi);
@@ -44,9 +44,9 @@ var makeConstellation = function(){
         majorStar.userData = d.proper;
         container.add(majorStar);
       }
-      //else use vertex shader method
+      //use vertex shader method for unnamed stars
       else{
-        //3D
+        //2d to 3d coordinates
         var lambda = d.ra*Math.PI/180*15,
             phi = d.dec*Math.PI/180,
             cosPhi = Math.cos(phi);
@@ -57,16 +57,18 @@ var makeConstellation = function(){
         vertices.push(x);
         vertices.push(y);
         vertices.push(z);
-        let rgb = new THREE.Color(starColor(d.ci));
+        var rgb = new THREE.Color(starColor(d.ci));
         colors.push(rgb.r, rgb.g, rgb.b);
         sizes.push((scaleMag(d.mag))*1);
       }
     }//filter by name/mag end
   })//database processing end
+  
+  //shader setup
   starsGeometryFiltered.addAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
   starsGeometryFiltered.addAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
   starsGeometryFiltered.addAttribute('size', new THREE.Float32BufferAttribute(sizes, 1));
-
+ 
   var uniforms = {
       texture: {value: new THREE.TextureLoader().load('textures/lensflare0_alpha.png')},
       scale: {type: 'f', value: window.innerHeight/2}
@@ -87,20 +89,21 @@ var makeConstellation = function(){
   //starFieldFiltered.geometry.center();
   container.add(starFieldFiltered);
 
-  //boundary
+  //append constellation boundary from intesected object
   var boundsDetailed = INTERSECTED.children[0].clone();
   //boundsDetailed.geometry.center();
   container.add(boundsDetailed);
 
-  //lines
+  //add constellation lines
   var linesGeometry = new THREE.Geometry();
   for (var i=2; i<INTERSECTED.children.length; i++){
     line = INTERSECTED.children[i].clone();
     container.add(line);
   }
-  console.log(container)
+  
+  //center constellation
   new THREE.Box3().setFromObject(container).getCenter(container.position);
-  console.log(container)
+  
   //append name and get description from wikipedia
   var ahref = INTERSECTED.children[2].userData[1];
   ahref = ahref.replace(/ /g,"_"); //replace space with underscore
@@ -110,9 +113,8 @@ var makeConstellation = function(){
   scene.add(container);
   container.name = "container";
   sceneLvl2 = scene;
-  //console.log(camera.position)
-
-  //centering
+  
+  //rotate constellation to face camera
   let vector = new THREE.Vector3(0,0,0);
   let direction = vector.clone().add(camera.position).normalize();
 
@@ -123,6 +125,8 @@ var makeConstellation = function(){
   new THREE.Box3().setFromObject(container).getCenter(container.position).multiplyScalar(-1);
   //console.log("\n dir: ",direction, '\n vector: ', vector, '\n container: ', container.position, '\n camera: ', camera.position)
   camera.translateZ(8000);
+  
+  //switch controls if using device orientation
   if(typeof window.orientation !== 'undefined'){
     trackballControls = new THREE.TrackballControls(camera, renderer.domElement);
   }
