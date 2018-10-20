@@ -29,9 +29,6 @@ queue()
   .defer(d3.json, "https://gist.githubusercontent.com/elPaleniozord/ed1dd65a955c2c7e1bb6cbc30feb523f/raw/9dd2837035dde1554f20157be681d71d54a26c58/lines.json")
   .await(makeGalaxy);
 
-
-window.onload = getLocation();
-
 function init(){
 
   //THREE.js declarations
