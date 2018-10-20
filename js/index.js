@@ -1,10 +1,10 @@
+//three variables
 var scene = new THREE.Scene(),
     sceneLvl1 = new THREE.Scene(),
     sceneLvl2 = new THREE.Scene(),
     sceneLvl3 = new THREE.Scene(),
-    lvl = 1,
     trackballControls,
-    name;
+    camera = new THREE.PerspectiveCamera(70, width/10 / (height/10), 1, 100000);
 //controls
 var minMag = 21,
     mouse = {x: 0, y: 0},
@@ -15,7 +15,8 @@ var minMag = 21,
     height = window.innerHeight,
     detailedView = false,
     radius = 12000,
-    camera = new THREE.PerspectiveCamera(70, width/10 / (height/10), 1, 100000),
+    lvl = 1,
+    name,
     realtime = false,
     scrollFlag = 0;
 
@@ -42,24 +43,17 @@ function init(){
   camera = new THREE.PerspectiveCamera(70, width/10 / (height/10), 1, 100000);
   camera.position.set(0,0,1)
 
-  //detect mobile
+  //setup controls
   if(typeof window.orientation !== 'undefined'){
     trackballControls = new THREE.DeviceOrientationControls(camera);
   }
  else {
     trackballControls = new THREE.TrackballControls(camera, renderer.domElement);
   }
-  //
-
-
-
+  //clock for rendering
   var clock = new THREE.Clock;
-
-  //camera.position.set(0,0,1);
-
-  //camera.lookAt(-3541.9769550248348, -4404.814978829795, 10585.461929096418) //CENTER AT POLARIS
-
-  //GUI CONTROLS
+	
+  //graphic user interface
   var gui = new dat.GUI();
   var controls = {
     zenithTracking: function(){
@@ -165,12 +159,10 @@ function onDocumentMouseClick(event){
     //if lvl2 scene is rendered create scene lvl3
     if(lvl == 2){
       lvl = 3;
-      console.log(INTERSECTED);
       makeObject(INTERSECTED);
     }
     //otherwise create lvl2 scene
     else{
-      console.log("making constellation")
       lvl = 2;
       makeConstellation();
     }
