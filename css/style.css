@@ -44,22 +44,22 @@ button{
   transition: 0.3s;
   visibility: hidden;
   user-select: none;
-  border-radius: 20%;
 }
 button:hover{
   background-color: #00cc66;
 }
 #scroll-container{
-	height: 60px;
+	height: 5%;
 	width: 100%;
 	margin: auto;
+	display: block;
 	background-color: white;
 }
 #scroll{
   transform: rotate(-90deg);
+  position: fixed;
   top: 90%;
   left: auto;
-
 }
 .sticky{
   position: fixed;

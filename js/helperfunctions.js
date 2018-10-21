@@ -128,10 +128,9 @@ const fitCameraToObject = function ( camera, object, offset, controls ) {
 function scroll(){
   //focus on map
   if(scrollFlag == 0){
-    window.scrollBy(0, (window.innerHeight));
+    window.scrollBy(0, (window.innerHeight-10));
     document.getElementById('scroll').style.top = 0;
-    document.getElementById('scroll').style.visibility = 'hidden';
-    document.getElementById('scroll-container').style.visibility = 'visible';
+    document.getElementById('scroll').style.transform = 'rotate(90deg)';
     scrollFlag = 1
   }
   else{
@@ -145,12 +144,18 @@ function scroll(){
 
 function posFix(){
 	var scrollCon = document.getElementById('scroll-container');
-
-	if(window.pageYOffset >= window.innerHeight){
+	var sticky = window.innerHeight;
+	var child = document.getElementById('scroll');
+	
+	if(window.pageYOffset >= sticky){
+		scrollCon.appendChild(child);
+		scrollCon.style.display = 'block';
 		scrollCon.classList.add('sticky');
 	} else {
-		scrollCon.style.display = 'none';
-		scrollCon.classList.remove('sticky');
+		scrollCon.removeChild(child);
+		document.body.appendChild(child);
+		//scrollCon.style.display = 'none';
+		//scrollCon.classList.remove('sticky');
 	}
-
+	
 }
