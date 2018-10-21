@@ -49,7 +49,7 @@ function init(){
   }
   //clock for rendering
   var clock = new THREE.Clock;
-	
+
   //graphic user interface
   var gui = new dat.GUI();
   var controls = {
@@ -137,7 +137,7 @@ document.addEventListener('mousedown', ()=>{start = {x: mouse.x, y: mouse.y}});
 document.addEventListener('mouseup', ()=>end = {x: mouse.x, y: mouse.y});
 document.getElementById('return').addEventListener('click', goBack);
 document.getElementById('scroll').addEventListener('click', scroll);
-//window.onscroll = function() {posFix()}
+window.onscroll = function() {posFix()}
 
 window.onload = init;
 
