@@ -137,13 +137,13 @@ document.addEventListener('mousedown', ()=>{start = {x: mouse.x, y: mouse.y}});
 document.addEventListener('mouseup', ()=>end = {x: mouse.x, y: mouse.y});
 document.getElementById('return').addEventListener('click', goBack);
 document.getElementById('scroll').addEventListener('click', scroll);
+//window.onscroll = function() {posFix()}
 
 window.onload = init;
 
 function onDocumentMouseMove(event){
   // the following line would stop any other event handler from firing
   // (such as the mouse's TrackballControls)
-  //event.preventDefault();
 
   // update the mouse variable
   mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;

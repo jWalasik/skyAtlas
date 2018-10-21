@@ -141,3 +141,21 @@ function scroll(){
   }
   //focus on text
 }
+
+function posFix(){
+	var scrollCon = document.getElementById('scroll-container');
+	var sticky = window.innerHeight;
+	var child = document.getElementById('scroll');
+	
+	if(window.pageYOffset >= sticky){
+		scrollCon.appendChild(child);
+		scrollCon.style.display = 'block';
+		scrollCon.classList.add('sticky');
+	} else {
+		scrollCon.removeChild(child);
+		document.body.appendChild(child);
+		//scrollCon.style.display = 'none';
+		//scrollCon.classList.remove('sticky');
+	}
+	
+}
