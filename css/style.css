@@ -9,12 +9,55 @@
   margin: auto;
 }
 .stars {
-      fill: #fff;
-      stroke: #000;
+  fill: #fff;
+  stroke: #000;
 }
 body {
   background-color: #000033;
   text-align: center;
+}
+button{
+  background-color: rgba(0,0,0,0);
+  border: none;
+  outline: none;
+  user-select: none;
+  cursor: pointer;
+}
+.icon{
+  width: 50px;
+  height: auto;
+  filter: opacity(50%);
+}
+.icon:hover{
+  filter: opacity(100%);
+}
+#return{
+  position: absolute;
+  top: 2%;
+  left: 2%;
+}
+#scroll-down{
+  position: absolute;
+  top: 90%;
+  transform: rotate(180deg);
+}
+#scroll-up{
+  margin: auto;
+  top: 5%;
+  display: inline-block;
+  width: 100px;
+}
+#scroll-container{
+  height: 50px;
+  width: 105%;
+  background-color: #000033;
+}
+.hidden{
+  display: none;
+}
+.sticky{
+  position: fixed;
+  top: 0;
 }
 #name-container {
   position: absolute;
@@ -29,42 +72,6 @@ body {
 }
 #description-container {
   color: #098bdc;
-}
-button{
-  position: absolute;
-  top:2%;
-  left:2%;
-  background-color: #098bdc;
-  color: white;
-  border: none;
-  font-size: 36px;
-  cursor: pointer;
-  display: inline-block;
-  padding: 10px 27px;
-  transition: 0.3s;
-  visibility: hidden;
-  user-select: none;
-}
-button:hover{
-  background-color: #00cc66;
-}
-#scroll-container{
-	height: 5%;
-	width: 100%;
-	margin: auto;
-	display: block;
-	background-color: white;
-}
-#scroll{
-  transform: rotate(-90deg);
-  position: fixed;
-  top: 90%;
-  left: auto;
-}
-.sticky{
-  position: fixed;
-  top: 0;
-  width: 100%;
 }
 #object{
   color: white;

@@ -2,19 +2,19 @@ var center;
 var cameraPos = new THREE.Quaternion();
 
 var makeConstellation = function(){
+
+  updateUI();
+
   var scene = new THREE.Scene();
 
   var vertices = [],
       colors = [],
       sizes = [],
       starsGeometryFiltered = new THREE.BufferGeometry();
-  
+
   //container for transformations
   var container = new THREE.Object3D();
 
-  document.getElementsByTagName("button")[0].style.visibility = "visible";
-  document.getElementById("scroll").style.visibility = "visible";
-  
   //stars
   starDatabase.map(function(d){
     intersections2 = [];
@@ -63,12 +63,12 @@ var makeConstellation = function(){
       }
     }//filter by name/mag end
   })//database processing end
-  
+
   //shader setup
   starsGeometryFiltered.addAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
   starsGeometryFiltered.addAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
   starsGeometryFiltered.addAttribute('size', new THREE.Float32BufferAttribute(sizes, 1));
- 
+
   var uniforms = {
       texture: {value: new THREE.TextureLoader().load('textures/lensflare0_alpha.png')},
       scale: {type: 'f', value: window.innerHeight/2}
@@ -100,7 +100,7 @@ var makeConstellation = function(){
     line = INTERSECTED.children[i].clone();
     container.add(line);
   }
-  
+
   //append name and get description from wikipedia
   var ahref = INTERSECTED.children[2].userData[1];
   ahref = ahref.replace(/ /g,"_"); //replace space with underscore
@@ -110,9 +110,9 @@ var makeConstellation = function(){
   scene.add(container);
   container.name = "container";
   sceneLvl2 = scene;
-  
+
   centerConstellation(container, -1);
-  
+
   //switch controls if using device orientation
   if(typeof window.orientation !== 'undefined'){
     trackballControls = new THREE.TrackballControls(camera, renderer.domElement);

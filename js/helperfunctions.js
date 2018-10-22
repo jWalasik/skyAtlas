@@ -130,32 +130,46 @@ function scroll(){
   if(scrollFlag == 0){
     window.scrollBy(0, (window.innerHeight-10));
     document.getElementById('scroll').style.top = 0;
-    document.getElementById('scroll').style.transform = 'rotate(90deg)';
     scrollFlag = 1
   }
   else{
     scrollFlag = 0;
     window.scrollTo(0,0);
     document.getElementById('scroll').style.top = '90%';
-    document.getElementById('scroll').style.transform = 'rotate(-90deg)';
   }
   //focus on text
+}
+function updateUI(id){
+  var downBtn = document.getElementById('scroll-down'),
+      upBtn = document.getElementById('scroll-up'),
+      returnBtn = document.getElementById('return'),
+      cont = document.getElementById('scroll-container');
+
+  if(lvl == 1){
+    downBtn.classList.add('hidden');
+    cont.classList.add('hidden');
+    returnBtn.classList.add('hidden');
+  }
+  else{
+    downBtn.classList.remove('hidden');
+    cont.classList.remove('hidden');
+    returnBtn.classList.remove('hidden');
+  }
+
+
 }
 
 function posFix(){
 	var scrollCon = document.getElementById('scroll-container');
 	var sticky = window.innerHeight;
 	var child = document.getElementById('scroll');
-	
+
 	if(window.pageYOffset >= sticky){
-		scrollCon.appendChild(child);
-		scrollCon.style.display = 'block';
+    scrollCon.style.display = 'block';
 		scrollCon.classList.add('sticky');
 	} else {
-		scrollCon.removeChild(child);
-		document.body.appendChild(child);
 		//scrollCon.style.display = 'none';
-		//scrollCon.classList.remove('sticky');
+		scrollCon.classList.remove('sticky');
 	}
-	
+
 }

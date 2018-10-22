@@ -1,10 +1,9 @@
 var goBack = function(){
+
   if(lvl == 2){
 	lvl = 1;
     document.getElementById('name-container').innerHTML = "";
-	document.getElementById('description-container').innerHTML = "";
-    document.getElementsByTagName("button")[0].style.visibility = "hidden";
-    document.getElementsByTagName("button")[1].style.visibility = "hidden";    
+	  document.getElementById('description-container').innerHTML = "";
   }
   else if( lvl == 3){
     lvl = 2;
@@ -14,4 +13,5 @@ var goBack = function(){
 	console.log(sceneLvl2);
 	centerConstellation(sceneLvl2.children[0], 1);
   }
+  updateUI();
 }

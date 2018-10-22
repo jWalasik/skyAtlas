@@ -19,7 +19,6 @@ var minMag = 21,
     name,
     realtime = false,
     scrollFlag = 0;
-
 //parse data
 queue()
   .defer(d3.csv, "https://gist.githubusercontent.com/elPaleniozord/5d96f2f5cce92366b06bea32a2625d2e/raw/8504f231ea5ee5fdef47371232c8c55256b8f045/hyg_data_sortMag.csv", function(d){
@@ -49,7 +48,7 @@ function init(){
   }
   //clock for rendering
   var clock = new THREE.Clock;
-	
+
   //graphic user interface
   var gui = new dat.GUI();
   var controls = {
@@ -136,8 +135,8 @@ document.getElementById('WebGL-Output').addEventListener('click', onDocumentMous
 document.addEventListener('mousedown', ()=>{start = {x: mouse.x, y: mouse.y}});
 document.addEventListener('mouseup', ()=>end = {x: mouse.x, y: mouse.y});
 document.getElementById('return').addEventListener('click', goBack);
-document.getElementById('scroll').addEventListener('click', scroll);
-//window.onscroll = function() {posFix()}
+//document.getElementById('scroll').addEventListener('click', scroll);
+window.onscroll = function() {posFix()}
 
 window.onload = init;
 
