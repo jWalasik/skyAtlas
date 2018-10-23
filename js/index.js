@@ -4,7 +4,8 @@ var scene = new THREE.Scene(),
     sceneLvl2 = new THREE.Scene(),
     sceneLvl3 = new THREE.Scene(),
     trackballControls,
-    camera = new THREE.PerspectiveCamera(70, width/10 / (height/10), 1, 100000);
+    camera = new THREE.PerspectiveCamera(70, width/10 / (height/10), 1, 100000),
+    renderer = new THREE.WebGLRenderer({alpha: true});
 //controls
 var minMag = 21,
     mouse = {x: 0, y: 0},
@@ -18,7 +19,7 @@ var minMag = 21,
     lvl = 1,
     name,
     realtime = false,
-    scrollFlag = 0;
+    mode = 0;
 //parse data
 queue()
   .defer(d3.csv, "https://gist.githubusercontent.com/elPaleniozord/5d96f2f5cce92366b06bea32a2625d2e/raw/8504f231ea5ee5fdef47371232c8c55256b8f045/hyg_data_sortMag.csv", function(d){
@@ -31,7 +32,7 @@ queue()
 function init(){
 
   //THREE.js declarations
-  var renderer = new THREE.WebGLRenderer({alpha: true});
+
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(width, height);
   document.getElementById('WebGL-Output').appendChild(renderer.domElement);

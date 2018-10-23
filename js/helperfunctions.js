@@ -186,16 +186,18 @@ function switchControls(){
   camera.position.copy( prevCamera.position );
   camera.rotation.copy( prevCamera.rotation );
 
-  var MODE = {TRACKBALL: 0, ORIENTATION: 1};
+  var MODE = {TRACKBALL: 1, ORIENTATION: 0};
 
   switch(mode){
     case MODE.TRACKBALL:
-      controls = new THREE.TrackballControls(camera);
+    console.log('trackball')
+      trackballControls = new THREE.TrackballControls(camera, renderer.domElement);
       mode = MODE.ORIENTATION;
       break;
 
     case MODE.ORIENTATION:
-      controls = new THREE.DeviceOrientationControls(camera);
+    console.log('orient')
+      trackballControls = new THREE.DeviceOrientationControls(camera);
       mode = MODE.TRACKBALL;
       break;
   }

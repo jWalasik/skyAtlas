@@ -58,7 +58,6 @@ button{
 .sticky{
   position: fixed;
   top: 0;
-  box-sizing: border-box;
 }
 #name-container {
   position: absolute;
