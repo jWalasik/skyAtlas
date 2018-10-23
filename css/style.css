@@ -49,7 +49,7 @@ button{
 }
 #scroll-container{
   height: 50px;
-  width: 105%;
+  width: 100%;
   background-color: #000033;
 }
 .hidden{

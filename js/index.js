@@ -135,7 +135,8 @@ document.getElementById('WebGL-Output').addEventListener('click', onDocumentMous
 document.addEventListener('mousedown', ()=>{start = {x: mouse.x, y: mouse.y}});
 document.addEventListener('mouseup', ()=>end = {x: mouse.x, y: mouse.y});
 document.getElementById('return').addEventListener('click', goBack);
-//document.getElementById('scroll').addEventListener('click', scroll);
+document.getElementById('scroll-down').addEventListener('click', scroll);
+document.getElementById('scroll-up').addEventListener('click', scroll);
 window.onscroll = function() {posFix()}
 
 window.onload = init;

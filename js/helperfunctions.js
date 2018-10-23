@@ -129,13 +129,15 @@ function scroll(){
   //focus on map
   if(scrollFlag == 0){
     window.scrollBy(0, (window.innerHeight-10));
-    document.getElementById('scroll').style.top = 0;
+    document.getElementById('scroll-container').classList.remove('hidden');
+    document.getElementById('scroll-down').classList.add('hidden');
     scrollFlag = 1
   }
   else{
     scrollFlag = 0;
     window.scrollTo(0,0);
-    document.getElementById('scroll').style.top = '90%';
+    document.getElementById('scroll-container').classList.add('hidden');
+    document.getElementById('scroll-down').classList.remove('hidden');
   }
   //focus on text
 }
@@ -147,12 +149,12 @@ function updateUI(id){
 
   if(lvl == 1){
     downBtn.classList.add('hidden');
-    cont.classList.add('hidden');
+    //cont.classList.add('hidden');
     returnBtn.classList.add('hidden');
   }
   else{
     downBtn.classList.remove('hidden');
-    cont.classList.remove('hidden');
+    //cont.classList.remove('hidden');
     returnBtn.classList.remove('hidden');
   }
 
@@ -162,10 +164,8 @@ function updateUI(id){
 function posFix(){
 	var scrollCon = document.getElementById('scroll-container');
 	var sticky = window.innerHeight;
-	var child = document.getElementById('scroll');
 
 	if(window.pageYOffset >= sticky){
-    scrollCon.style.display = 'block';
 		scrollCon.classList.add('sticky');
 	} else {
 		//scrollCon.style.display = 'none';
