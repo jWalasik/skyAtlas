@@ -35,11 +35,13 @@ button{
   position: absolute;
   top: 2%;
   left: 2%;
+  display: none;
 }
 #scroll-down{
   position: absolute;
   top: 90%;
   transform: rotate(180deg);
+  display: none;
 }
 #scroll-up{
   margin: auto;
@@ -51,8 +53,6 @@ button{
   height: 50px;
   width: 100%;
   background-color: #000033;
-}
-.hidden{
   display: none;
 }
 .sticky{

@@ -3,8 +3,9 @@ var cameraPos = new THREE.Quaternion();
 
 var makeConstellation = function(){
 
-  updateUI();
-
+  updateUI('atlas');
+  if(typeof window.orientation !== 'undefined')switchControls();
+  
   var scene = new THREE.Scene();
 
   var vertices = [],

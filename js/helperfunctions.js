@@ -126,39 +126,31 @@ const fitCameraToObject = function ( camera, object, offset, controls ) {
 }
 
 function scroll(){
-  //focus on map
-  if(scrollFlag == 0){
-    window.scrollBy(0, (window.innerHeight-10));
-    document.getElementById('scroll-container').classList.remove('hidden');
-    document.getElementById('scroll-down').classList.add('hidden');
-    scrollFlag = 1
-  }
-  else{
-    scrollFlag = 0;
-    window.scrollTo(0,0);
-    document.getElementById('scroll-container').classList.add('hidden');
-    document.getElementById('scroll-down').classList.remove('hidden');
-  }
-  //focus on text
+  console.log(this)
 }
-function updateUI(id){
+function updateUI(state){
   var downBtn = document.getElementById('scroll-down'),
-      upBtn = document.getElementById('scroll-up'),
       returnBtn = document.getElementById('return'),
       cont = document.getElementById('scroll-container');
 
-  if(lvl == 1){
-    downBtn.classList.add('hidden');
-    //cont.classList.add('hidden');
-    returnBtn.classList.add('hidden');
-  }
-  else{
-    downBtn.classList.remove('hidden');
-    //cont.classList.remove('hidden');
-    returnBtn.classList.remove('hidden');
-  }
+  switch(state){
+    case "default":
+      downBtn.style.display = 'none';
+      returnBtn.style.display = 'none';
+      cont.style.display = 'none';
+      break;
+    case "atlas":
+      downBtn.style.display = 'inline-block';
+      returnBtn.style.display = 'block';
+      cont.style.display = 'none';
+      break;
+    case "description":
+      downBtn.style.display = 'none';
+      returnBtn.style.display = 'none';
+      cont.style.display = 'inline-block';
+      break;
 
-
+  }
 }
 
 function posFix(){
@@ -166,10 +158,32 @@ function posFix(){
 	var sticky = window.innerHeight;
 
 	if(window.pageYOffset >= sticky){
+    document.getElementById('scroll-down').classList.add('hidden');
 		scrollCon.classList.add('sticky');
 	} else {
 		//scrollCon.style.display = 'none';
 		scrollCon.classList.remove('sticky');
 	}
+}
 
+function switchControls(){
+  var prevCamera = camera;
+
+  camera = new THREE.PerspectiveCamera(70, width/10 / (height/10), 1, 100000);
+  camera.position.copy( prevCamera.position );
+  camera.rotation.copy( prevCamera.rotation );
+
+  var MODE = {TRACKBALL: 0, ORIENTATION: 1};
+
+  switch(mode){
+    case MODE.TRACKBALL:
+      controls = new THREE.TrackballControls(camera);
+      mode = MODE.ORIENTATION;
+      break;
+
+    case MODE.ORIENTATION:
+      controls = new THREE.DeviceOrientationControls(camera);
+      mode = MODE.TRACKBALL;
+      break;
+  }
 }

@@ -102,7 +102,6 @@ function init(){
 
   //RENDERING FUNCTION
   function render(){
-
     //chose scene to render
     scene = window["sceneLvl"+lvl];
     if(lvl == 2){
@@ -135,9 +134,9 @@ document.getElementById('WebGL-Output').addEventListener('click', onDocumentMous
 document.addEventListener('mousedown', ()=>{start = {x: mouse.x, y: mouse.y}});
 document.addEventListener('mouseup', ()=>end = {x: mouse.x, y: mouse.y});
 document.getElementById('return').addEventListener('click', goBack);
-document.getElementById('scroll-down').addEventListener('click', scroll);
-document.getElementById('scroll-up').addEventListener('click', scroll);
-window.onscroll = function() {posFix()}
+document.getElementById('scroll-down').addEventListener('click', scroll());
+document.getElementById('scroll-up').addEventListener('click', scroll());
+window.onscroll = function() {updateUI()}
 
 window.onload = init;
 

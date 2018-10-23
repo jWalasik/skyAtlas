@@ -4,6 +4,7 @@ var goBack = function(){
 	lvl = 1;
     document.getElementById('name-container').innerHTML = "";
 	  document.getElementById('description-container').innerHTML = "";
+    updateUI('default');
   }
   else if( lvl == 3){
     lvl = 2;
@@ -13,5 +14,5 @@ var goBack = function(){
 	console.log(sceneLvl2);
 	centerConstellation(sceneLvl2.children[0], 1);
   }
-  updateUI();
+
 }
