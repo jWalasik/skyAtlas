@@ -133,10 +133,10 @@ document.getElementById('WebGL-Output').addEventListener('mousemove', onDocument
 document.getElementById('WebGL-Output').addEventListener('click', onDocumentMouseClick);
 document.addEventListener('mousedown', ()=>{start = {x: mouse.x, y: mouse.y}});
 document.addEventListener('mouseup', ()=>end = {x: mouse.x, y: mouse.y});
-document.getElementById('return').addEventListener('click', goBack);
-document.getElementById('scroll-down').addEventListener('click', scroll());
-document.getElementById('scroll-up').addEventListener('click', scroll());
-window.onscroll = function() {updateUI()}
+//document.getElementById('return').addEventListener('click', goBack);
+//document.getElementById('scroll-down').addEventListener('click', scroll());
+//document.getElementById('scroll-up').addEventListener('click', scroll());
+window.onscroll = function() {updateUI('offset')}
 
 window.onload = init;
 

@@ -125,8 +125,17 @@ const fitCameraToObject = function ( camera, object, offset, controls ) {
    }
 }
 
-function scroll(){
-  console.log(this)
+function scrolling(direction){
+  switch(direction){
+    case 'down':
+      window.scrollBy(0, window.innerHeight);
+      updateUI("description");
+      break;
+    case 'up':
+      window.scrollTo(0,0);
+      updateUI("atlas");
+      break;
+  }
 }
 function updateUI(state){
   var downBtn = document.getElementById('scroll-down'),
@@ -147,9 +156,13 @@ function updateUI(state){
     case "description":
       downBtn.style.display = 'none';
       returnBtn.style.display = 'none';
-      cont.style.display = 'inline-block';
+      cont.style.display = 'block';
       break;
-
+    case "offset":
+      if(window.pageYOffset > window.innerHeight) cont.classList.add('sticky');
+      if(window.pageYOffset <= window.innerHeight) cont.classList.remove('sticky');
+      if(window.pageYOffset == 0) updateUI('atlas');
+      if(window.pageYOffset > 10) updateUI('description');
   }
 }
 
