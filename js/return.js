@@ -5,8 +5,7 @@ var goBack = function(){
     document.getElementById('name-container').innerHTML = "";
 	  document.getElementById('description-container').innerHTML = "";
     updateUI('default');
-    //if(typeof window.orientation !== 'undefined')
-    switchControls();
+    if(typeof window.orientation !== 'undefined') switchControls();
   }
   else if( lvl == 3){
     lvl = 2;
