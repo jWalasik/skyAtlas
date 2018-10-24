@@ -4,7 +4,6 @@ var cameraPos = new THREE.Quaternion();
 var makeConstellation = function(){
 
   updateUI('atlas');
-  if(typeof window.orientation !== 'undefined') switchControls();
 
   var scene = new THREE.Scene();
 
@@ -112,12 +111,9 @@ var makeConstellation = function(){
   container.name = "container";
   sceneLvl2 = scene;
 
+  if(typeof window.orientation !== 'undefined') switchControls();
+  
   centerConstellation(container, -1);
-
-  //switch controls if using device orientation
-  if(typeof window.orientation !== 'undefined'){
-    trackballControls = new THREE.TrackballControls(camera, renderer.domElement);
-  }
 
 }
 
