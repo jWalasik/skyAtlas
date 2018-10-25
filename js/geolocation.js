@@ -49,7 +49,7 @@ function computeZenith() {
 function rotateSphere(long, lat){
   var compass = DeviceOrientationEvent.webkitCompassHeading;
   console.log(compass);
-  scene.rotation.z = compass;
+  scene.rotateZ(-compass);
 
   //rotate to zenith location
   var c = scene.rotation.y;
