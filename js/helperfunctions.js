@@ -192,12 +192,15 @@ function switchControls(){
     case MODE.TRACKBALL:
       trackballControls = new THREE.TrackballControls(camera, renderer.domElement);
       mode = MODE.ORIENTATION;
+      console.log("trackball");
       break;
 
     case MODE.ORIENTATION:
       camera.position.set(0,0,0);
       trackballControls = new THREE.DeviceOrientationControls(camera);
+      console.log("orientation");
       mode = MODE.TRACKBALL;
       break;
   }
+  console.log(mode)
 }
