@@ -10,6 +10,11 @@ function getLocation() {
           coords = p.coords;
           var skyCenter = new THREE.Vector3(0,12000,0);
           setTimeout(function(){
+            //center sky horizontally
+            console.log(DeviceOrientationEvent.webkitCompassHeading);
+            var north = new THREE.Euler(0, 0, DeviceOrientationEvent.webkitCompassHeading, 'XYZ')
+            scene.getObjectByName("galaxy").quaternion.setFromEuler(north);
+            //center sky vertically
             scene.getObjectByName("galaxy").quaternion.setFromUnitVectors(computeZenith().normalize(), skyCenter.clone().normalize());
           }, 5000);
 
@@ -48,7 +53,9 @@ function computeZenith() {
 //var sidereal = 0;
 function rotateSphere(long, lat){
   var compass = DeviceOrientationEvent.webkitCompassHeading;
+  console.log("compass: ")
   console.log(compass);
+
   scene.rotation.z = -compass;
 
   //rotate to zenith location
