@@ -112,7 +112,7 @@ var makeConstellation = function(){
   sceneLvl2 = scene;
 
   if(typeof window.orientation !== 'undefined') switchControls();
-  
+
   centerConstellation(container, -1);
 
 }
