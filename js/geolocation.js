@@ -11,9 +11,13 @@ function getLocation() {
           var skyCenter = new THREE.Vector3(0,12000,0);
           setTimeout(function(){
             //center sky horizontally
-            console.log(DeviceOrientationEvent.webkitCompassHeading);
-            var north = new THREE.Euler(0, 0, DeviceOrientationEvent.webkitCompassHeading, 'XYZ')
-            scene.getObjectByName("galaxy").quaternion.setFromEuler(north);
+            if(typeof window.orientation !== 'undefined'){
+              console.log(window.orientation);
+              console.log(window.orientation.webkitCompassHeading);
+              var north = new THREE.Euler(0, 0, window.orientation.webkitCompassHeading, 'XYZ')
+              scene.getObjectByName("galaxy").quaternion.setFromEuler(north);
+            }
+
             //center sky vertically
             scene.getObjectByName("galaxy").quaternion.setFromUnitVectors(computeZenith().normalize(), skyCenter.clone().normalize());
           }, 5000);

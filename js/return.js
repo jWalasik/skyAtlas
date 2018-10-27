@@ -13,7 +13,7 @@ var goBack = function(){
 	document.getElementById('name-container').innerHTML = name;
 	document.getElementById('description-container').innerHTML = name;
 	console.log(sceneLvl2);
-	centerConstellation(sceneLvl2.children[0], -1);
+	centerConstellation(sceneLvl2.children[0], 1);
   }
 
 }

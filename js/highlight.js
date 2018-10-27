@@ -1,6 +1,8 @@
 var resized = false;
 function checkHighlight(){
   var vector = new THREE.Vector3(mouse.x, mouse.y, 1);
+  if(typeof window.orientation !== 'undefined') vector.set(0,0,1)
+  console.log('mouse position: ', vector)
   vector.unproject(camera);
   var ray = new THREE.Raycaster(camera.position, vector.normalize());
 

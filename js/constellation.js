@@ -111,10 +111,9 @@ var makeConstellation = function(){
   container.name = "container";
   sceneLvl2 = scene;
 
-  if(typeof window.orientation !== 'undefined') switchControls();
-
   centerConstellation(container, -1);
 
+  if(typeof window.orientation !== 'undefined') switchControls();
 }
 
 function centerConstellation(container, x){
@@ -129,4 +128,5 @@ function centerConstellation(container, x){
 
 	new THREE.Box3().setFromObject(container).getCenter(container.position).multiplyScalar(-1);
 	camera.translateZ(8000);
+
 };

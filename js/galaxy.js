@@ -22,7 +22,7 @@ var makeGalaxy = function(error, hyg, bounds, lines){
   var material = new THREE.SpriteMaterial({ map:texture})
   material.transparent = true;
   material.depthTest = true;
-  
+
   //mark center of the sky
   var zenithMarker = new THREE.Sprite(material);
   zenithMarker.scale.set(1000, 1000, 1000);
@@ -32,7 +32,6 @@ var makeGalaxy = function(error, hyg, bounds, lines){
   zenithMarker.position.z = 9099.0;
 
   galaxy.add(zenithMarker)
-  console.log(zenithMarker.position)
 
   //define stars geometries, project them onto sphere
   var starsGeometry = new THREE.BufferGeometry();
