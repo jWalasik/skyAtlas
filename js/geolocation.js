@@ -5,6 +5,7 @@ var test = 0;
 //get lat/long coordinates
 function getLocation() {
     if (navigator.geolocation) {
+
         navigator.geolocation.getCurrentPosition(function(p){
           realtime = true;
           coords = p.coords;
@@ -12,8 +13,7 @@ function getLocation() {
           setTimeout(function(){
             //center sky horizontally
             if(typeof window.orientation !== 'undefined'){
-              console.log(window.orientation);
-              console.log(window.orientation.webkitCompassHeading);
+              //var north = new THREE.Euler(0, 0, 30, 'XYZ')
               var north = new THREE.Euler(0, 0, window.orientation.webkitCompassHeading, 'XYZ')
               scene.getObjectByName("galaxy").quaternion.setFromEuler(north);
             }
@@ -55,18 +55,3 @@ function computeZenith() {
 //var jd =  //julian date epoch
 //var declination = position.coords.latitude;
 //var sidereal = 0;
-function rotateSphere(long, lat){
-  var compass = DeviceOrientationEvent.webkitCompassHeading;
-  console.log("compass: ")
-  console.log(compass);
-
-  scene.rotation.z = -compass;
-
-  //rotate to zenith location
-  var c = scene.rotation.y;
-  var d = -long * (Math.PI / 180)%(2 * Math.PI);
-  var e = Math.PI / 2 * -1;
-  scene.rotation.y = c % (2 * Math.PI);
-  scene.rotation.x = lat * (Math.PI / 180) % Math.PI;
-  scene.rotation.z = 360-(d+e);
-}

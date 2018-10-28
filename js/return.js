@@ -15,5 +15,4 @@ var goBack = function(){
 	console.log(sceneLvl2);
 	centerConstellation(sceneLvl2.children[0], 1);
   }
-
 }

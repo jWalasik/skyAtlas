@@ -196,6 +196,7 @@ function switchControls(){
 
     case MODE.ORIENTATION:
       camera.position.set(0,0,0);
+      camera.rotation.copy( prevCamera.rotation );
       trackballControls = new THREE.DeviceOrientationControls(camera);
       mode = MODE.TRACKBALL;
       break;

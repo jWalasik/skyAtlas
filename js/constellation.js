@@ -127,6 +127,7 @@ function centerConstellation(container, x){
 	container.quaternion.setFromUnitVectors(container.position.normalize(), vector.normalize());
 
 	new THREE.Box3().setFromObject(container).getCenter(container.position).multiplyScalar(-1);
+
 	camera.translateZ(8000);
 
 };

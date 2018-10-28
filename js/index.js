@@ -103,6 +103,7 @@ function init(){
 
   //RENDERING FUNCTION
   function render(){
+    if(scene.getObjectByName('galaxy')) console.log("position:", scene.getObjectByName('galaxy').position, '\nrotation:', scene.getObjectByName('galaxy').rotation)
     //chose scene to render
     scene = window["sceneLvl"+lvl];
     if(lvl == 2){
