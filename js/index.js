@@ -38,7 +38,7 @@ function init(){
   document.getElementById('WebGL-Output').appendChild(renderer.domElement);
 
   camera = new THREE.PerspectiveCamera(70, width/10 / (height/10), 1, 100000);
-  camera.position.set(0,0,1)
+  camera.position.set(0,0,0)
 
   //setup controls
   if(typeof window.orientation !== 'undefined'){
@@ -47,6 +47,7 @@ function init(){
  else {
     trackballControls = new THREE.TrackballControls(camera, renderer.domElement);
   }
+
   //clock for rendering
   var clock = new THREE.Clock;
 
@@ -103,8 +104,8 @@ function init(){
 
   //RENDERING FUNCTION
   function render(){
-    if(scene.getObjectByName('galaxy')) console.log("position:", scene.getObjectByName('galaxy').position, '\nrotation:', scene.getObjectByName('galaxy').rotation)
-    if(scene.getObjectByName('container')) console.log(scene.getObjectByName('container').position ,scene.getObjectByName('container').rotation,)
+    //if(scene.getObjectByName('galaxy')) console.log("position:", scene.getObjectByName('galaxy').position, '\nrotation:', scene.getObjectByName('galaxy').rotation)
+    //if(scene.getObjectByName('container')) console.log(scene.getObjectByName('container').position ,scene.getObjectByName('container').rotation,)
     //chose scene to render
     scene = window["sceneLvl"+lvl];
     if(lvl == 2){

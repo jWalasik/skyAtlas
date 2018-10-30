@@ -180,24 +180,26 @@ function posFix(){
 }
 
 function switchControls(){
+  console.log('switch', camera.position)
   var prevCamera = camera;
-  console.log(camera.rotation);
   camera = new THREE.PerspectiveCamera(70, width/10 / (height/10), 1, 100000);
 
   var MODE = {TRACKBALL: 0, ORIENTATION: 1};
-  camera.position.copy( prevCamera.position );
-  camera.rotation.copy( prevCamera.rotation );
 
+  camera.rotation.copy( prevCamera.rotation );
+  camera.position.copy( prevCamera.position );
+  console.log('switch', camera.position)
   switch(mode){
     case MODE.TRACKBALL:
+      console.log('trackball', camera.position)
       trackballControls = new THREE.TrackballControls(camera, renderer.domElement);
       mode = MODE.ORIENTATION;
       break;
 
     case MODE.ORIENTATION:
+      camera.position.set(0,0,0);
       trackballControls = new THREE.DeviceOrientationControls(camera);
       mode = MODE.TRACKBALL;
       break;
   }
-  console.log(mode)
 }

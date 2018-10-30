@@ -5,7 +5,7 @@ var test = 0;
 //get lat/long coordinates
 function getLocation() {
     if (navigator.geolocation) {
-
+        
         navigator.geolocation.getCurrentPosition(function(p){
           realtime = true;
           coords = p.coords;
@@ -13,11 +13,12 @@ function getLocation() {
           setTimeout(function(){
             //center sky horizontally
             if(typeof window.orientation !== 'undefined'){
+              console.log('mobile detected, north: ', window.orientation.webkitCompassHeading)
               //var north = new THREE.Euler(0, 0, 30, 'XYZ')
               var north = new THREE.Euler(0, 0, window.orientation.webkitCompassHeading, 'XYZ')
               scene.getObjectByName("galaxy").quaternion.setFromEuler(north);
             }
-
+            console.log('centering vertically')
             //center sky vertically
             scene.getObjectByName("galaxy").quaternion.setFromUnitVectors(computeZenith().normalize(), skyCenter.clone().normalize());
           }, 5000);

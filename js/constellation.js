@@ -111,23 +111,22 @@ var makeConstellation = function(){
   container.name = "container";
   sceneLvl2 = scene;
 
-  centerConstellation(container, -1);
 
+  centerConstellation(container, -1);
   if(typeof window.orientation !== 'undefined') switchControls();
 }
 
 function centerConstellation(container, x){
+  console.log('center', camera.position)
 	new THREE.Box3().setFromObject(container).getCenter(container.position);
-	console.log(container);
 	let vector = new THREE.Vector3(0,0,0);
 	let direction = vector.clone().add(camera.position).normalize();
 
 	vector.add(direction.clone().multiplyScalar(x));
 
 	container.quaternion.setFromUnitVectors(container.position.normalize(), vector.normalize());
-
+  console.log('center', camera.position)
 	new THREE.Box3().setFromObject(container).getCenter(container.position).multiplyScalar(-1);
-
 	camera.translateZ(8000);
-
+  console.log('center', camera.position)
 };
