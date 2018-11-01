@@ -30,7 +30,6 @@ queue()
   .await(makeGalaxy);
 
 function init(){
-
   //THREE.js declarations
 
   renderer.setPixelRatio(window.devicePixelRatio);
@@ -38,8 +37,8 @@ function init(){
   document.getElementById('WebGL-Output').appendChild(renderer.domElement);
 
   camera = new THREE.PerspectiveCamera(70, width/10 / (height/10), 1, 100000);
-  camera.position.set(0,0,0)
-
+  camera.position.set(0,0,0.0001)
+  camera.rotation.set(0,0,0)
   //setup controls
   if(typeof window.orientation !== 'undefined'){
     trackballControls = new THREE.DeviceOrientationControls(camera);
@@ -104,6 +103,7 @@ function init(){
 
   //RENDERING FUNCTION
   function render(){
+
     //if(scene.getObjectByName('galaxy')) console.log("position:", scene.getObjectByName('galaxy').position, '\nrotation:', scene.getObjectByName('galaxy').rotation)
     //if(scene.getObjectByName('container')) console.log(scene.getObjectByName('container').position ,scene.getObjectByName('container').rotation,)
     //chose scene to render
@@ -156,8 +156,11 @@ function onDocumentMouseMove(event){
 function onDocumentMouseClick(event){
   //prevent function execution if dragging
   if (start.x == end.x && start.y == end.y){
+    if(lvl == 3){
+      return
+    }
     //if lvl2 scene is rendered create scene lvl3
-    if(lvl == 2){
+    if(lvl == 2 && INTERSECTED.type == "Points"){
       lvl = 3;
       makeObject(INTERSECTED);
     }

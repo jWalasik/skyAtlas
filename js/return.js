@@ -1,5 +1,4 @@
 var goBack = function(){
-
   if(lvl == 2){
 	  lvl = 1;
     document.getElementById('name-container').innerHTML = "";

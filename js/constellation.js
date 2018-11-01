@@ -6,7 +6,7 @@ var makeConstellation = function(){
   updateUI('atlas');
 
   var scene = new THREE.Scene();
-
+      scene.selectable=[];
   var vertices = [],
       colors = [],
       sizes = [],
@@ -14,10 +14,8 @@ var makeConstellation = function(){
 
   //container for transformations
   var container = new THREE.Object3D();
-
   //stars
   starDatabase.map(function(d){
-    intersections2 = [];
     if(d.con == INTERSECTED.userData.name){
       //if processing major star create unique object
       if(d.proper !== ""){
@@ -41,8 +39,11 @@ var makeConstellation = function(){
           map: majorStarMap,
         });
         var majorStar = new THREE.Points(majorStarGeo, majorStarMat);
+        
         majorStar.userData = d.proper;
         container.add(majorStar);
+        scene.selectable.push(majorStar)
+        console.log(scene.selectable)
       }
       //use vertex shader method for unnamed stars
       else{

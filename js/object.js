@@ -24,8 +24,8 @@ var makeObject = function(object){
 
   getWikiData(ahref);
 
-  let scene = new THREE.Scene();
-
+  var scene = new THREE.Scene();
+  scene.selectable=[];
   //corona
 
   uniform.resolution.value.x = 1; // window.innerWidth;

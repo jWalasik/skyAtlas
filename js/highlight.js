@@ -4,16 +4,10 @@ function checkHighlight(){
   if(typeof window.orientation !== 'undefined') vector.set(0,0,1)
   vector.unproject(camera);
   var ray = new THREE.Raycaster(camera.position, vector.normalize());
+  ray.params.Points.threshold = 500;
 
   var intersects;
-  if(lvl == 1){
-    ray.params.Points.threshold = 1; //raycaster precision
-    intersects = ray.intersectObjects(intersections);
-  }
-  else if(lvl ==2){
-    ray.params.Points.threshold = 100;
-    intersects = ray.intersectObjects(scene.children[0].children);
-  }
+  intersects = ray.intersectObjects(scene.selectable);
 
   //if there is at least one intersection
   if(lvl == 1 && intersects.length>0){
