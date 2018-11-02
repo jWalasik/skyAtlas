@@ -39,11 +39,10 @@ var makeConstellation = function(){
           map: majorStarMap,
         });
         var majorStar = new THREE.Points(majorStarGeo, majorStarMat);
-        
+
         majorStar.userData = d.proper;
         container.add(majorStar);
         scene.selectable.push(majorStar)
-        console.log(scene.selectable)
       }
       //use vertex shader method for unnamed stars
       else{
@@ -112,22 +111,24 @@ var makeConstellation = function(){
   container.name = "container";
   sceneLvl2 = scene;
 
-
+  var center = new THREE.Box3().setFromObject(container).getCenter(container.position);
   centerConstellation(container, -1);
   if(typeof window.orientation !== 'undefined') switchControls();
 }
 
 function centerConstellation(container, x){
-  console.log('center', camera.position)
-	new THREE.Box3().setFromObject(container).getCenter(container.position);
-	let vector = new THREE.Vector3(0,0,0);
-	let direction = vector.clone().add(camera.position).normalize();
+  
+  //draw smallest possible box around mesh and compute its center
 
+	var vector = new THREE.Vector3(0,0,0);
+	var direction = vector.clone().add(camera.position).normalize();
+  
 	vector.add(direction.clone().multiplyScalar(x));
-
+  
 	container.quaternion.setFromUnitVectors(container.position.normalize(), vector.normalize());
-  console.log('center', camera.position)
-	new THREE.Box3().setFromObject(container).getCenter(container.position).multiplyScalar(-1);
+
+  var center2 = new THREE.Box3().setFromObject(container).getCenter(container.position).multiplyScalar(-1);
+ 
 	camera.translateZ(8000);
-  console.log('center', camera.position)
+  
 };
