@@ -21,7 +21,7 @@ function getLocation() {
             }
             */
             //MOCK HORIZONTAL ROTATION FOR DESKTOP DEBUG
-            var north = new THREE.Euler(0, 0, 30, 'XYZ')
+            var north = new THREE.Euler(0, 30, 0, 'XYZ')
             console.log('centering vertically')
             //center sky vertically
             scene.getObjectByName("galaxy").quaternion.setFromUnitVectors(computeZenith().normalize(), skyCenter.clone().normalize());
