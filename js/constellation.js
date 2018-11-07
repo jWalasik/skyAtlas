@@ -113,22 +113,32 @@ var makeConstellation = function(){
 
   ;
   centerConstellation(container, 1);
-  if(typeof window.orientation !== 'undefined') switchControls();
+  if(typeof window.orientation !== 'undefined') {
+    camera.rotation.set(0,0,0);
+    camera.position.set(0,0,0)
+    switchControls()
+  };
 }
 
 function centerConstellation(container, x){
-  console.log("camera: ", camera.position, camera.rotation)
-  console.log("contrainer: ", container.position, container.rotation)
-  //draw smallest possible box around mesh and compute its center
-  new THREE.Box3().setFromObject(container).getCenter(container.position).multiplyScalar(1);
+  //draw box around constellation and get its center
+  var bCenter = new THREE.Box3().setFromObject(container).getCenter();
+  //get direction which camera is looking at
+  var direction = camera.getWorldDirection();
+  //center object
+  container.quaternion.setFromUnitVectors(bCenter.normalize(), direction.normalize());
+  //move object to 0,0,0
+  new THREE.Box3().setFromObject(container).getCenter(container.position).multiplyScalar(-1);
+  // //draw smallest possible box around mesh and compute its center
+  // new THREE.Box3().setFromObject(container).getCenter(container.position).multiplyScalar(1);
   
-	var vector = new THREE.Vector3(0,0,0);
-	var direction = vector.clone().add(camera.position).normalize();
+	// var vector = new THREE.Vector3(0,0,0);
+	// var direction = vector.clone().add(camera.position).normalize();
   
-	vector.add(direction.clone().multiplyScalar(1));
+	// vector.add(direction.clone().multiplyScalar(1));
   
-	container.quaternion.setFromUnitVectors(container.position.normalize().multiplyScalar(-x), vector.normalize());
+	// container.quaternion.setFromUnitVectors(container.position.normalize().multiplyScalar(-x), vector.normalize());
 
-  var center2 = new THREE.Box3().setFromObject(container).getCenter(container.position).multiplyScalar(-1);
-	camera.translateZ(8000);
+  // var center2 = new THREE.Box3().setFromObject(container).getCenter(container.position).multiplyScalar(-1);
+  // camera.translateZ(8000);
 };
