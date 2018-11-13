@@ -2,7 +2,6 @@ var center;
 var cameraPos = new THREE.Quaternion();
 
 var makeConstellation = function(){
-
   updateUI('atlas');
 
   var scene = new THREE.Scene();
@@ -111,16 +110,14 @@ var makeConstellation = function(){
   container.name = "container";
   sceneLvl2 = scene;
 
-  ;
   centerConstellation(container, 1);
   if(typeof window.orientation !== 'undefined') {
-    camera.rotation.set(0,0,0);
-    camera.position.set(0,0,0)
     switchControls()
   };
 }
 
 function centerConstellation(container, x){
+  console.log('centering')
   //draw box around constellation and get its center
   var bCenter = new THREE.Box3().setFromObject(container).getCenter();
   //get direction which camera is looking at
@@ -129,6 +126,9 @@ function centerConstellation(container, x){
   container.quaternion.setFromUnitVectors(bCenter.normalize(), direction.normalize());
   //move object to 0,0,0
   new THREE.Box3().setFromObject(container).getCenter(container.position).multiplyScalar(-1);
+
+  //move camera if mobile
+
   // //draw smallest possible box around mesh and compute its center
   // new THREE.Box3().setFromObject(container).getCenter(container.position).multiplyScalar(1);
   

@@ -17,6 +17,8 @@ var minMag = 21,
     detailedView = false,
     radius = 12000,
     lvl = 1,
+    prevPos,
+    prevRot,
     name,
     realtime = false,
     mode = 0;
@@ -166,11 +168,15 @@ function onDocumentMouseClick(event){
     }
     //if lvl2 scene is rendered create scene lvl3
     if(lvl == 2 && INTERSECTED.type == "Points"){
+      prevPos = camera.position.clone()
+      prevRot = camera.rotation.clone()
       lvl = 3;
       makeObject(INTERSECTED);
     }
     //otherwise create lvl2 scene
     else{
+      prevPos = camera.position.clone()
+      prevRot = camera.rotation.clone()
       lvl = 2;
       makeConstellation();
     }
