@@ -1,7 +1,7 @@
 var goBack = function(){
   if(lvl == 2){
     camera.position=prevPos
-    camera.position=prevRot  
+    camera.rotation=prevRot  
 	  lvl = 1;
     document.getElementById('name-container').innerHTML = "";
 	  document.getElementById('description-container').innerHTML = "";
@@ -11,7 +11,7 @@ var goBack = function(){
   }
   else if( lvl == 3){
     camera.position=prevPos
-    camera.position=prevRot 
+    camera.rotation=prevRot 
     lvl = 2;
   	document.getElementById('name-container').innerHTML = name;
   	document.getElementById('description-container').innerHTML = name;
