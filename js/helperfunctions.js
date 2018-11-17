@@ -124,9 +124,13 @@ function posFix(){
 function switchControls(){
   //console.log('container: ', scene.getObjectByName('container').rotation) // container isnt affected
   console.log('camera: ', camera.position)
+  var prevCamera = camera;
   camera = new THREE.PerspectiveCamera(70, width/10 / (height/10), 1, 100000);
 
   var MODE = {TRACKBALL: 0, ORIENTATION: 1};
+
+  camera.rotation.copy( prevCamera.rotation );
+  camera.position.copy( prevCamera.position );
 
   console.log('camera: ', camera.position)
   switch(mode){
