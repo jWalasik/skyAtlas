@@ -14,7 +14,7 @@ function getLocation() {
             //center sky horizontally
             
             if(typeof window.orientation !== 'undefined'){
-              console.log('mobile detected, north: ', window.orientation.webkitCompassHeading)
+              console.log('mobile detected, north: ', -window.orientation.webkitCompassHeading)
               
               var north = new THREE.Euler(0, 0, window.orientation.webkitCompassHeading, 'XYZ')
               scene.getObjectByName("galaxy").quaternion.setFromEuler(north);
