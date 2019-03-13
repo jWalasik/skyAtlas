@@ -16,7 +16,7 @@ function getLocation() {
             if(typeof window.orientation !== 'undefined'){
               console.log('mobile detected, north: ', -window.orientation.webkitCompassHeading)
               
-              var north = new THREE.Euler(180, -window.orientation.webkitCompassHeading, 0, 'XYZ')
+              var north = new THREE.Euler(-270, -window.orientation.webkitCompassHeading, 0, 'XYZ')
               scene.getObjectByName("galaxy").quaternion.setFromEuler(north);
             }
             
