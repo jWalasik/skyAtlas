@@ -1,11 +1,7 @@
-[INSERT SNAPSHOT HERE]
 # skyAtlas
-
+[![INSERT YOUR GRAPHIC HERE](https://i.imgur.com/z1pieXB.jpg)]()
 > Interactive 3d map of a night sky
-
 > three.js sky, stars, 3d, javascript, webgl
-
-[![INSERT YOUR GRAPHIC HERE](http://i.imgur.com/dt8AUb6.png)]()
 
 ## Table of Contents (Optional)
 
@@ -16,7 +12,7 @@
 ---
 
 ## Installation
-As this app was build with vanilla Javascript there is no need for installation. Just clone/download this repo onto your computer and launch index.js
+As this app was build with vanilla Javascript, so there is no need for installation. Just clone/download this repo onto your computer and launch index.js
 
 ---
 
