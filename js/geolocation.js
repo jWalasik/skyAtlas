@@ -5,7 +5,7 @@ var test = 0;
 //get lat/long coordinates
 function getLocation() {
     if (navigator.geolocation) {
-        
+
         navigator.geolocation.getCurrentPosition(function(p){
           realtime = true;
           coords = p.coords;
@@ -14,14 +14,14 @@ function getLocation() {
             //center sky vertically
             scene.getObjectByName("galaxy").quaternion.setFromUnitVectors(computeZenith().normalize(), skyCenter.clone().normalize());
 
-            //center sky horizontally            
-            if(typeof window.orientation !== 'undefined'){              
+            //center sky horizontally
+            if(typeof window.orientation !== 'undefined'){
               var north = new THREE.Euler(0, 0, -window.orientation.webkitCompassHeading, 'XYZ')
               scene.getObjectByName("galaxy").quaternion.setFromEuler(north);
             }
             
             //MOCK HORIZONTAL ROTATION FOR DESKTOP DEBUG
-            //var north = new THREE.Euler(0, 0, 30, 'XYZ')            
+            //var north = new THREE.Euler(0, 0, 30, 'XYZ')
             //scene.getObjectByName("galaxy").quaternion.setFromEuler(north);
           }, 3000);
 
