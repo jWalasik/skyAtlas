@@ -110,8 +110,7 @@ function init(){
   render();
 
   //RENDERING FUNCTION
-  function render(){
-    
+  function render(){    
     //if(scene.getObjectByName('helper')) console.log("position:", scene.getObjectByName('helper').position, '\nrotation:', scene.getObjectByName('helper').rotation)
     //if(scene.getObjectByName('container')) console.log(scene.getObjectByName('container').position ,scene.getObjectByName('container').rotation,)
     //chose scene to render

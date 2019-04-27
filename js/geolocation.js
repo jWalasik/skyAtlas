@@ -11,21 +11,19 @@ function getLocation() {
           coords = p.coords;
           var skyCenter = new THREE.Vector3(0,12000,0);
           setTimeout(function(){
-            //center sky horizontally
-            
-            if(typeof window.orientation !== 'undefined'){
-              console.log('mobile detected, north: ', window.orientation.webkitCompassHeading)
-              
-              var north = new THREE.Euler(0, 0, window.orientation.webkitCompassHeading, 'XYZ')
+            //center sky vertically
+            scene.getObjectByName("galaxy").quaternion.setFromUnitVectors(computeZenith().normalize(), skyCenter.clone().normalize());
+
+            //center sky horizontally            
+            if(typeof window.orientation !== 'undefined'){              
+              var north = new THREE.Euler(0, 0, -window.orientation.webkitCompassHeading, 'XYZ')
               scene.getObjectByName("galaxy").quaternion.setFromEuler(north);
             }
             
             //MOCK HORIZONTAL ROTATION FOR DESKTOP DEBUG
-            //var north = new THREE.Euler(0, 30, 0, 'XYZ')
-            console.log('centering vertically')
-            //center sky vertically
-            scene.getObjectByName("galaxy").quaternion.setFromUnitVectors(computeZenith().normalize(), skyCenter.clone().normalize());
-          }, 5000);
+            //var north = new THREE.Euler(0, 0, 30, 'XYZ')            
+            //scene.getObjectByName("galaxy").quaternion.setFromEuler(north);
+          }, 3000);
 
 
         });
