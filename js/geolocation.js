@@ -16,12 +16,13 @@ function getLocation() {
 
             //center sky horizontally
             if(typeof window.orientation !== 'undefined'){
-              var north = new THREE.Euler(0, 0, -window.orientation.webkitCompassHeading, 'XYZ')
+              
+              var north = new THREE.Euler(0, -window.orientation.webkitCompassHeading, window.orientation.gamma, 'XYZ')
               scene.getObjectByName("galaxy").quaternion.setFromEuler(north);
             }
             
             //MOCK HORIZONTAL ROTATION FOR DESKTOP DEBUG
-            //var north = new THREE.Euler(0, 0, 30, 'XYZ')
+            //var north = new THREE.Euler(.1, .1, .1, 'XYZ')
             //scene.getObjectByName("galaxy").quaternion.setFromEuler(north);
           }, 3000);
 

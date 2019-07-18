@@ -41,7 +41,7 @@ function init(){
 
   camera = new THREE.PerspectiveCamera(70, width/10 / (height/10), 1, 100000);
   camera.position.set(0,0,0.0001)
-  camera.rotation.set(0,0,0)
+  //camera.rotation.set(0,0,0)
   //setup controls
   if(typeof window.orientation !== 'undefined'){
     trackballControls = new THREE.DeviceOrientationControls(camera);

@@ -218,12 +218,12 @@ var makeGalaxy = function(error, hyg, bounds, lines){
   })  //lines.features.map end89
 
   //helper object
-  var geometry = new THREE.BoxGeometry( 200, 200, 200 );
-  var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
-  var cube = new THREE.Mesh( geometry, material );
-  galaxy.add( cube );
-  cube.position.set(0,0,12000)
-  cube.name='helper';
+  // var geometry = new THREE.BoxGeometry( 200, 200, 200 );
+  // var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+  // var cube = new THREE.Mesh( geometry, material );
+  // galaxy.add( cube );
+  // cube.position.set(0,0,12000)
+  // cube.name='helper';
 
   sceneLvl1 = scene;
   getLocation();

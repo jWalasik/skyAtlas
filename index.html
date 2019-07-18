@@ -112,7 +112,7 @@
       c += flare(alpha, uv, 35.1412, 1.0);
       c += flare(alpha, uv, 21.5637, 1.0);
       c += flare(alpha, uv, 1.2637, 1.0);
-      c.xyz = clamp(c.xyz, 0.2, 1.0);
+      c.xyz = clamp(c.xyz, 0.0, 1.0);
       if (alpha >= 0.99)
       {
           c.a = alpha; //middle section trasnsparency
@@ -293,7 +293,7 @@
   </div>
 
   <div id="object"></div>
-  <div id="coordinates">X ; Y</div>
+  <div id="coordinates"></div>
   <!--MODALS-->
   <div id="name-container"></div>
   <div id="description-container"><!--Object description goes here--></div>
