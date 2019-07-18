@@ -16,8 +16,9 @@ function getLocation() {
 
             //center sky horizontally
             if(typeof window.orientation !== 'undefined'){
-              
-              var north = new THREE.Euler(0, -window.orientation.webkitCompassHeading, window.orientation.gamma, 'XYZ')
+              document.getElementById('coordinates').addEventListener(orientation, setCoords())
+
+              var north = new THREE.Euler(0, window.orientation.webkitCompassHeading, window.orientation.gamma, 'XYZ')
               scene.getObjectByName("galaxy").quaternion.setFromEuler(north);
             }
             
@@ -59,3 +60,6 @@ function computeZenith() {
 //var jd =  //julian date epoch
 //var declination = position.coords.latitude;
 //var sidereal = 0;
+const setCoords = (e) => {
+  document.getElementById('coordinates').innerHTML(window.orientation.alpha, window.orientation.beta, window.orientation.gamma)
+}
