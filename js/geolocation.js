@@ -16,13 +16,10 @@ function getLocation() {
 
             //center sky horizontally
             if(typeof window.orientation !== 'undefined'){
-              console.log('orient: ', window.screen.orientation,
-                "a:",window.orientation.alpha, 
-                'b:', window.orientation.beta, 
-                'g:', window.orientation.gamma,
-                'north: ', window.orientation.webkitCompassHeading)
+              console.log('north: ', window.orientation.webkitCompassHeading)
 
-              var north = new THREE.Euler(window.orientation.alpha, window.orientation.webkitCompassHeading, window.orientation.gamma, 'XYZ')
+              var north = new THREE.Euler(0, window.orientation.webkitCompassHeading, -.75, 'XYZ')
+              console.log(north)
               scene.getObjectByName("galaxy").quaternion.setFromEuler(north, skyCenter.clone().normalize());
             }
             
