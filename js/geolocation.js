@@ -16,14 +16,14 @@ function getLocation() {
 
             //center sky horizontally
             if(typeof window.orientation !== 'undefined'){
-              document.getElementById('coordinates').addEventListener(orientation, setCoords())
+              console.log('orient: ', window.orientation,"a:",window.orientation.alpha, 'b:', window.orientation.beta, 'g:', window.orientation.gamma)
 
-              var north = new THREE.Euler(0, window.orientation.webkitCompassHeading, window.orientation.gamma, 'XYZ')
-              scene.getObjectByName("galaxy").quaternion.setFromEuler(north);
+              var north = new THREE.Euler(window.orientation.alpha, window.orientation.webkitCompassHeading, window.orientation.gamma, 'XYZ')
+              scene.getObjectByName("galaxy").quaternion.setFromEuler(north, skyCenter.clone().normalize());
             }
             
             //MOCK HORIZONTAL ROTATION FOR DESKTOP DEBUG
-            //var north = new THREE.Euler(.1, .1, .1, 'XYZ')
+            //var north = new THREE.Euler(0, 0, 0.75, 'XYZ')
             //scene.getObjectByName("galaxy").quaternion.setFromEuler(north);
           }, 3000);
 
@@ -60,6 +60,3 @@ function computeZenith() {
 //var jd =  //julian date epoch
 //var declination = position.coords.latitude;
 //var sidereal = 0;
-const setCoords = (e) => {
-  document.getElementById('coordinates').innerHTML(window.orientation.alpha, window.orientation.beta, window.orientation.gamma)
-}
