@@ -18,7 +18,7 @@ function getLocation() {
             if(typeof window.orientation !== 'undefined'){
               console.log('north: ', window.orientation.webkitCompassHeading)
 
-              var north = new THREE.Euler(0, window.orientation.webkitCompassHeading, -.75, 'XYZ')
+              var north = new THREE.Euler(0, window.orientation.webkitCompassHeading, 0, 'XYZ')
               console.log(north)
               scene.getObjectByName("galaxy").quaternion.setFromEuler(north, skyCenter.clone().normalize());
             }
@@ -53,7 +53,7 @@ function computeZenith() {
     //rotateSphere(lst, lat);
     //test+=0.25;
     return zenith;
-//6977.505643669164, y: -3537.6415427577203, z: 9099.423460171516 = Alkaid
+    //6977.505643669164, y: -3537.6415427577203, z: 9099.423460171516 = Alkaid
     //camera.lookAt(zenith);
 }
 
@@ -61,3 +61,5 @@ function computeZenith() {
 //var jd =  //julian date epoch
 //var declination = position.coords.latitude;
 //var sidereal = 0;
+
+
