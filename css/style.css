@@ -85,3 +85,47 @@ button{
   color:green;
   user-select: none;
 }
+#loading-screen {
+  position: absolute;
+	z-index: 2;
+	top: 0;
+  left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: #000000;
+	opacity: 1;
+  transition: 1s opacity;
+  display: flex;
+  justify-content: center;
+}
+#loading-screen.fade-out {
+  opacity: 0;
+  display:none;
+}
+
+.loader{
+  width:50px;
+  height:50px;
+  border-radius:50%;
+  position:relative;
+  left:0px;
+  right:0px;
+  margin:auto;
+  background:rgba(255, 255, 255, 0.06);
+  box-shadow:-2px -2px 3px rgb(0, 255, 234),
+    -3px -2px 3px rgb(25, 0, 255),
+    inset 2px 1px 1px rgba(255, 255, 255, 1.0),
+    inset 2px 1px 3px rgba(0, 255, 234, 0.9),
+    -3px -2px 150px rgb(25, 0, 255);
+  animation: rotate .6s 0s linear infinite;  
+}
+
+@keyframes rotate{
+  0% {transform: rotate(0deg)}
+  100% {transform: rotate(359deg)}
+}
+@keyframes stretch{
+  0% {transform: scale3d(1,1,1)}
+  20% {transform: scale3d(1.2,.8,1)}
+  100% {transform: scale3d(15,.01,1)}
+}

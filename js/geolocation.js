@@ -24,8 +24,8 @@ function getLocation() {
             }
             
             //MOCK HORIZONTAL ROTATION FOR DESKTOP DEBUG
-            //var north = new THREE.Euler(0, 0, 0.75, 'XYZ')
-            //scene.getObjectByName("galaxy").quaternion.setFromEuler(north);
+            //var north = new THREE.Euler(1, 1, 1, 'XYZ')
+            //scene.getObjectByName("galaxy").quaternion.setFromEuler(north, skyCenter.clone().normalize());
           }, 3000);
 
 
@@ -50,16 +50,8 @@ function computeZenith() {
     scene.getObjectByName("zenith").position.y = zenith.y;
     scene.getObjectByName("zenith").position.z = zenith.z-1000;
 
-    //rotateSphere(lst, lat);
-    //test+=0.25;
     return zenith;
-    //6977.505643669164, y: -3537.6415427577203, z: 9099.423460171516 = Alkaid
     //camera.lookAt(zenith);
 }
-
-//translate geocoordinates to zeniths declination and right ascension
-//var jd =  //julian date epoch
-//var declination = position.coords.latitude;
-//var sidereal = 0;
 
 
