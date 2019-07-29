@@ -10,6 +10,7 @@ var scene = new THREE.Scene(),
 var minMag = 21,
     mouse = {x: 0, y: 0},
     intersections=[],
+    clock = new THREE.Clock,
     INTERSECTED,
     starDatabase=[],
     width = window.innerWidth,
@@ -51,7 +52,7 @@ function init(){
   }
 
   //clock for rendering
-  var clock = new THREE.Clock;
+  
 
   //graphic user interface
   var gui = new dat.GUI();
