@@ -12,14 +12,12 @@ function getLocation() {
           var skyCenter = new THREE.Vector3(0,12000,0);
           setTimeout(function(){
             //center sky vertically
-            scene.getObjectByName("galaxy").quaternion.setFromUnitVectors(skyCenter.clone().normalize(), computeZenith().normalize());
+            scene.getObjectByName("galaxy").quaternion.setFromUnitVectors( computeZenith().normalize(), skyCenter.clone().normalize() );
 
             //center sky horizontally
             if(typeof window.orientation !== 'undefined'){
 
               var north = new THREE.Euler(0, window.orientation.webkitCompassHeading, 0, 'XYZ')
-              
-
               scene.getObjectByName("galaxy").quaternion.setFromEuler(north, skyCenter.clone().normalize());
             }
             

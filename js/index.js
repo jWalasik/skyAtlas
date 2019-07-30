@@ -99,7 +99,7 @@ function init(){
   gui.add(controls, 'toggleLabels');
   gui.add(controls, 'toggleLines');
   gui.add(controls, 'toggleStars');
-  gui.add(controls, "filterStars", 0, 120000, 1)
+  gui.add(controls, "filterStars", 0, 120000, 15000)
     .onChange( function( value ) {
 	     scene.traverse(function(child){
          if (child.type == 'Points'){

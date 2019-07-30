@@ -184,7 +184,12 @@ var makeGalaxy = function(error, hyg, bounds, lines){
   var starField = new THREE.Points(starsGeometry, starsMaterial);
   galaxy.add(starField);
   //scene.add(starField);
-
+  //set default star filter
+  scene.traverse(function(child){
+    if (child.type == 'Points'){
+      child.geometry.setDrawRange(0, 15000);
+    }
+  })
   //process constellation lines
   lines.features.map(function(d){
     let linesMerged = new THREE.Geometry();
