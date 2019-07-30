@@ -4,7 +4,7 @@ var scene = new THREE.Scene(),
     sceneLvl2 = new THREE.Scene(),
     sceneLvl3 = new THREE.Scene(),
     trackballControls,
-    camera = new THREE.PerspectiveCamera(70, width/10 / (height/10), 1, 100000),
+    camera = new THREE.PerspectiveCamera(45, width/10 / (height/10), 1, 100000),
     renderer = new THREE.WebGLRenderer({alpha: true});
 //controls
 var minMag = 21,
