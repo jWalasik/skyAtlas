@@ -184,12 +184,7 @@ var makeGalaxy = function(error, hyg, bounds, lines){
   var starField = new THREE.Points(starsGeometry, starsMaterial);
   galaxy.add(starField);
   //scene.add(starField);
-  //set default star filter
-  scene.traverse(function(child){
-    if (child.type == 'Points'){
-      child.geometry.setDrawRange(0, 15000);
-    }
-  })
+
   //process constellation lines
   lines.features.map(function(d){
     let linesMerged = new THREE.Geometry();
@@ -220,10 +215,22 @@ var makeGalaxy = function(error, hyg, bounds, lines){
       linesGeometry = new THREE.Geometry();
     })  //coordinates mapping end
 
+    scene.traverse(function(child){
+      if (child.type == 'Points'){
+        child.geometry.setDrawRange(0, 10000);
+      }
+    })
   })  //lines.features.map end89
+
+  //helper object
+  // var geometry = new THREE.BoxGeometry( 200, 200, 200 );
+  // var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+  // var cube = new THREE.Mesh( geometry, material );
+  // galaxy.add( cube );
+  // cube.position.set(0,0,12000)
+  // cube.name='helper';
 
   sceneLvl1 = scene;
   document.getElementById('loading-screen').classList.add('fade-out')
-  
   getLocation();
 }
