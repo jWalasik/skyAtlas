@@ -5,26 +5,23 @@ var test = 0;
 //get lat/long coordinates
 function getLocation() {
     if (navigator.geolocation) {
-
         navigator.geolocation.getCurrentPosition(function(p){
           realtime = true;
           coords = p.coords;
           var skyCenter = new THREE.Vector3(0,12000,0);
           setTimeout(function(){
-            //center sky vertically
-            scene.getObjectByName("galaxy").quaternion.setFromUnitVectors( computeZenith().normalize(), skyCenter.clone().normalize() );
-
             //center sky horizontally
             if(typeof window.orientation !== 'undefined'){
 
               var north = new THREE.Euler(0, window.orientation.webkitCompassHeading, 0, 'XYZ')
               scene.getObjectByName("galaxy").quaternion.setFromEuler(north, skyCenter.clone().normalize());
             }
-            
+            //center sky vertically
+            scene.getObjectByName("galaxy").quaternion.setFromUnitVectors( computeZenith().normalize(), skyCenter.clone().normalize() );
             //MOCK HORIZONTAL ROTATION FOR DESKTOP DEBUG
             //var north = new THREE.Euler(1, 1, 1, 'XYZ')
             //scene.getObjectByName("galaxy").quaternion.setFromEuler(north, skyCenter.clone().normalize());
-          }, 3000);
+          }, 5000);
 
 
         });
