@@ -44,6 +44,6 @@ function computeZenith() {
 function computeAzimuth(e){
   console.log(e)
 
-  let azimuth = 360 - e.deviceOrientation.alpha
+  let azimuth = 180 - e.deviceOrientation.alpha
   trackballControls.updateAlphaOffsetAngle(THREE.Math.degToRad(azimuth))
 }
