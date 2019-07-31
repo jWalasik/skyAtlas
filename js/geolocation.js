@@ -41,7 +41,9 @@ function computeZenith() {
   return zenith;
 }
 
-function computeAzimuth(){
-  var sensorAbs = new AbsoluteOrientationSensor();
-  console.log(sensorAbs)
+function computeAzimuth(e){
+  console.log(e)
+
+  let azimuth = 360 - e.deviceOrientation.alpha
+  trackballControls.updateAlphaOffsetAngle(THREE.Math.degToRad(azimuth))
 }

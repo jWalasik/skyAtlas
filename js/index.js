@@ -143,6 +143,7 @@ var end = {x:0, y:0};
 
 document.getElementById('WebGL-Output').addEventListener('mousemove', onDocumentMouseMove, false);
 document.getElementById('WebGL-Output').addEventListener('click', onDocumentMouseClick);
+document.addEventListener('deviceorientationabsolute', computeAzimuth, true)
 document.addEventListener('mousedown', ()=>{start = {x: mouse.x, y: mouse.y}});
 document.addEventListener('mouseup', ()=>end = {x: mouse.x, y: mouse.y});
 //document.getElementById('return').addEventListener('click', goBack);
