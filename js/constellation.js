@@ -106,39 +106,22 @@ var makeConstellation = function(){
   document.getElementById('name-container').innerHTML = INTERSECTED.children[2].userData[1];
   getWikiData(ahref+'_(constellation)');
 
+  centerConstellation(container, 1);
+
   scene.add(container);
   container.name = "container";
   sceneLvl2 = scene;
 
-  centerConstellation(container, 1);
   if(typeof window.orientation !== 'undefined') {
     switchControls()
   };
 }
 
 function centerConstellation(container, x){
-  console.log('centering')
-  //draw box around constellation and get its center
-  var bCenter = new THREE.Box3().setFromObject(container).getCenter();
-  //get direction which camera is looking at
-  var direction = camera.getWorldDirection();
-  //center object
-  container.quaternion.setFromUnitVectors(bCenter.normalize(), direction.normalize());
-  //move object to 0,0,0
-  new THREE.Box3().setFromObject(container).getCenter(container.position).multiplyScalar(-1);
-
-  //move camera if mobile
-
-  // //draw smallest possible box around mesh and compute its center
-  // new THREE.Box3().setFromObject(container).getCenter(container.position).multiplyScalar(1);
-  
-	// var vector = new THREE.Vector3(0,0,0);
-	// var direction = vector.clone().add(camera.position).normalize();
-  
-	// vector.add(direction.clone().multiplyScalar(1));
-  
-	// container.quaternion.setFromUnitVectors(container.position.normalize().multiplyScalar(-x), vector.normalize());
-
-  // var center2 = new THREE.Box3().setFromObject(container).getCenter(container.position).multiplyScalar(-1);
-  // camera.translateZ(8000);
+  const bCenter = new THREE.Box3().setFromObject(container).getCenter()
+  const camDirection = camera.getWorldDirection()
+ 
+  container.quaternion.setFromUnitVectors(bCenter.normalize(), camDirection.normalize())
+  camera.zoom = 2
+  camera.updateProjectionMatrix ()
 };
