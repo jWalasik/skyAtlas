@@ -9,8 +9,10 @@ function getLocation() {
       var skyCenter = new THREE.Vector3(0,12000,0);
       setTimeout(function(){
         //center sky vertically
-        scene.getObjectByName("galaxy").quaternion.setFromUnitVectors(computeZenith().normalize(), skyCenter.clone().normalize());
-      }, 5000);
+        var target = new THREE.Quaternion().setFromUnitVectors(computeZenith().normalize(), skyCenter.clone().normalize());
+        animateRotation(scene.getObjectByName("galaxy").quaternion, target, 1/100)
+        //scene.getObjectByName("galaxy").quaternion.setFromUnitVectors(computeZenith().normalize(), skyCenter.clone().normalize());
+      }, 3000);
     });
   } else {
     x.innerHTML = "Geolocation is not supported by this browser.";
@@ -37,4 +39,10 @@ function computeZenith() {
 function computeAzimuth(e){
   let azimuth = 360 - e.alpha
   trackballControls.updateAlphaOffsetAngle(THREE.Math.degToRad(azimuth))
+}
+
+const animateRotation = (start, target, acc) => {
+  if(acc>=1) return
+  THREE.Quaternion.slerp(start, target, start, acc)
+  setTimeout(()=>animateRotation(start, target, (acc+1/100)), 20)
 }
