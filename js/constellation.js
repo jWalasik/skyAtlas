@@ -120,8 +120,13 @@ var makeConstellation = function(){
 function centerConstellation(container, x){
   const bCenter = new THREE.Box3().setFromObject(container).getCenter()
   const camDirection = camera.getWorldDirection()
- 
-  container.quaternion.setFromUnitVectors(bCenter.normalize(), camDirection.normalize())
-  camera.zoom = 2
-  camera.updateProjectionMatrix ()
+  const target = new THREE.Quaternion().setFromUnitVectors(bCenter.normalize(), camDirection.normalize())
+  const animate = (acc) => {
+    if(acc>=1) return
+    THREE.Quaternion.slerp(container.quaternion, target, container.quaternion, acc)
+    setTimeout(()=>animate(acc+1/100), 20)
+    camera.zoom = 1+acc
+    camera.updateProjectionMatrix ()
+  }
+  animate(1/100)
 };
