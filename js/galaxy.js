@@ -118,9 +118,7 @@ var makeGalaxy = function(error, hyg, bounds, lines){
     label.scale.set(1000, 1000, 1000);
     boundsMesh.add(label);
   });
-
   var processStars = starDatabase.map(function(d){
-
     var lambda = d.ra*Math.PI/180*15,
         phi = d.dec*Math.PI/180,
         cosPhi = Math.cos(phi);
