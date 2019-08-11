@@ -25,8 +25,8 @@ var minMag = 21,
     mode = 0;
 
 //parseData
-window.onload = processData()
-
+const database = processData()
+console.log(database)
 queue()
   .defer(d3.csv, "https://gist.githubusercontent.com/elPaleniozord/5d96f2f5cce92366b06bea32a2625d2e/raw/8504f231ea5ee5fdef47371232c8c55256b8f045/hyg_data_sortMag.csv", function(d){
     starDatabase.push(d);
