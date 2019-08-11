@@ -1,10 +1,12 @@
-//clear storage - just run this snippet in console
-// window.indexedDB.databases().then((r) => {
-//     for (var i = 0; i < r.length; i++) window.indexedDB.deleteDatabase(r[i].name);
-// }).then(() => {
-//     alert('All data cleared.');
-// });
+/*clear storage - just run this snippet in console
+window.indexedDB.databases().then((r) => {
+    for (var i = 0; i < r.length; i++) window.indexedDB.deleteDatabase(r[i].name);
+}).then(() => {
+    alert('All data cleared.');
+});
+*/
 const downloadData = () =>{
+    console.log('downloading content')
     let data = {
         stars: [],
         bounds: [],
@@ -20,7 +22,6 @@ const downloadData = () =>{
         .defer(d3.json, "https://gist.githubusercontent.com/elPaleniozord/ed1dd65a955c2c7e1bb6cbc30feb523f/raw/9dd2837035dde1554f20157be681d71d54a26c58/lines.json",function(d){
             data.lines.push(d);
             })
-    
     return data 
 }
 
@@ -32,6 +33,7 @@ function processData(){
             .then(function() {console.log('Service Worker Registered'); });
     }
     var IDB;
+
     var IDBSetting = {
         name: 'indexedDBName',
         version: 1,
@@ -54,6 +56,7 @@ function processData(){
 
         request.onupgradeneeded = (event) => {
             console.log('upgrading IDB', event)
+            IDB = downloadData()
             var db = event.target.result
             for (var i in IDBSetting.tables){
                 var objectStore = db.createObjectStore(IDBSetting.tables[i].tableName, {
@@ -65,6 +68,11 @@ function processData(){
                         unique: IDBSetting.tables[i].unique[j]
                     })
                 }
+            }
+            console.log('add data')
+            for(var i in IDB){
+                console.log('adding data:', i, IDB[i])
+                IDBFuncSet.addData(i, IDB[i])
             }
         }
     }();
@@ -93,9 +101,41 @@ function processData(){
             request.onerror = (event) => console.log('addData IDB opening failure')
         }
     }
-
     
 
+    IDBFuncSet.getAllData = function(arr, table) {
+        try {
+            var req = indexedDB.open(IDBSetting.name, IDBSetting.version);
+    
+            req.onsuccess = function(event) {
+                var db = req.result;
+                var transaction = db.transaction([table], "readonly");
+                var objectStore = transaction.objectStore(table);
+    
+                var objectStoreRequest = objectStore.openCursor();
+    
+                objectStoreRequest.onsuccess = function(event) {
+                    var cursor = event.target.result;
+                    if (cursor) {
+                        arr.push(cursor.value);
+                        cursor.continue();
+                    } else {
+    
+                    }
+                }
+            };
+            req.onerror = function(event) {
+                console.log("getAllData indexed DB open fail");
+            };
+        } catch (e) {
+            console.log(e);
+        }
+    }
+    var IDBdata = [];
+    for(var i in IDB){
+        IDBFuncSet.getAllData(IDBdata, i)
+    }
+    return IDBdata
     /*
     var db
     //storage
