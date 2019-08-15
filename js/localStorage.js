@@ -5,7 +5,7 @@ window.indexedDB.databases().then((r) => {
     alert('All data cleared.');
 });
 */
-const downloadData = () =>{
+const downloadData = async () =>{
     console.log('downloading content')
     let data = {
         stars: [],
@@ -22,16 +22,31 @@ const downloadData = () =>{
 const cacheName = 'static-v1'
 
 const processData = () => {
-    const cache = caches.open(cacheName).then(cache => cache)
+    let cache = caches.open(cacheName).then(data => {
+        console.log('opened cache', data)
+        return data
+    })
     console.log(cache)
-    downloadData()
+    downloadData().then(console.log('processing end'))
 }
 
 const storeFiles = (err,stars, bounds, lines) => {
     console.log(err, stars, bounds, lines)
     if(err) console.log(err)
-    return caches.open(cacheName).then(cache => {
-        return cache.addAll([stars,bounds,lines])
+    caches.open(cacheName).then(cache => {
+        const options = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }
+        const res = new Response('{stars}', options)
+
+        console.log(res)
+        return cache.addAll([
+            '/data/hyg_data_sortMag.csv',
+            '/data/lines.json',
+            '/data/bounds.json'
+        ]).then(console.log('succesfully stored data in cache', cache))
     })
 }
 
