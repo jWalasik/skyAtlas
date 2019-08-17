@@ -33,25 +33,26 @@ const processData = () => {
 const storeFiles = (err,stars, bounds, lines) => {
     console.log(err, stars, bounds, lines)
     if(err) console.log(err)
+    //store data converted from csv to json => 4mb vs 21mb
     caches.open(cacheName).then(cache => {
-        const options = {
+        const jsonRes = new Response(JSON.stringify(stars), {
             headers: {
-                'Content-Type': 'application/json'
+                'content-type': 'application/json'
             }
-        }
-        const res = new Response('{stars}', options)
+        })
 
-        console.log(res)
+        cache.put('/data.json', jsonRes)
         return cache.addAll([
-            '/data/hyg_data_sortMag.csv',
             '/data/lines.json',
             '/data/bounds.json'
         ]).then(console.log('succesfully stored data in cache', cache))
     })
 }
 
-const loadOfflineFiles = event => {
-    return caches.match(event.request).then(match => {
-        return match || fetch(event.request)
-    })
-}
+self.addEventListener('fetch', (e)=> {
+    e.respondWith(
+        caches.match(event.request).then((res)=>{
+            return res || fetch(event.request)
+        })
+    )
+})
