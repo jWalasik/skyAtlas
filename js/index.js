@@ -1,5 +1,3 @@
-import * as ServiceWorker from './serviceWorker'
-
 //three variables
 var scene = new THREE.Scene(),
     sceneLvl1 = new THREE.Scene(),

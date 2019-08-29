@@ -27,14 +27,15 @@ const processData = () => {
         return data
     })
     console.log(cache)
+    if(cache) return cache
     downloadData().then(console.log('processing end'))
 }
 
 const storeFiles = (err,stars, bounds, lines) => {
     console.log(err, stars, bounds, lines)
     if(err) console.log(err)
-    //store data converted from csv to json => 4mb vs 21mb
     caches.open(cacheName).then(cache => {
+        //convert csv to json - improves loading times, csv reduce bandwidth
         const jsonRes = new Response(JSON.stringify(stars), {
             headers: {
                 'content-type': 'application/json'
