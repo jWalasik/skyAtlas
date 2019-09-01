@@ -51,9 +51,6 @@ const storeFiles = (err,stars, bounds, lines) => {
 }
 
 self.addEventListener('fetch', (e)=> {
-    e.respondWith(
-        caches.match(event.request).then((res)=>{
-            return res || fetch(event.request)
-        })
-    )
+    const request = e.request
+    const url = new URL(request.url)
 })

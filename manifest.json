@@ -1,6 +1,7 @@
 {
   "name": "skyAtlas PWA",
   "short_name": "skyAtlas",
+  "start_url": "/js/serviceWorker.js",
   "icons": [{
     "src": "/textures/icons/icon512.png",
     "sizes": "512x512",
