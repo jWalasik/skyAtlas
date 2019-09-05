@@ -12,7 +12,6 @@ var minMag = 21,
     intersections=[],
     clock = new THREE.Clock,
     INTERSECTED,
-    starDatabase=[],
     width = window.innerWidth,
     height = window.innerHeight,
     detailedView = false,
@@ -24,16 +23,12 @@ var minMag = 21,
     realtime = false,
     mode = 0;
 
-//parseData
-//const database = processData()
-parseData()
-queue()
-  .defer(d3.csv, "https://gist.githubusercontent.com/elPaleniozord/5d96f2f5cce92366b06bea32a2625d2e/raw/8504f231ea5ee5fdef47371232c8c55256b8f045/hyg_data_sortMag.csv", function(d){
-    starDatabase.push(d);
-  })
-  .defer(d3.json, "https://gist.githubusercontent.com/elPaleniozord/bb775473088f3f60c5f3ca1afeb88a82/raw/68dbc32a363d380cf9e7e57d53794c24bce4348b/bounds.json")
-  .defer(d3.json, "https://gist.githubusercontent.com/elPaleniozord/ed1dd65a955c2c7e1bb6cbc30feb523f/raw/9dd2837035dde1554f20157be681d71d54a26c58/lines.json")
-  .await(makeGalaxy);
+let database = {}
+parseData().then((data)=>{
+  console.log('data parsed', data)
+  database = data
+  makeGalaxy()
+})
 
 function init(){
   //THREE.js declarations
@@ -51,10 +46,7 @@ function init(){
   }
  else {
     trackballControls = new THREE.TrackballControls(camera, renderer.domElement);
-  }
-
-  //clock for rendering
-  
+  }  
 
   //graphic user interface
   var gui = new dat.GUI();
@@ -186,7 +178,7 @@ function onDocumentMouseClick(event){
 }
 if('serviceWorker' in navigator){
   console.log('sw registration in progress')
-  navigator.serviceWorker.register('/serviceWorker.js')
+  navigator.serviceWorker.register('./serviceWorker.js')
     .then(()=>console.log('registered'))
     .catch((err)=>console.log(err))
 }

@@ -45,7 +45,7 @@ var makeGalaxy = function(error, hyg, bounds, lines){
   };
 
   //process contellation boundaries
-  bounds.boundaries.map(function(d){
+  database.bounds.boundaries.map(function(d){
     var boundsName = d[0];
     var boundsGeometry = new THREE.Geometry();
     var outlineGeometry = new THREE.Geometry();
@@ -118,7 +118,7 @@ var makeGalaxy = function(error, hyg, bounds, lines){
     label.scale.set(1000, 1000, 1000);
     boundsMesh.add(label);
   });
-  var processStars = starDatabase.map(function(d){
+  database.stars.map(function(d){
     var lambda = d.ra*Math.PI/180*15,
         phi = d.dec*Math.PI/180,
         cosPhi = Math.cos(phi);
@@ -162,7 +162,6 @@ var makeGalaxy = function(error, hyg, bounds, lines){
   starsGeometry.addAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
   starsGeometry.addAttribute('size', new THREE.Float32BufferAttribute(sizes, 1));
 
-
   var uniforms = {
       texture: {value: new THREE.TextureLoader().load('textures/lensflare0_alpha.png')},
       scale: {type: 'f', value: window.innerHeight/2}
@@ -184,7 +183,7 @@ var makeGalaxy = function(error, hyg, bounds, lines){
   //scene.add(starField);
 
   //process constellation lines
-  lines.features.map(function(d){
+  database.lines.features.map(function(d){
     let linesMerged = new THREE.Geometry();
     let linesGeometry = new THREE.Geometry();
     d.geometry.coordinates.map(function(coords){
@@ -204,11 +203,12 @@ var makeGalaxy = function(error, hyg, bounds, lines){
       var lines = new THREE.Line(linesGeometry, linesMaterial);
 
       lines.userData = d.id;
+      
       galaxy.traverse(function(child){
         if(child.userData.name == d.id[0]){
           child.add(lines);
         }
-      })//scene traveser end
+      })
 
       linesGeometry = new THREE.Geometry();
     })  //coordinates mapping end

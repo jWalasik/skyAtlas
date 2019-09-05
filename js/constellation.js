@@ -14,7 +14,7 @@ var makeConstellation = function(){
   //container for transformations
   var container = new THREE.Object3D();
   //stars
-  starDatabase.map(function(d){
+  database.stars.map(function(d){
     if(d.con == INTERSECTED.userData.name){
       //if processing major star create unique object
       if(d.proper !== ""){
@@ -28,7 +28,6 @@ var makeConstellation = function(){
             y = radius*cosPhi*Math.sin(lambda),
             z = radius * Math.sin(phi);
 
-
         majorStarGeo.vertices.push(new THREE.Vector3(x,y,z));
         var majorStarMat = new THREE.PointsMaterial({
           color: new THREE.Color(starColor(d.ci)),
@@ -38,7 +37,6 @@ var makeConstellation = function(){
           map: majorStarMap,
         });
         var majorStar = new THREE.Points(majorStarGeo, majorStarMat);
-
         majorStar.userData = d.proper;
         container.add(majorStar);
         scene.selectable.push(majorStar)

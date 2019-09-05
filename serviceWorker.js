@@ -1,24 +1,29 @@
 const CACHE_NAME = 'sky-atlas';
 
 let filesToCache = [
-  '/',
-  '/index.html',
-  '/css/style.css',
-  '/lib/dat.gui.js',
-  '/lib/d3.min.js',
-  '/lib/TrackBallControls.js',
-  '/lib/three.min.js',
-  '/js/constellation.js',
-  '/js/galaxy.js',
-  '/js/geolocation.js',
-  '/js/helperfunctions.js',
-  '/js/highlight.js',
-  '/js/index.js',
-  '/js/object.js',
-  '/js/return.js',
-  '/js/skybox.js',
-  '/js/wikiLookup.js',
-  '/js/parseData.js'
+  './',
+  './index.html',
+  './manifest.json',
+  './serviceWorker.js',
+  './css/style.css',
+  './textures/icons/return-icon.png',
+  './textures/icons/scroll-icon.png',
+  './lib/dat.gui.js',
+  './lib/d3.min.js',
+  './lib/TrackballControls.js',
+  './lib/DeviceOrientationControls.js',
+  './lib/three.min.js',
+  './js/constellation.js',
+  './js/galaxy.js',
+  './js/geolocation.js',
+  './js/helperfunctions.js',
+  './js/highlight.js',
+  './js/index.js',
+  './js/object.js',
+  './js/return.js',
+  './js/skybox.js',
+  './js/wikiLookup.js',
+  './js/parseData.js'
 ]
 
 self.addEventListener('install', (event) => {

@@ -15,7 +15,7 @@ var goBack = function(){
     camera.position.set(prevPos.x, prevPos.y,prevPos.z)
     camera.rotation=prevRot
     trackballControls.update();
-    lvl = 2.5;
+    lvl = 2;
   	document.getElementById('name-container').innerHTML = name;
   	document.getElementById('description-container').innerHTML = name;
     //centerConstellation(sceneLvl2.children[0], 1);
