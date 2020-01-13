@@ -127,8 +127,8 @@ function switchControls(){
 
   var MODE = {TRACKBALL: 0, ORIENTATION: 1};
 
-  camera.rotation.copy( prevCamera.rotation );
-  camera.position.copy( prevCamera.position );
+  camera.quaternion.copy( prevCamera.quaternion );
+  camera.quaternion.copy( prevCamera.quaternion );
 
   switch(mode){
     case MODE.TRACKBALL:

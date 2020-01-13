@@ -2,6 +2,11 @@ var coords;
 var test = 0;
 
 function getLocation() {
+  const options = {
+    enableHighAccuracy: false,
+    timeout: 5000,
+    maximumAge: Infinity
+  }
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function(p){
       realtime = true;
@@ -13,7 +18,7 @@ function getLocation() {
         animateRotation(scene.getObjectByName("galaxy").quaternion, target, 1/100)
         //scene.getObjectByName("galaxy").quaternion.setFromUnitVectors(computeZenith().normalize(), skyCenter.clone().normalize());
       }, 3000);
-    });
+    },err=>console.log(err),options);
   } else {
     x.innerHTML = "Geolocation is not supported by this browser.";
   }

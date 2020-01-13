@@ -104,8 +104,6 @@ var makeConstellation = function(){
   document.getElementById('name-container').innerHTML = INTERSECTED.children[2].userData[1];
   getWikiData(ahref+'_(constellation)');
 
-  centerConstellation(container, 1);
-
   scene.add(container);
   container.name = "container";
   sceneLvl2 = scene;
@@ -113,12 +111,16 @@ var makeConstellation = function(){
   if(typeof window.orientation !== 'undefined') {
     switchControls()
   };
+
+  centerConstellation(container, 1);
 }
 
 function centerConstellation(container, x){
   const bCenter = new THREE.Box3().setFromObject(container).getCenter()
+  //const camDirection = new THREE.Quaternion().copy(camera.quaternion)
   const camDirection = camera.getWorldDirection()
   const target = new THREE.Quaternion().setFromUnitVectors(bCenter.normalize(), camDirection.normalize())
+
   const animate = (acc) => {
     if(acc>=1) return
     THREE.Quaternion.slerp(container.quaternion, target, container.quaternion, acc)

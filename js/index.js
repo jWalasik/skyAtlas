@@ -25,7 +25,6 @@ var minMag = 21,
 
 let database = {}
 parseData().then((data)=>{
-  console.log('data parsed', data)
   database = data
   makeGalaxy()
 })
@@ -43,8 +42,7 @@ function init(){
   //setup controls
   if(typeof window.orientation !== 'undefined'){
     trackballControls = new THREE.DeviceOrientationControls(camera);
-  }
- else {
+  } else {
     trackballControls = new THREE.TrackballControls(camera, renderer.domElement);
   }  
 
@@ -108,19 +106,23 @@ function init(){
   function render(){    
     //chose scene to render
     scene = window["sceneLvl"+lvl];
-    if(lvl == 2){
-      //scene.getObjectByName(camera.quaternion).quaternion.copy("container");
+    //animate star blinking with sine wave 
+    if(lvl == 1 && scene.getObjectByName('starField') ){
+      var stars = scene.getObjectByName('starField');    
+
+      stars.material.uniforms.time.value += 0.1
+      // for( var i = 0; i < count; i++ ) {        
+      //   alphas.array[i] += 0.1
+      // }
     }
     else if(lvl == 3){
       updateObject(scene.getObjectByName( "corona" ));
     }
-
     var delta = clock.getDelta();
     trackballControls.update(delta);
     uniform.time.value += 0.02;
     surfaceUniform.time.value +=0.07;
     checkHighlight();
-
     //console.log(camera.position)
     requestAnimationFrame(render);
 
@@ -177,8 +179,12 @@ function onDocumentMouseClick(event){
   }
 }
 if('serviceWorker' in navigator){
-  console.log('sw registration in progress')
-  navigator.serviceWorker.register('./serviceWorker.js')
-    .then(()=>console.log('registered'))
-    .catch((err)=>console.log(err))
+  navigator.serviceWorker.getRegistrations().then(reg => {
+    if(reg.scope !== "https://elpaleniozord.github.io/skyAtlas/") {
+      console.log('sw registration in progress')
+      navigator.serviceWorker.register('./serviceWorker.js')
+        .then(()=>console.log('registered'))
+        .catch((err)=>console.log(err))
+    }
+  })  
 }

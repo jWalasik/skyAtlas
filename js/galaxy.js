@@ -1,4 +1,4 @@
-var makeGalaxy = function(error, hyg, bounds, lines){
+var makeGalaxy = function(){
   //process data
   let scene = new THREE.Scene();
   scene.selectable=[];
@@ -41,7 +41,7 @@ var makeGalaxy = function(error, hyg, bounds, lines){
   var sizes = [];
   var constellations =[];
   var uniforms = {
-    color: { type: "c", value: new THREE.Color( 0xffffff ) },
+    color: { type: "c", value: new THREE.Color( 0xffffff ) }
   };
 
   //process contellation boundaries
@@ -157,14 +157,23 @@ var makeGalaxy = function(error, hyg, bounds, lines){
       //scene.add(label);
     }
   });
-  //console.log(constellations);
+  //console.log(constellations);  
   starsGeometry.addAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
   starsGeometry.addAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
   starsGeometry.addAttribute('size', new THREE.Float32BufferAttribute(sizes, 1));
+  
+  var numVertices = starsGeometry.attributes.position.count;
+  var alphas = new Float32Array( numVertices * 1 )
+  for( var i = 0; i < numVertices; i ++ ) {    
+        // set alpha randomly
+        alphas[ i ] = Math.random();
+    }
+  starsGeometry.addAttribute('alpha', new THREE.Float32BufferAttribute(alphas, 1));
 
   var uniforms = {
       texture: {value: new THREE.TextureLoader().load('textures/lensflare0_alpha.png')},
-      scale: {type: 'f', value: window.innerHeight/2}
+      scale: {type: 'f', value: window.innerHeight/2},
+      time: { type: 'f', value: 0.1 }
     };
 
   var starsMaterial = new THREE.ShaderMaterial({
@@ -179,6 +188,7 @@ var makeGalaxy = function(error, hyg, bounds, lines){
   });
 
   var starField = new THREE.Points(starsGeometry, starsMaterial);
+  starField.name = 'starField';
   galaxy.add(starField);
   //scene.add(starField);
 
