@@ -3,7 +3,7 @@ var starColor = d3.scale.linear()
                   .domain([-1, 0.5, 0.73, 1.05, 1.25, 1.60, 2])
                   .range(['#68b1ff', '#93e4ff', '#d8f5ff', '#FFFFFF', '#fffad8', '#ffdda8', '#ffb5b5']);
 //inverse size scalling with magnitude
-var scaleMag = d3.scale.linear()
+var scaleMag = d3.scale.log()
                   .domain([-2.5, 20])
                   .range([3.5, 0.005]);
 
