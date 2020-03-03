@@ -5,7 +5,7 @@ var starColor = d3.scale.linear()
 //inverse size scalling with magnitude
 var scaleMag = d3.scale.log()
                   .domain([-2.5, 20])
-                  .range([3.5, 0.005]);
+                  .range([3.5, 0.05]);
 
 // Converts a point [longitude, latitude] in degrees to a THREE.Vector3.
 function vertex(point) {
