@@ -21,12 +21,22 @@ var minMag = 21,
     prevRot,
     name,
     realtime = false,
-    mode = 0;
+    mode = 0,
+    isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
 let database = {}
+document.getElementById('loading-screen__text').innerHTML = "Loading star database..."
 parseData().then((data)=>{
+  document.getElementById('loading-screen__text').innerHTML = "Forging stars..."
   database = data
   makeGalaxy()
+}).then(res => {
+  //hide loading screen
+  document.getElementById('loading-screen__text').innerHTML = "Ready"
+  const container = document.getElementById('loading-screen')
+  container.classList.add('fade-out')
+
+  setTimeout(()=>{container.style.display='none'}, 2000)
 })
 
 function init(){
@@ -130,14 +140,13 @@ function init(){
   } //render end
 }//init end
 
-
 //event listeners
 var start = {x: 0, y: 0};
 var end = {x:0, y:0};
 
 document.getElementById('WebGL-Output').addEventListener('mousemove', onDocumentMouseMove, false);
 document.getElementById('WebGL-Output').addEventListener('click', onDocumentMouseClick);
-document.addEventListener('deviceorientationabsolute', computeAzimuth, true)
+document.addEventListener('deviceorientationabsolute', computeAzimuth, true) //use absolute orientation to get initial 
 document.addEventListener('mousedown', ()=>{start = {x: mouse.x, y: mouse.y}});
 document.addEventListener('mouseup', ()=>end = {x: mouse.x, y: mouse.y});
 //document.getElementById('return').addEventListener('click', goBack);
@@ -148,10 +157,6 @@ window.onscroll = function() {updateUI('offset')}
 window.onload = init;
 
 function onDocumentMouseMove(event){
-  // the following line would stop any other event handler from firing
-  // (such as the mouse's TrackballControls)
-
-  // update the mouse variable
   mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
   mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 }

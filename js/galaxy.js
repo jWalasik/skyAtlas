@@ -70,7 +70,7 @@ var makeGalaxy = function(){
       labelZ.push(point.z);
     }
     //draw boundary outline
-    var outlineMaterial = new THREE.LineBasicMaterial({color: 0xfbff3d});
+    var outlineMaterial = new THREE.LineBasicMaterial({color: 0xffe291, transparent: true, opacity: 0.35});
     var outline = new THREE.Line(outlineGeometry, outlineMaterial);
 
     //triangulation method
@@ -172,7 +172,7 @@ var makeGalaxy = function(){
 
   var uniforms = {
       texture: {value: new THREE.TextureLoader().load('textures/lensflare0_alpha.png')},
-      scale: {type: 'f', value: window.innerHeight/2},
+      scale: {type: 'f', value: isMobile ? window.innerHeight : window.innerHeight/2},
       time: { type: 'f', value: 0.1 }
     };
 
@@ -239,6 +239,5 @@ var makeGalaxy = function(){
   // cube.name='helper';
 
   sceneLvl1 = scene;
-  document.getElementById('loading-screen').classList.add('fade-out')
   getLocation();
 }
