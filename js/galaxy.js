@@ -190,7 +190,6 @@ var makeGalaxy = function(){
   var starField = new THREE.Points(starsGeometry, starsMaterial);
   starField.name = 'starField';
   galaxy.add(starField);
-  //scene.add(starField);
 
   //process constellation lines
   database.lines.features.map(function(d){
@@ -229,6 +228,9 @@ var makeGalaxy = function(){
       }
     })
   })  //lines.features.map end89
+
+  //planets
+
 
   //helper object
   // var geometry = new THREE.BoxGeometry( 200, 200, 200 );
