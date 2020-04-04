@@ -34,6 +34,42 @@ var makeGalaxy = function(){
 
   galaxy.add(zenithMarker)
 
+  //initialize solar system objects
+  const system = new SolarSystem
+  system.compute()
+  const planets = system.geocentricCoords()
+  console.log(planets)
+  planets.map((planet)=>{
+    let canvas = document.createElement('canvas')
+    const context = canvas.getContext('2d')
+    const textWidth = (context.measureText(planet.name)).width
+    context.font = "Bold 60px Arial"
+    context.fillStyle = "rgba(255,150,50,1)"
+    context.fillText(planet.name, textWidth/8.5,60)
+
+    let texture = new THREE.Texture(canvas)
+    texture.needsUpdate = true
+    texture.minFilter = THREE.LinearFilter
+
+    let material = new THREE.SpriteMaterial({map: texture})
+    material.transparent = true
+    material.depthTest = true
+
+    let planetMarker = new THREE.Sprite(material)
+    planetMarker.scale.set(1000,1000,1000)
+    planetMarker.name = planet.name
+    
+    var lambda = planet.ra*Math.PI/180*15,
+        phi = planet.dec*Math.PI/180,
+        cosPhi = Math.cos(phi);
+
+    planetMarker.position.x = radius*cosPhi*Math.cos(lambda)
+    planetMarker.position.y = radius*cosPhi*Math.sin(lambda)
+    planetMarker.position.z = (radius * Math.sin(phi))
+
+    galaxy.add(planetMarker)
+  })
+
   //define stars geometries, project them onto sphere
   var starsGeometry = new THREE.BufferGeometry();
   var vertices = [];
