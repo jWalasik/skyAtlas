@@ -38,7 +38,7 @@ var makeGalaxy = function(){
   const system = new SolarSystem
   system.compute()
   const planets = system.geocentricCoords()
-  console.log(planets)
+
   planets.map((planet)=>{
     let canvas = document.createElement('canvas')
     const context = canvas.getContext('2d')
