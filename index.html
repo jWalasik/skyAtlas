@@ -280,15 +280,27 @@
     }
   </script>
 <!--BLACK MAGICS END-->
+  <main>
+    <nav>
+      <ul>
+        <li>Item1</li>
+        <li>Item2</li>
+        <li>Item3</li>
+      </ul>
+    </nav>
+
+    <div id="WebGL-Output">
+      <div style="display:none">
+        <span id="marker_template" class="marker"><span class="name">
+        </span></span>
+      </div>
+    </div>
+
+  </main>
   <div id="Stats-Output">
   </div>
   <!-- Div which will hold the Output -->
-  <div id="WebGL-Output">
-    <div style="display:none">
-			<span id="marker_template" class="marker"><span class="name">
-			</span></span>
-		</div>
-  </div>
+  
 
   <!--CONTROLS-->
   <button id="return" class="hidden" onclick="goBack()">
@@ -314,6 +326,8 @@
   <!--MODALS-->
   <div id="name-container"></div>
   <div id="description-container"><!--Object description goes here--></div>
+
+  <footer>Coded and designed by <a href='https://github.com/elPaleniozord'>jWalasik</a></footer>
 
   <script src='serviceWorker.js'></script>
 
