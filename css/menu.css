@@ -1,0 +1,25 @@
+.menu {
+  border: 1px solid green;
+  height: 50px;
+  color: white;
+  width: 100vw;
+}
+
+.nav-list {
+  list-style: none;
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+.hidden {
+
+}
+
+#gear-icon {
+  position: fixed;
+  top: 0;
+  right: 0;
+  fill: white;
+  height: 44px;
+  width: 44px;
+}

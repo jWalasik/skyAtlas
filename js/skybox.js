@@ -1,5 +1,5 @@
 function initSky(){
-	var prefix = 'textures/skybox/';
+	var prefix = 'assets/skybox/';
 	var directions = ['px','nx','py','ny','pz','nz',];
 	var suffix = '.jpg';
 	var skyGeometry = new THREE.CubeGeometry(50000,50000,50000);

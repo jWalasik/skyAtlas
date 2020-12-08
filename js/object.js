@@ -10,7 +10,7 @@ var surfaceUniform = {
   resolution: { type: "v2", value: new THREE.Vector2()},
   color: { type: 'v3', value: new THREE.Vector3()},
   veinColor: { type: 'v3', value: new THREE.Vector3(1,1,1)},
-  iChannel0: {type: 't', value: new THREE.TextureLoader().load('textures/noise.png')}
+  iChannel0: {type: 't', value: new THREE.TextureLoader().load('assets/noise.png')}
 }
 
 

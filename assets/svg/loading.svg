@@ -1,4 +1,4 @@
-<svg id='sunset'  viewBox="0 0 600 600">
+<svg id='sunset'  viewBox="0 0 600 600" preserveAspectRatio='none'>
   <defs>    
     <radialGradient id="grad1" cx="50%" cy="0%" r="50%" fx="50%" fy="0%">
       <stop offset="0%"

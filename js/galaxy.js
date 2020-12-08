@@ -207,7 +207,7 @@ var makeGalaxy = function(){
   starsGeometry.addAttribute('alpha', new THREE.Float32BufferAttribute(alphas, 1));
 
   var uniforms = {
-      texture: {value: new THREE.TextureLoader().load('textures/lensflare0_alpha.png')},
+      texture: {value: new THREE.TextureLoader().load('assets/lensflare0_alpha.png')},
       scale: {type: 'f', value: isMobile ? window.innerHeight : window.innerHeight/2},
       time: { type: 'f', value: 0.1 }
     };

@@ -19,7 +19,7 @@ var makeConstellation = function(){
       //if processing major star create unique object
       if(d.proper !== ""){
         var majorStarGeo = new THREE.Geometry();
-        var majorStarMap = new THREE.TextureLoader().load('textures/lensflare0_alpha.png');
+        var majorStarMap = new THREE.TextureLoader().load('assets/lensflare0_alpha.png');
         //2d to 3d coordinates
         var lambda = d.ra*Math.PI/180*15, //arc length, range 360 deg
             phi = d.dec*Math.PI/180,      //arc length, range 90 deg
@@ -67,7 +67,7 @@ var makeConstellation = function(){
   starsGeometryFiltered.addAttribute('size', new THREE.Float32BufferAttribute(sizes, 1));
 
   var uniforms = {
-      texture: {value: new THREE.TextureLoader().load('textures/lensflare0_alpha.png')},
+      texture: {value: new THREE.TextureLoader().load('assets/lensflare0_alpha.png')},
       scale: {type: 'f', value: window.innerHeight/2}
     };
 

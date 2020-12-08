@@ -28,7 +28,7 @@ const parseData = () => {
       .catch(err=>console.log(err))
     }
     else {
-      console.log('cache exist - loading data...')
+      console.log('cache detected - loading data...')
       return caches.open(cacheName).then(cache => 
         cache.match('db.json').then((result)=> result.json())
       )

@@ -1,7 +1,7 @@
 {
   "mercury": {
-    "sprite": "./textures/mer-small.png",
-    "map": "./textures/mer-map.png",
+    "sprite": "./assets/mer-small.png",
+    "map": "./assets/mer-map.png",
     "elements": {
       "base": {
         "a": "0.38709927",

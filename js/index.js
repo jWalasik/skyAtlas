@@ -1,4 +1,7 @@
 //three variables
+const scenes = {
+  views: [new THREE.Scene(),new THREE.Scene(),new THREE.Scene()]
+}
 var scene = new THREE.Scene(),
     sceneLvl1 = new THREE.Scene(),
     sceneLvl2 = new THREE.Scene(),
@@ -38,6 +41,12 @@ parseData().then((data)=>{
 
   setTimeout(()=>{container.style.display='none'}, 2000)
 })
+
+setTimeout(()=>{container.style.display='none'}, 2000)
+
+function start() {
+  console.log('start')
+}
 
 function init(){
   //THREE.js declarations
@@ -154,7 +163,7 @@ document.addEventListener('mouseup', ()=>end = {x: mouse.x, y: mouse.y});
 //document.getElementById('scroll-up').addEventListener('click', scroll());
 window.onscroll = function() {updateUI('offset')}
 
-window.onload = init;
+//window.onload = init;
 
 function onDocumentMouseMove(event){
   mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
