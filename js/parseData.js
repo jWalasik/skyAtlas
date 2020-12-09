@@ -1,9 +1,9 @@
 const cacheName = "galaxy-db"
 
-const parseData = () => {
+const parseData = (database) => {
   //check local storage for data
-  return caches.has(cacheName).then((hasCache)=>{
-    if(!hasCache){
+  return caches.has(cacheName).then((cache)=>{
+    if(!cache){
       console.log('cache has no data stored - downloading...')
       const urls = [
         'https://gist.githubusercontent.com/elPaleniozord/5d96f2f5cce92366b06bea32a2625d2e/raw/8504f231ea5ee5fdef47371232c8c55256b8f045/hyg_data_sortMag.csv',
@@ -46,3 +46,5 @@ const storeData = (database)=>{
     cache.put('db.json', jsonRes)
   })
 }
+
+export default parseData

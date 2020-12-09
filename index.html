@@ -18,13 +18,13 @@
   <link rel="apple-touch-icon" href="/assets/icons/icon96.png" />
 </head>
 
-<body onload='start()' oncontextmenu="return false">
+<body oncontextmenu="return false">
   <noscript>You need to enable JavaScript to run this app.</noscript>
 
   <!-- LOADING SCREEN -->
-  <div class='loading-screen'>
+  <div class='loading-screen' id='loading-screen'>
     <h3 class='loading-screen__title'>sky Atlas</h3>
-    <div id='loading-screen__progress'>...loading</div>
+    <div id='loading-screen__status'>...loading</div>
 
     <svg class='loading-screen__svg' viewBox="0 0 600 600" preserveAspectRatio=none>
       <defs>    
@@ -108,7 +108,8 @@
   </nav>
 
   <!-- DISPLAY SCREEN -->
-  <main class='display'>
+  <main class='display' id='display'>
+    <h3>THIS SHOULDNT BE VISIBLE WHILE LOADING</h3>
     <div id="WebGL-Output">
       <div style="display:none"></div>
     </div>
@@ -121,29 +122,8 @@
     <a href='https://github.com/elPaleniozord'>jWalasik</a>
   </footer>
   
-
-  <!-- <script src='serviceWorker.js'></script>
-
-  <script src="lib/dat.gui.js"></script>
-  <script src='lib/d3.min.js'></script>
-  <script src='lib/three.min.js'></script>
-  <script src='lib/TrackballControls.js'></script>
-  <script src='lib/DeviceOrientationControls.js'></script>
-
-  <script src='js/solarSystem.js'></script>
-  <script src='js/galaxy.js'></script>
-  <script src='js/helperfunctions.js'></script>  
-  <script src='js/constellation.js'></script>
-  <script src='js/skybox.js'></script>
-  <script src='js/object.js'></script>
-  <script src='js/highlight.js'></script>
-  <script src='js/parseData.js'></script>
-  <script src='js/return.js'></script>
-  <script src='js/geolocation.js'></script>
-  <script src='js/wikiLookup.js'></script> -->
-  
-  <script src='js/main.js'></script>
+  <script src='serviceWorker.js'></script>
+  <script type='module' src='js/main.js'></script>
 
 </body>
-
 </html>

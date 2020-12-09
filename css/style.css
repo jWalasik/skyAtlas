@@ -12,11 +12,16 @@ body {
   justify-content: space-around;
   align-items: center;
   color: white;
+  background-color: black;
   height: calc(100vh - 20px);
   width: 100%;
   position: absolute;
   top: 0;
   left: 0;
+}
+.loading-screen--hidden {
+  animation: fade-out 2s 1 ease;
+  animation-fill-mode: forwards;
 }
 .loading-screen__title {
   font-family: Andromeda;
@@ -25,10 +30,14 @@ body {
   padding-left: 36px;
   font-weight: 100;
   text-align: center;
+  text-shadow:
+  0 0 5px #fff,
+  0 0 10px #fff;
 }
-#loading-screen__progress {
+#loading-screen__status {
   font-size: 20px;
   margin-top: 70px;
+  z-index: 2;
 }
 .loading-screen__svg {
   position: absolute;
@@ -37,7 +46,6 @@ body {
   transform: translate(-50%, -50%);
   height: 100%;
   width: 100%;
-  z-index: -1;
 }
 
 /* MENU */
@@ -79,13 +87,16 @@ body {
 .display {
   height: calc(100vh - 20px);
   width: 100%;
-
+  color: white;
 }
 
 /* FOOTER */
 .footer {
+  position: fixed;
+  bottom: 0;
   height: 20px;
-  text-align: center;
+  left: 50%;
+  transform: translate(-50%, 0);
   color: rgb(209, 209, 209);
   font-size: 12px;
 }
@@ -116,10 +127,11 @@ body {
 }
 
 
-@keyframes rotate {
+@keyframes fade-out {
   100% {
-    transform: rotate(120deg);
+    opacity: 0;
   }
+
 }
 /* body {
   background-color: black;
