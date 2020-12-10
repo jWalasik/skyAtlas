@@ -6,6 +6,7 @@ import Graticule from './graticule.js'
 import {UnrealBloomPass} from '../lib/postprocessing/UnrealBloomPass.js'
 import {RenderPass} from '../lib/postprocessing/RenderPass.js'
 import {EffectComposer} from '../lib/postprocessing/EffectComposer.js'
+import StarField from './starField.js'
 
 const Atlas = function () {
   let _this = this;
@@ -37,9 +38,11 @@ const Atlas = function () {
 
   const graticule = Graticule()
   this.scenes[this.currentScene].add( graticule )
-
-  // const galaxy = Galaxy()
-  // this.scenes[this.currentScene].add( galaxy )
+  console.time('star field')
+  StarField().then(starField => {
+    console.log(starField)
+    this.scenes[this.currentScene].add( starField )}) 
+  console.timeEnd('star field')
   
   const renderScene = new RenderPass(this.scenes[this.currentScene], this.cameras[this.currentCamera])
 

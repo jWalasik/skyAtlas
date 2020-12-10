@@ -203,7 +203,7 @@ var makeGalaxy = function(){
   for( var i = 0; i < numVertices; i ++ ) {    
         // set alpha randomly
         alphas[ i ] = Math.random();
-    }
+  }
   starsGeometry.addAttribute('alpha', new THREE.Float32BufferAttribute(alphas, 1));
 
   var uniforms = {
