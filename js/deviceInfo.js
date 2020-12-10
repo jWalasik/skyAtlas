@@ -30,6 +30,8 @@ export default function deviceInfo() {
 
   return {
     mobile: isMobile,
-    webGL: webGL
+    webGL: webGL,
+    width: window.innerWidth,
+    height: window.innerHeight,
   }
 }

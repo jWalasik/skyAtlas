@@ -22,6 +22,7 @@ body {
 .loading-screen--hidden {
   animation: fade-out 2s 1 ease;
   animation-fill-mode: forwards;
+  z-index: -100;
 }
 .loading-screen__title {
   font-family: Andromeda;

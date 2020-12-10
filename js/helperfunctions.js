@@ -1,18 +1,21 @@
-//translate color index to actuall color
-var starColor = d3.scale.linear()
-                  .domain([-1, 0.5, 0.73, 1.05, 1.25, 1.60, 2])
-                  .range(['#68b1ff', '#93e4ff', '#d8f5ff', '#FFFFFF', '#fffad8', '#ffdda8', '#ffb5b5']);
-//inverse size scalling with magnitude
-// var scaleMag = d3.scale.log()
-//                   .domain([-2.5, 20])
-//                   .range([3.5, 0.05]);
-var scaleMag = (mag) => {
-  //since using logarithmic scale inversed and account for negative values
-  return Math.log((mag-20)*-1)
-}
+import * as THREE from './lib/three.module.js'
+
+// //translate color index to actuall color
+// var starColor = d3.scale.linear()
+//                   .domain([-1, 0.5, 0.73, 1.05, 1.25, 1.60, 2])
+//                   .range(['#68b1ff', '#93e4ff', '#d8f5ff', '#FFFFFF', '#fffad8', '#ffdda8', '#ffb5b5']);
+// //inverse size scalling with magnitude
+// // var scaleMag = d3.scale.log()
+// //                   .domain([-2.5, 20])
+// //                   .range([3.5, 0.05]);
+// var scaleMag = (mag) => {
+//   //since using logarithmic scale inversed and account for negative values
+//   return Math.log((mag-20)*-1)
+// }
 
 // Converts a point [longitude, latitude] in degrees to a THREE.Vector3.
 function vertex(point) {
+  const radius = 12000
   //console.log("point", point);
   var lambda = point[0] * Math.PI / 180,
       phi = point[1] * Math.PI / 180,
@@ -24,28 +27,49 @@ function vertex(point) {
   );
 }
 
-function findLabelPos(coordArray){
+// function findLabelPos(coordArray){
 
-  var min = Math.min(...coordArray),
-      max = Math.max(...coordArray),
-      mid = min + (max-min)/2;
+//   var min = Math.min(...coordArray),
+//       max = Math.max(...coordArray),
+//       mid = min + (max-min)/2;
 
-  return mid;
+//   return mid;
+// }
+
+
+export function pairs(values, pairof = pair) {
+  const pairs = [];
+  let previous;
+  let first = false;
+  for (const value of values) {
+    if (first) pairs.push(pairof(previous, value));
+    previous = value;
+    first = true;
+  }
+  return pairs;
+}
+
+export function pair(a, b) {
+  return [a, b];
 }
 
 // Converts a GeoJSON MultiLineString in spherical coordinates to a THREE.LineSegments.
-function wireframe(multilinestring, material) {
+export function wireframe(multilinestring, material) {
   var geometry = new THREE.Geometry;
-    multilinestring.coordinates.forEach(function(line) {
-    d3.pairs(line.map(vertex), function(a, b) {
-      geometry.vertices.push(a, b);
-    });
+  multilinestring.coordinates.forEach(function(line) {
+    pairs(
+      line.map(vertex), 
+      function(a, b) {
+        geometry.vertices.push(a, b);
+      }
+    );
   });
+
   return new THREE.LineSegments(geometry, material);
 }
 
 // See https://github.com/d3/d3-geo/issues/95
-function graticule10() {
+export function graticule10() {
   var epsilon = 1e-6,
       x1 = 180, x0 = -x1, y1 = 80, y0 = -y1, dx = 10, dy = 10,
       X1 = 180, X0 = -X1, Y1 = 90, Y0 = -Y1, DX = 90, DY = 360,
@@ -71,78 +95,78 @@ function graticule10() {
   };
 }
 
-function scrolling(direction){
-  switch(direction){
-    case 'down':
-      window.scrollBy(0, window.innerHeight);
-      updateUI("description");
-      break;
-    case 'up':
-      window.scrollTo(0,0);
-      updateUI("atlas");
-      break;
-  }
-}
-function updateUI(state){
-  var downBtn = document.getElementById('scroll-down'),
-      returnBtn = document.getElementById('return'),
-      cont = document.getElementById('scroll-container');
+// function scrolling(direction){
+//   switch(direction){
+//     case 'down':
+//       window.scrollBy(0, window.innerHeight);
+//       updateUI("description");
+//       break;
+//     case 'up':
+//       window.scrollTo(0,0);
+//       updateUI("atlas");
+//       break;
+//   }
+// }
+// function updateUI(state){
+//   var downBtn = document.getElementById('scroll-down'),
+//       returnBtn = document.getElementById('return'),
+//       cont = document.getElementById('scroll-container');
 
-  switch(state){
-    case "default":
-      downBtn.style.display = 'none';
-      returnBtn.style.display = 'none';
-      cont.style.display = 'none';
-      break;
-    case "atlas":
-      downBtn.style.display = 'inline-block';
-      returnBtn.style.display = 'block';
-      cont.style.display = 'none';
-      break;
-    case "description":
-      downBtn.style.display = 'none';
-      returnBtn.style.display = 'none';
-      cont.style.display = 'block';
-      break;
-    case "offset":
-      if(window.pageYOffset > window.innerHeight) cont.classList.add('sticky');
-      if(window.pageYOffset <= window.innerHeight) cont.classList.remove('sticky');
-      if(window.pageYOffset == 0) updateUI('atlas');
-      if(window.pageYOffset > 10) updateUI('description');
-  }
-}
+//   switch(state){
+//     case "default":
+//       downBtn.style.display = 'none';
+//       returnBtn.style.display = 'none';
+//       cont.style.display = 'none';
+//       break;
+//     case "atlas":
+//       downBtn.style.display = 'inline-block';
+//       returnBtn.style.display = 'block';
+//       cont.style.display = 'none';
+//       break;
+//     case "description":
+//       downBtn.style.display = 'none';
+//       returnBtn.style.display = 'none';
+//       cont.style.display = 'block';
+//       break;
+//     case "offset":
+//       if(window.pageYOffset > window.innerHeight) cont.classList.add('sticky');
+//       if(window.pageYOffset <= window.innerHeight) cont.classList.remove('sticky');
+//       if(window.pageYOffset == 0) updateUI('atlas');
+//       if(window.pageYOffset > 10) updateUI('description');
+//   }
+// }
 
-function posFix(){
-	var scrollCon = document.getElementById('scroll-container');
-	var sticky = window.innerHeight;
+// function posFix(){
+// 	var scrollCon = document.getElementById('scroll-container');
+// 	var sticky = window.innerHeight;
 
-	if(window.pageYOffset >= sticky){
-    document.getElementById('scroll-down').classList.add('hidden');
-		scrollCon.classList.add('sticky');
-	} else {
-		//scrollCon.style.display = 'none';
-		scrollCon.classList.remove('sticky');
-	}
-}
+// 	if(window.pageYOffset >= sticky){
+//     document.getElementById('scroll-down').classList.add('hidden');
+// 		scrollCon.classList.add('sticky');
+// 	} else {
+// 		//scrollCon.style.display = 'none';
+// 		scrollCon.classList.remove('sticky');
+// 	}
+// }
 
-function switchControls(){
-  var prevCamera = camera;
-  camera = new THREE.PerspectiveCamera(70, width/10 / (height/10), 1, 100000);
+// function switchControls(){
+//   var prevCamera = camera;
+//   camera = new THREE.PerspectiveCamera(70, width/10 / (height/10), 1, 100000);
 
-  var MODE = {TRACKBALL: 0, ORIENTATION: 1};
+//   var MODE = {TRACKBALL: 0, ORIENTATION: 1};
 
-  camera.quaternion.copy( prevCamera.quaternion );
-  camera.quaternion.copy( prevCamera.quaternion );
+//   camera.quaternion.copy( prevCamera.quaternion );
+//   camera.quaternion.copy( prevCamera.quaternion );
 
-  switch(mode){
-    case MODE.TRACKBALL:
-      trackballControls = new THREE.TrackballControls(camera, renderer.domElement);
-      mode = MODE.ORIENTATION;
-      break;
+//   switch(mode){
+//     case MODE.TRACKBALL:
+//       trackballControls = new THREE.TrackballControls(camera, renderer.domElement);
+//       mode = MODE.ORIENTATION;
+//       break;
 
-    case MODE.ORIENTATION:
-      trackballControls = new THREE.DeviceOrientationControls(camera);
-      mode = MODE.TRACKBALL;
-      break;
-  }
-}
+//     case MODE.ORIENTATION:
+//       trackballControls = new THREE.DeviceOrientationControls(camera);
+//       mode = MODE.TRACKBALL;
+//       break;
+//   }
+// }

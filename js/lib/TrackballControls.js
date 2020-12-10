@@ -3,7 +3,9 @@
  * @author Mark Lundin 	/ http://mark-lundin.com
  */
 
-THREE.TrackballControls = function ( object, domElement ) {
+ import * as THREE from './three.module.js'
+
+const TrackballControls = function ( object, domElement ) {
 	var _this = this;
 	var STATE = { NONE: -1, ROTATE: 0, ZOOM: 1, PAN: 2, TOUCH_ROTATE: 3, TOUCH_ZOOM_PAN: 4 };
 
@@ -191,7 +193,7 @@ THREE.TrackballControls = function ( object, domElement ) {
 					angle *= _this.rotateSpeed;
 
 					quaternion.setFromAxisAngle( axis, -angle );
-					if(lvl == 2){
+					if(1 == 2){
 						//_eye.applyQuaternion( quaternion );
 						_this.object.up.applyQuaternion( quaternion );
 						_rotateEnd.applyQuaternion( quaternion );
@@ -239,10 +241,6 @@ THREE.TrackballControls = function ( object, domElement ) {
 					_zoomStart.copy( _zoomEnd );
 
 				} else {
-					if(lvl == 2){
-						//camera.lookAt(getMouseProjectionOnBall())
-						_zoomStart.y += ( _zoomEnd.y - _zoomStart.y ) * this.dynamicDampingFactor;
-					}
 					_zoomStart.y += ( _zoomEnd.y - _zoomStart.y ) * this.dynamicDampingFactor;
 
 				}
@@ -333,14 +331,9 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 		_this.checkDistances();
 
-		//hacked
-		if(realtime && lvl == 1){
-			computeZenith();
-			_this.object.lookAt(_this.target);
-		}
-		else{
-			_this.object.lookAt( _this.target );
-		}
+
+		_this.object.lookAt( _this.target );
+
 
 
 		if ( lastPosition.distanceToSquared( _this.object.position ) > EPS ) {
@@ -623,4 +616,6 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 };
 
-THREE.TrackballControls.prototype = Object.create( THREE.EventDispatcher.prototype );
+TrackballControls.prototype = Object.create( THREE.EventDispatcher.prototype );
+
+export {TrackballControls}

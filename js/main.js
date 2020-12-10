@@ -1,35 +1,35 @@
+//shared variables
+let database = {}
+
 import deviceInfo from './deviceInfo.js'
 import parseData from './parseData.js'
 import shaderLoader from './shaderLoader.js'
+import setupUI from './controllers/setupControlls.js'
+import initAtlas from './visualization/initAtlas.js'
 
 const display = document.getElementById('WebGL-Output')
 const loadingScreen = document.getElementById('loading-screen')
 const status = document.getElementById('loading-screen__status')
 const device = deviceInfo()
 
-let database
 
-export default function start() {
+export default function init() {
   //check device compatibility
-
+  status.innerHTML = 'Checking device compatibility'
+  deviceInfo()
   //load data
-  parseData(database).then(data => {
-    console.log('data', database)
-  })
-  
-  shaderLoader().then(shaders => console.log(shaders))
+  status.innerHTML = 'Loading stellar data'
+  //database = parseData(database)
+  status.innerHTML = 'Igniting star cores'
+  //shaderLoader().then(shaders => console.log(shaders))
+  status.innerHTML = 'Forging galaxies'
+  new initAtlas()
 
-  // initScene()
-  // setupCameras()
-  // buildUI()
+  setupUI()
 
   // render()
-  
+  status.innerHTML = 'Welcome to skyAtlas'
+  loadingScreen.classList.toggle('loading-screen--hidden')
 }
 
-document.addEventListener('DOMContentLoaded', start())
-document.getElementById('menu').addEventListener('click', function(e) {
-  const [list, icon] = this.children
-  list.classList.toggle('menu-list--collapsed')
-  icon.classList.toggle('menu-icon--spin')
-})
+document.addEventListener('DOMContentLoaded', init())
