@@ -1,9 +1,11 @@
 import * as THREE from '../lib/three.module.js'
-import { wireframe, graticule10 } from '../helperfunctions.js'
-//import {TrackballControls} from '../lib/TrackballControls.js'
 import { TrackballControls } from '../lib/three.TrackballControls.js'
 import { DeviceOrientationControls } from '../lib/three.DeviceOrientationControls.js'
 import deviceInfo from '../deviceInfo.js'
+import Graticule from './graticule.js'
+import {UnrealBloomPass} from '../lib/postprocessing/UnrealBloomPass.js'
+import {RenderPass} from '../lib/postprocessing/RenderPass.js'
+import {EffectComposer} from '../lib/postprocessing/EffectComposer.js'
 
 const Atlas = function () {
   let _this = this;
@@ -33,14 +35,29 @@ const Atlas = function () {
   this.clock = new THREE.Clock
   this.cameras[this.currentCamera].position.set(0,0,1)
 
-  const graticule = wireframe(graticule10() , new THREE.LineBasicMaterial({color: 0x666666}))
+  const graticule = Graticule()
   this.scenes[this.currentScene].add( graticule )
+
+  // const galaxy = Galaxy()
+  // this.scenes[this.currentScene].add( galaxy )
   
+  const renderScene = new RenderPass(this.scenes[this.currentScene], this.cameras[this.currentCamera])
+
+  const bloomPass = new UnrealBloomPass(new THREE.Vector2(width,height),1.5, 0.4, 0.85)
+  bloomPass.threshold = 0
+  bloomPass.strength = 1.5
+  bloomPass.radius = 0
+
+  let composer = new EffectComposer(renderer)
+  composer.addPass(renderScene)
+  composer.addPass(bloomPass)
+
   this.render = function () {
     this.controllers[this.currentController].update(this.clock.getDelta())
 
     requestAnimationFrame(this.render.bind(this))
     renderer.render(this.scenes[this.currentScene], this.cameras[this.currentCamera])
+    composer.render()
   }
   this.render()
 
