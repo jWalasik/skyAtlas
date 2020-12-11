@@ -1,6 +1,7 @@
 import * as THREE from '../lib/three.module.js'
 import { GalaxyDB } from "../database.js"
 import { pairs, vertex } from '../helperfunctions.js'
+import Label from './label.js'
 
 const database = new GalaxyDB()
 
@@ -29,7 +30,7 @@ const Bounds = () => {
 
     bounds.add(outline)
     bounds.name = name
-    //add label
+    
     boundaries.add(bounds)
   })
   return boundaries

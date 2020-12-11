@@ -1,13 +1,16 @@
 import * as THREE from '../lib/three.module.js'
 import { TrackballControls } from '../lib/three.TrackballControls.js'
 import { DeviceOrientationControls } from '../lib/three.DeviceOrientationControls.js'
-import deviceInfo from '../deviceInfo.js'
-import Graticule from './graticule.js'
 import {UnrealBloomPass} from '../lib/postprocessing/UnrealBloomPass.js'
 import {RenderPass} from '../lib/postprocessing/RenderPass.js'
 import {EffectComposer} from '../lib/postprocessing/EffectComposer.js'
-import StarField from './starField.js'
+
+import deviceInfo from '../deviceInfo.js'
+import Asterisms from './asterisms.js'
 import Bounds from './bounds.js'
+import Graticule from './graticule.js'
+import StarField from './starField.js'
+import Planets from './planets.js'
 
 const Atlas = function () {
   let _this = this;
@@ -17,9 +20,9 @@ const Atlas = function () {
   const renderer = new THREE.WebGL1Renderer({alpha: true});
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(width, height)
-
+  
   document.getElementById('WebGL-Output').appendChild(renderer.domElement)
-
+  
   this.scenes = [new THREE.Scene()]
   this.currentScene = 0
 
@@ -46,8 +49,13 @@ const Atlas = function () {
   const boundaries = Bounds()
   this.scenes[this.currentScene].add( boundaries )
 
+  const asterisms = Asterisms()
+  this.scenes[this.currentScene].add( asterisms )
+
   const starField = StarField()
   this.scenes[this.currentScene].add( starField )
+
+  const planets = Planets()
   console.timeEnd('geometries')
   
   //POSTPROCESSING
