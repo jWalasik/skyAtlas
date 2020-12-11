@@ -7,11 +7,13 @@ import {UnrealBloomPass} from '../lib/postprocessing/UnrealBloomPass.js'
 import {RenderPass} from '../lib/postprocessing/RenderPass.js'
 import {EffectComposer} from '../lib/postprocessing/EffectComposer.js'
 import StarField from './starField.js'
+import Bounds from './bounds.js'
 
 const Atlas = function () {
   let _this = this;
   const {height, width, mobile, webGL} = deviceInfo()
 
+  //old shaders are not compatible with webgl2, thus using previous renderer version - deprecation incoming, upgrade advised
   const renderer = new THREE.WebGL1Renderer({alpha: true});
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(width, height)
@@ -36,13 +38,19 @@ const Atlas = function () {
   this.clock = new THREE.Clock
   this.cameras[this.currentCamera].position.set(0,0,1)
 
+  //GEOMETRIES
+  console.time('geometries')
   const graticule = Graticule()
   this.scenes[this.currentScene].add( graticule )
-  console.time('star field')
+  
+  const boundaries = Bounds()
+  this.scenes[this.currentScene].add( boundaries )
+
   const starField = StarField()
   this.scenes[this.currentScene].add( starField )
-  console.timeEnd('star field')
+  console.timeEnd('geometries')
   
+  //POSTPROCESSING
   const renderScene = new RenderPass(this.scenes[this.currentScene], this.cameras[this.currentCamera])
 
   const bloomPass = new UnrealBloomPass(new THREE.Vector2(width,height),1.5, 0.4, 0.85)
@@ -54,6 +62,7 @@ const Atlas = function () {
   composer.addPass(renderScene)
   composer.addPass(bloomPass)
 
+  //RENDER LOOP
   this.render = function () {
     this.controllers[this.currentController].update(this.clock.getDelta())
 

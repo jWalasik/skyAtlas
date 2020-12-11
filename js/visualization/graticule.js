@@ -43,7 +43,7 @@ const Graticule = () => {
     };
   }
 
-  return wireframe(graticule10(), new THREE.LineBasicMaterial({color: 0x666666}))
+  return wireframe(graticule10(), new THREE.LineBasicMaterial({color: 0x383838}))
 }
 
 export default Graticule
