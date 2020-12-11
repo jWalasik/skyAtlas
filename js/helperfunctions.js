@@ -34,7 +34,11 @@ export function starColor(ci,type) {
   var G = (g <= 0.0031308)? 12.92*g : 1.055*Math.pow(g,1/0.5)-0.055
   var B = (b <= 0.0031308)? 12.92*b : 1.055*Math.pow(b,1/0.5)-0.055
 
-  return [Math.round(R*255),Math.round(G*255),Math.round(B*255)]
+  return [
+    Math.round(R*255),
+    Math.round(G*255),
+    Math.round(B*255)
+  ]
 }
 
 

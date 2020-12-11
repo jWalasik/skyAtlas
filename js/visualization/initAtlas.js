@@ -12,7 +12,7 @@ const Atlas = function () {
   let _this = this;
   const {height, width, mobile, webGL} = deviceInfo()
 
-  const renderer = new THREE.WebGLRenderer({alpha: true});
+  const renderer = new THREE.WebGL1Renderer({alpha: true});
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(width, height)
 
@@ -39,9 +39,8 @@ const Atlas = function () {
   const graticule = Graticule()
   this.scenes[this.currentScene].add( graticule )
   console.time('star field')
-  StarField().then(starField => {
-    console.log(starField)
-    this.scenes[this.currentScene].add( starField )}) 
+  const starField = StarField()
+  this.scenes[this.currentScene].add( starField )
   console.timeEnd('star field')
   
   const renderScene = new RenderPass(this.scenes[this.currentScene], this.cameras[this.currentCamera])
