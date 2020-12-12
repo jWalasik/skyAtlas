@@ -1,5 +1,7 @@
 import * as THREE from '../lib/three.module.js'
-import { TrackballControls } from '../lib/three.TrackballControls.js'
+//hacked version of older trackball allowing rotation around z axis
+import { TrackballControls } from '../lib/TrackballControls.js'
+//import { TrackballControls } from '../lib/three.TrackballControls.js'
 import { DeviceOrientationControls } from '../lib/three.DeviceOrientationControls.js'
 import {UnrealBloomPass} from '../lib/postprocessing/UnrealBloomPass.js'
 import {RenderPass} from '../lib/postprocessing/RenderPass.js'
@@ -36,6 +38,7 @@ const Atlas = function () {
     new TrackballControls(this.cameras[this.currentCamera], renderer.domElement),
     new DeviceOrientationControls(this.cameras[this.currentCamera])
   ]
+  this.controllers[0].noPan = true;
   this.currentController = 0
 
   this.clock = new THREE.Clock
@@ -55,7 +58,10 @@ const Atlas = function () {
   const starField = StarField()
   this.scenes[this.currentScene].add( starField )
 
-  const planets = Planets()
+  const planets = Planets().then(planets => {
+    this.scenes[this.currentScene].add( planets )
+  })
+  
   console.timeEnd('geometries')
   
   //POSTPROCESSING
