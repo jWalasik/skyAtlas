@@ -7,6 +7,8 @@ import {UnrealBloomPass} from '../lib/postprocessing/UnrealBloomPass.js'
 import {RenderPass} from '../lib/postprocessing/RenderPass.js'
 import {EffectComposer} from '../lib/postprocessing/EffectComposer.js'
 
+import Menu from '../controllers/Menu.js'
+
 import deviceInfo from '../deviceInfo.js'
 import Asterisms from './asterisms.js'
 import Bounds from './bounds.js'
@@ -63,6 +65,9 @@ const Atlas = function () {
   })
   
   console.timeEnd('geometries')
+
+  //CONTROLS
+  Menu(this.scenes[this.currentScene])
   
   //POSTPROCESSING
   const renderScene = new RenderPass(this.scenes[this.currentScene], this.cameras[this.currentCamera])

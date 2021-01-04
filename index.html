@@ -10,8 +10,6 @@
   <meta name="theme-color" content="#16191f">
   <meta name="mobile-web-app-capable" content="yes">
   <title>skyAtlas</title>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
   <link rel="stylesheet" href="css/style.css">
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" type="image/png" href="/assets/icons/icon96.png" />
@@ -20,33 +18,7 @@
 
 <body>
   <noscript>You need to enable JavaScript to run this app.</noscript>
-  <script type="x-shader/x-vertex" id="vertexshader">
-    uniform float scale;
-    attribute float size;
-    attribute float alpha;
-    varying vec3 vColor;
-    varying float vAlpha;
-    
-    void main() {
-        vColor = color;
-	      vAlpha = alpha;
-        vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
-        gl_PointSize = size*(120.0) * ((scale / -mvPosition.z));
-        gl_Position = projectionMatrix * mvPosition;
-    }
-  </script>
 
-  <script type="x-shader/x-fragment" id="fragmentshader">
-    uniform sampler2D texture;
-    uniform float time;
-    varying vec3 vColor;
-    varying float vAlpha;
-
-    void main() {
-        gl_FragColor = vec4( vColor * (1.0 - (sin(time*vAlpha))*0.3) , 1 );
-        gl_FragColor = gl_FragColor * texture2D( texture, gl_PointCoord );
-    }
-  </script>
   <!-- LOADING SCREEN -->
   <div class='loading-screen' id='loading-screen'>
     <h3 class='loading-screen__title'>sky Atlas</h3>
@@ -123,14 +95,7 @@
     </svg>    
   </div>
   <!-- MENU -->
-  <nav class='menu' id='menu'>
-    <ul class='menu-list menu-list--collapsed'>
-      <li>Setting1</li>
-      <li>Setting1</li>
-      <li>Setting1</li>
-      <li>Setting1</li>
-    </ul>
-    <img class='menu-icon' src='/assets/svg/gear.svg' />
+  <nav id='menu' class='menu menu--hidden'>
   </nav>
 
   <!-- DISPLAY SCREEN -->

@@ -1,7 +1,5 @@
 import deviceInfo from './deviceInfo.js'
 import {GalaxyDB} from './database.js'
-import shaderLoader from './shaderLoader.js'
-import setupUI from './controllers/setupControlls.js'
 import initAtlas from './visualization/initAtlas.js'
 
 const display = document.getElementById('WebGL-Output')
@@ -21,8 +19,6 @@ export default async function init() {
   //shaderLoader().then(shaders => console.log(shaders))
   status.innerHTML = 'Forging galaxies'
   new initAtlas()
-
-  setupUI()
 
   // render()
   status.innerHTML = 'Welcome to skyAtlas'
