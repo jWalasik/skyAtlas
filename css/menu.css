@@ -1,6 +1,7 @@
 .menu {
-  border: 1px solid red;
   position: absolute;
+  background-color: black;
+  color: white;
 }
 
 .menu--hidden {

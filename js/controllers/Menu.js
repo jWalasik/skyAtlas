@@ -7,33 +7,50 @@ const Menu = (scene) => {
   link.type = 'text/css'
   head.appendChild(link)
 
-  const menu = document.getElementById('menu')
+  //HELPER FUNCTIONS
+  const ToggleSwitch = (id) => {
+    const label = document.createElement('label')
+    label.textContent = id
 
+    const input = document.createElement('input')
+    input.type = 'checkbox'
+    input.id = id
+    input.checked = true
+    input.addEventListener('change', toggleItem)
+    
+    label.appendChild(input)
+    return label
+  }
+
+  //MENU CONTAINER
+  const menu = document.getElementById('menu')
   const navList = document.createElement('ul')
 
+  // DISPLAY CONTROL
   //magnitude filter
   const slider = document.createElement('div'),
-        input = document.createElement('input')
+        inputMag = document.createElement('input')
 
-  input.type = 'range'
-  input.value = 13.0
-  input.min = 0.0
-  input.max = 13.0
-  input.step = 0.1
-  input.orient = 'vertical'
+  inputMag.type = 'range'
+  inputMag.value = 13.0
+  inputMag.min = 0.0
+  inputMag.max = 13.0
+  inputMag.step = 0.1
+  inputMag.orient = 'vertical'
 
-  input.className = 'slider'
-  // input.addEventListener('change', ()=>{
-  //   scene.traverse(child => {
-  //     console.log(child)
-  //   })
-  // })
-  input.addEventListener('input', filterStars)
-
-
-  slider.appendChild(input)
+  inputMag.className = 'slider'
+  inputMag.addEventListener('input', filterStars)
+  slider.appendChild(inputMag)
 
   navList.appendChild(slider)
+
+  //asterisms  
+  navList.appendChild(ToggleSwitch('asterisms'))
+  navList.appendChild(ToggleSwitch('boundaries'))
+  navList.appendChild(ToggleSwitch('graticule'))
+  navList.appendChild(ToggleSwitch('planets'))
+  navList.appendChild(ToggleSwitch('names'))
+
   menu.appendChild(navList)
 
   function filterStars(e) {
@@ -43,6 +60,15 @@ const Menu = (scene) => {
     scene.traverse(child => {
       if(child.type === 'Points') {
         child.geometry.setDrawRange(0, value)
+      }
+    })
+  }
+
+  function toggleItem(e) {
+    scene.traverse(child => {
+      console.log(child.name)
+      if(child.name === e.target.id) {
+        child.visible = !child.visible
       }
     })
   }

@@ -8,6 +8,7 @@ const loader = new THREE.TextureLoader()
 const Planets = async () => {
   system.compute()
   const planets = new THREE.Object3D()
+  planets.name = 'planets'
   return Promise.all(
      system.geocentricCoords().map(planet => {
       if(planet.name === 'earth' || planet.name==='pluto') return

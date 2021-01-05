@@ -14,7 +14,9 @@ const Graticule = () => {
       );
     });
   
-    return new THREE.LineSegments(geometry, material);
+    const graticule = new THREE.LineSegments(geometry, material);
+    graticule.name = 'graticule'
+    return graticule
   }
 
   function graticule10() {
