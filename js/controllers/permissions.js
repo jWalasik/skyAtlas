@@ -1,5 +1,5 @@
 import * as THREE from '../lib/three.module.js'
-import {computeZenith, vertex, compassHeading} from '../helperfunctions.js'
+import {computeZenith, vertex, compassHeading, debounce} from '../helperfunctions.js'
 import { rotateCameraTo } from '../visualization/animate.js'
 
 const modal = document.getElementById('modal')
@@ -18,7 +18,7 @@ export function handlePermissions(scene) {
   // navigator.permissions.query({name: 'deviceorientation'}).then(res => {
   //   console.log('dev orientation',res)
   // })
-  useDeviceOrientation()
+  if(window.DeviceOrientationEvent && 'ontouchstart' in window) useDeviceOrientation()
 }
 
 export function useLocation(e, scene) {
@@ -47,7 +47,7 @@ export function useDeviceOrientation() {
   cube.name='helper';
   window.scene.add(cube)
 
-  window.addEventListener('deviceorientation', e => {
+  window.addEventListener('deviceorientation', debounce(e => {
     const heading = compassHeading(e.alpha, e.beta, e.gamma)
     const center = new THREE.Vector3(0,12000,0)
     const north = vertex(0, heading)
@@ -58,7 +58,7 @@ export function useDeviceOrientation() {
     const geometries = window.scene.getObjectByName('geometries').quaternion
     rotateCameraTo(geometries,target, .01)
   })
-}
+)}
 
 function clearModal() {
   modal.innerHTML = ''
