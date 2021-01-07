@@ -21,6 +21,7 @@ const Atlas = function () {
   /*storing scene in window scope ease the access for utilies like animated transitions but is considered bad practice might need refactor*/
   const SCENE = window.scene = new THREE.Scene()
   const {height, width, mobile, webGL} = deviceInfo()
+  //throw warning for ios users
 
   //old shaders are not compatible with webgl2, thus using previous renderer version - deprecation incoming, upgrade advised
   const renderer = new THREE.WebGL1Renderer({alpha: true});

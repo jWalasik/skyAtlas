@@ -1,5 +1,5 @@
 import * as THREE from '../lib/three.module.js'
-import {computeZenith} from '../helperfunctions.js'
+import {computeZenith, vertex, compassHeading} from '../helperfunctions.js'
 import { rotateCameraTo } from '../visualization/animate.js'
 
 const modal = document.getElementById('modal')
@@ -14,7 +14,11 @@ export function handlePermissions(scene) {
     res.onchange = function() {
       handlePermissions(scene)
     }
-  })  
+  })
+  // navigator.permissions.query({name: 'deviceorientation'}).then(res => {
+  //   console.log('dev orientation',res)
+  // })
+  useDeviceOrientation()
 }
 
 export function useLocation(e, scene) {
@@ -31,6 +35,28 @@ export function useLocation(e, scene) {
   },
   err=>{
     alert(err)
+  })
+}
+
+export function useDeviceOrientation() {
+  var geometry = new THREE.BoxGeometry( 200, 200, 200 );
+  var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+  var cube = new THREE.Mesh( geometry, material );
+
+  cube.position.set(0,0,12000)
+  cube.name='helper';
+  window.scene.add(cube)
+
+  window.addEventListener('deviceorientation', e => {
+    const heading = compassHeading(e.alpha, e.beta, e.gamma)
+    const center = new THREE.Vector3(0,12000,0)
+    const north = vertex(0, heading)
+    const target = new THREE.Quaternion().setFromUnitVectors(
+      north.normalize(),
+      center.normalize()
+    )
+    const geometries = window.scene.getObjectByName('geometries').quaternion
+    rotateCameraTo(geometries,target, .01)
   })
 }
 
