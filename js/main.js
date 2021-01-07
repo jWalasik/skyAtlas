@@ -1,6 +1,6 @@
 import deviceInfo from './deviceInfo.js'
 import {GalaxyDB} from './database.js'
-import initAtlas from './visualization/initAtlas.js'
+import Atlas from './visualization/Atlas.js'
 
 const display = document.getElementById('WebGL-Output')
 const loadingScreen = document.getElementById('loading-screen')
@@ -18,7 +18,7 @@ export default async function init() {
   status.innerHTML = 'Igniting star cores'
   //shaderLoader().then(shaders => console.log(shaders))
   status.innerHTML = 'Forging galaxies'
-  new initAtlas()
+  new Atlas()
 
   // render()
   status.innerHTML = 'Welcome to skyAtlas'

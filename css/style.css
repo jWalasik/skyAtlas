@@ -72,6 +72,19 @@ body {
   color: white;
 }
 
+/* MODAL */
+#modal {
+  background-color: black;
+  color: white;
+  position: absolute;
+  bottom: 10%;
+  width: 60%;
+  left: 20%;
+  border: 1px solid blue;
+}
+.modal--hidden {
+  display: none;
+}
 
 @font-face {
   font-family: Halcyon;

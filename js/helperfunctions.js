@@ -41,7 +41,6 @@ export function starColor(ci,type) {
   ]
 }
 
-
 export function toJSON(csv) {
   let lines=csv.split("\n");
   let result = [];
@@ -84,6 +83,18 @@ export function vertex([a,b]) {
       radius * cosPhi * Math.sin(lambda),
       radius * Math.sin(phi)
   );
+}
+
+export function computeZenith(lat, lon) {
+  let test = 0
+  const now = new Date().getTime()/1000/60/60/24 //days,
+  const jd = now - 30*365.2425 //days since 2000 january 1 - julian day
+  const ut = new Date().getUTCHours() + new Date().getUTCMinutes() / 100
+
+  const lst = (100.4606184 + 0.9856473662862 * jd + lon + 15 * ut+test) % 360 //d-number of days since j2000 epoch, long-longitude, ut - universal time
+  const zenith = vertex([lst, lat])
+
+  return zenith;
 }
 
 // function findLabelPos(coordArray){

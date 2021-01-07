@@ -15,9 +15,11 @@ import Bounds from './bounds.js'
 import Graticule from './graticule.js'
 import StarField from './starField.js'
 import Planets from './planets.js'
+import {handlePermissions} from '../controllers/permissions.js'
 
 const Atlas = function () {
-  let _this = this;
+  /*storing scene in window scope ease the access for utilies like animated transitions but is considered bad practice might need refactor*/
+  const SCENE = window.scene = new THREE.Scene()
   const {height, width, mobile, webGL} = deviceInfo()
 
   //old shaders are not compatible with webgl2, thus using previous renderer version - deprecation incoming, upgrade advised
@@ -27,7 +29,7 @@ const Atlas = function () {
   
   document.getElementById('WebGL-Output').appendChild(renderer.domElement)
   
-  this.scenes = [new THREE.Scene()]
+  this.scenes = [SCENE]
   this.currentScene = 0
 
   this.cameras = [
@@ -46,28 +48,33 @@ const Atlas = function () {
   this.clock = new THREE.Clock
   this.cameras[this.currentCamera].position.set(0,0,1)
 
+  //store geometries in master object to ease rotations
+  const geometries = new THREE.Object3D()
+  geometries.name = 'geometries'
   //GEOMETRIES
   console.time('geometries')
   const graticule = Graticule()
-  this.scenes[this.currentScene].add( graticule )
+  geometries.add( graticule )
   
   const boundaries = Bounds()
-  this.scenes[this.currentScene].add( boundaries )
+  geometries.add( boundaries )
 
   const asterisms = Asterisms()
-  this.scenes[this.currentScene].add( asterisms )
+  geometries.add( asterisms )
 
   const starField = StarField()
-  this.scenes[this.currentScene].add( starField )
-
-  const planets = Planets().then(planets => {
-    this.scenes[this.currentScene].add( planets )
-  })
+  geometries.add( starField )
   
+  //promise due to async texture loader
+  Planets().then(planets => {
+    geometries.add( planets )
+  })
   console.timeEnd('geometries')
+  this.scenes[this.currentScene].add( geometries )
 
   //CONTROLS
   Menu(this.scenes[this.currentScene])
+  handlePermissions(this.scenes[this.currentScene])
   
   //POSTPROCESSING
   const renderScene = new RenderPass(this.scenes[this.currentScene], this.cameras[this.currentCamera])
@@ -90,7 +97,6 @@ const Atlas = function () {
     composer.render()
   }
   this.render()
-
 }
 
 export default Atlas
