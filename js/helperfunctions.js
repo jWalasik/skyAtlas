@@ -1,6 +1,6 @@
 import * as THREE from './lib/three.module.js'
 
-function debounce(func, wait, immediate) {
+export function debounce(func, wait, immediate) {
 	var timeout;
 	return function() {
 		var context = this, args = arguments;
@@ -112,7 +112,7 @@ export function computeZenith(lat, lon) {
   return zenith;
 }
 
-export function compassHeading() {
+export function compassHeading(alpha, beta, gamma) {
   // Convert degrees to radians
   const alphaRad = alpha * (Math.PI / 180);
   const betaRad = beta * (Math.PI / 180);
@@ -143,7 +143,6 @@ export function compassHeading() {
 
   // Convert radians to degrees
   compassHeading *= 180 / Math.PI;
-
   return compassHeading;
 }
 

@@ -14,7 +14,7 @@ export const GalaxyDB = function() {
   ]
 
   this.parseData = async function() {
-    const path = '/assets/data/'
+    const path = 'assets/data/'
     await Promise.all(files.map(file => {
       const [id, type] = file.split('.')
       return fetch(path+file)

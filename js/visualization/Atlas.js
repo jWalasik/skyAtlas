@@ -7,7 +7,7 @@ import {UnrealBloomPass} from '../lib/postprocessing/UnrealBloomPass.js'
 import {RenderPass} from '../lib/postprocessing/RenderPass.js'
 import {EffectComposer} from '../lib/postprocessing/EffectComposer.js'
 
-import Menu from '../controllers/Menu.js'
+import Menu from '../controls/Menu.js'
 
 import deviceInfo from '../deviceInfo.js'
 import Asterisms from './asterisms.js'
@@ -15,13 +15,18 @@ import Bounds from './bounds.js'
 import Graticule from './graticule.js'
 import StarField from './starField.js'
 import Planets from './planets.js'
-import {handlePermissions} from '../controllers/permissions.js'
+import {handlePermissions} from '../controls/permissions.js'
+import {useSelectors} from '../controls/selector.js'
 
 const Atlas = function () {
-  /*storing scene in window scope ease the access for utilies like animated transitions but is considered bad practice might need refactor*/
-  const SCENE = window.scene = new THREE.Scene()
   const {height, width, mobile, webGL} = deviceInfo()
-  //throw warning for ios users
+  
+  /*
+    storing scene and camera in window scope ease the access for utilies like animated transitions
+    considered bad practice might need refactor
+  */
+  const SCENE = window.scene = new THREE.Scene()
+  const CAMERA = window.camera = new THREE.PerspectiveCamera(70, width/height, 1, 100000)
 
   //old shaders are not compatible with webgl2, thus using previous renderer version - deprecation incoming, upgrade advised
   const renderer = new THREE.WebGL1Renderer({alpha: true});
@@ -34,7 +39,7 @@ const Atlas = function () {
   this.currentScene = 0
 
   this.cameras = [
-    new THREE.PerspectiveCamera(70, width/height, 1, 100000),
+    CAMERA,
     new THREE.OrthographicCamera(width/-2, width/2, height/2, height/-2, 1, 100000)
   ]
   this.currentCamera = 0
@@ -76,6 +81,7 @@ const Atlas = function () {
   //CONTROLS
   Menu(this.scenes[this.currentScene])
   handlePermissions(this.scenes[this.currentScene])
+  useSelectors()
   
   //POSTPROCESSING
   const renderScene = new RenderPass(this.scenes[this.currentScene], this.cameras[this.currentCamera])

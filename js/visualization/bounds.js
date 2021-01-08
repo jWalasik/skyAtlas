@@ -28,7 +28,7 @@ const Bounds = () => {
     
     const boundsMaterial = new THREE.MeshBasicMaterial({color: 0x96fff7, transparent:true, opacity:0.0});
     const bounds = new THREE.Mesh(boundsGeometry, boundsMaterial)
-
+    bounds.material.side = THREE.DoubleSide
     bounds.add(outline)
     bounds.name = name
     

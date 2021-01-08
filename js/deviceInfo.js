@@ -27,6 +27,10 @@ export default function deviceInfo() {
     // WebGL not supported
     return false;
   })
+  //apple devices handle orientation differently it was not tested
+
+  //absolute orientation is experimental feature and mechanics are incompatible between browsers
+  
 
   return {
     mobile: isMobile,

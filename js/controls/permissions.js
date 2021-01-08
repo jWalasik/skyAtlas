@@ -39,6 +39,7 @@ export function useLocation(e, scene) {
 }
 
 export function useDeviceOrientation() {
+  console.log('DEVICE ORIENTATION TRIGGER')
   var geometry = new THREE.BoxGeometry( 200, 200, 200 );
   var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
   var cube = new THREE.Mesh( geometry, material );
@@ -47,18 +48,26 @@ export function useDeviceOrientation() {
   cube.name='helper';
   window.scene.add(cube)
 
-  window.addEventListener('deviceorientation', debounce(e => {
-    const heading = compassHeading(e.alpha, e.beta, e.gamma)
-    const center = new THREE.Vector3(0,12000,0)
-    const north = vertex(0, heading)
-    const target = new THREE.Quaternion().setFromUnitVectors(
-      north.normalize(),
-      center.normalize()
-    )
-    const geometries = window.scene.getObjectByName('geometries').quaternion
-    rotateCameraTo(geometries,target, .01)
-  })
-)}
+  window.addEventListener(
+    'deviceorientation', 
+    debounce(
+      e => {
+        const heading = compassHeading(e.alpha, e.beta, e.gamma)
+        const center = new THREE.Vector3(0,12000,0)
+        const north = vertex([0, e.alpha-360])
+        const target = new THREE.Quaternion().setFromUnitVectors(
+          north.normalize(),
+          center.normalize()
+        )
+        const geometries = window.scene.getObjectByName('geometries').quaternion
+        rotateCameraTo(geometries,target,1)
+      },
+      0, 
+      true // 
+    ), 
+    true  //absolute uses north magnetic declination instead of device frame
+  )
+}
 
 function clearModal() {
   modal.innerHTML = ''

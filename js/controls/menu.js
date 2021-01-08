@@ -2,7 +2,7 @@ const Menu = (scene) => {
   //load styles
   const head = document.getElementsByTagName('head')[0];
   const link = document.createElement('link')
-  link.href = './css/menu.css'
+  link.href = 'css/menu.css'
   link.rel = 'stylesheet'
   link.type = 'text/css'
   head.appendChild(link)

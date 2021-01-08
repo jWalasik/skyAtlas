@@ -87,20 +87,14 @@ body {
 }
 
 @font-face {
-  font-family: Halcyon;
-  src: url(/assets/fonts/designer.otf);
-  font-weight: 500;
-  font-style: normal;
-}
-@font-face {
   font-family: Andromeda;
-  src: url(/assets/fonts/andromeda.ttf);
+  src: url(../assets/fonts/andromeda.ttf);
   font-weight: 500;
   font-style: normal;
 }
 @font-face {
   font-family: Supermolot;
-  src: url(/assets/fonts/supermolot.otf);
+  src: url(../assets/fonts/supermolot.otf);
   font-weight: 500;
   font-style: normal;
 }
