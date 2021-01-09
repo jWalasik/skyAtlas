@@ -16,7 +16,8 @@ import Graticule from './graticule.js'
 import StarField from './starField.js'
 import Planets from './planets.js'
 import {handlePermissions} from '../controls/permissions.js'
-import {useSelectors} from '../controls/selector.js'
+import {highlight, setControlEvents} from '../controls/selector.js'
+import { debounce } from '../helperfunctions.js'
 
 const Atlas = function () {
   const {height, width, mobile, webGL} = deviceInfo()
@@ -26,8 +27,9 @@ const Atlas = function () {
     considered bad practice might need refactor
   */
   const SCENE = window.scene = new THREE.Scene()
+  SCENE.selectable = []
   const CAMERA = window.camera = new THREE.PerspectiveCamera(70, width/height, 1, 100000)
-
+  
   //old shaders are not compatible with webgl2, thus using previous renderer version - deprecation incoming, upgrade advised
   const renderer = new THREE.WebGL1Renderer({alpha: true});
     renderer.setPixelRatio(window.devicePixelRatio);
@@ -43,12 +45,13 @@ const Atlas = function () {
     new THREE.OrthographicCamera(width/-2, width/2, height/2, height/-2, 1, 100000)
   ]
   this.currentCamera = 0
-
+  
   this.controllers = [
     new TrackballControls(this.cameras[this.currentCamera], renderer.domElement),
     new DeviceOrientationControls(this.cameras[this.currentCamera])
   ]
   this.controllers[0].noPan = true;
+  this.controllers[0].minDistance = 100;
   this.currentController = 0
 
   this.clock = new THREE.Clock
@@ -80,8 +83,8 @@ const Atlas = function () {
 
   //CONTROLS
   Menu(this.scenes[this.currentScene])
-  handlePermissions(this.scenes[this.currentScene])
-  useSelectors()
+  //handlePermissions(this.scenes[this.currentScene])
+  setControlEvents()
   
   //POSTPROCESSING
   const renderScene = new RenderPass(this.scenes[this.currentScene], this.cameras[this.currentCamera])
@@ -98,7 +101,7 @@ const Atlas = function () {
   //RENDER LOOP
   this.render = function () {
     this.controllers[this.currentController].update(this.clock.getDelta())
-
+    debounce(highlight(), .5, false) 
     requestAnimationFrame(this.render.bind(this))
     renderer.render(this.scenes[this.currentScene], this.cameras[this.currentCamera])
     composer.render()

@@ -1,3 +1,8 @@
+const defaultSettings = {
+  motionControl: (typeof window.orientation !== 'undefined') ? 1 : 0
+
+}
+
 const Menu = (scene) => {
   //load styles
   const head = document.getElementsByTagName('head')[0];
@@ -6,6 +11,17 @@ const Menu = (scene) => {
   link.rel = 'stylesheet'
   link.type = 'text/css'
   head.appendChild(link)
+
+  const settings = caches.has('skyAtlas_settings').then(exists => {
+    if(!exists) {
+      return defaultSettings
+    } else {
+      return caches.open('skyAtlas_settings').then(settings => {
+        console.log(settings)
+        return settings
+      })
+    }
+  }).catch(err => console.log(err))
 
   //HELPER FUNCTIONS
   const ToggleSwitch = (id) => {
@@ -50,6 +66,7 @@ const Menu = (scene) => {
   navList.appendChild(ToggleSwitch('graticule'))
   navList.appendChild(ToggleSwitch('planets'))
   navList.appendChild(ToggleSwitch('names'))
+  navList.appendChild(ToggleSwitch('motion camera'))
 
   menu.appendChild(navList)
 
@@ -81,11 +98,13 @@ const Menu = (scene) => {
     menu.classList.toggle('menu--hidden')
   }
 
+
+  function switchCamera() {
+
+  }
   document.addEventListener('contextmenu', toggleMenu)
   
   return null
 }
-
-
 
 export default Menu

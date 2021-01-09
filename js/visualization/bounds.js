@@ -31,7 +31,10 @@ const Bounds = () => {
     bounds.material.side = THREE.DoubleSide
     bounds.add(outline)
     bounds.name = name
-    
+    bounds.userData = {
+      linkedObjects: new Set([])
+    }
+    window.scene.selectable.push(bounds)
     boundaries.add(bounds)
   })
   return boundaries

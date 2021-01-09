@@ -5,6 +5,32 @@ import { vertex } from '../helperfunctions.js'
 const system = new SolarSystem()
 const loader = new THREE.TextureLoader()
 
+function linkToConstellation(object) {
+  const center = new THREE.Vector3(0,0,0)
+  const ray = new THREE.Raycaster(center, new THREE.Vector3().copy(object.position).normalize())
+  ray.params.Points.threshold = 5
+  const intersections = ray.intersectObjects(window.scene.selectable)
+  //triangulation method is bugged causing boundaries to overlap sometimes
+  //temporary fix
+  intersections.forEach(constellation => {
+    console.log(constellation)
+    constellation.object.userData.linkedObjects.add(object.name)
+  })
+}
+
+// function updatePosition() {
+//   setInterval(()=>{
+//     system.compute()
+//     system.geocentricCoords().map(planet => {
+//       if(planet.name === 'earth' || planet.name==='pluto') return
+//       const object = window.scene.getObjectByName(planet.name)
+//       const {x,y,z} = vertex([planet.ra*15,planet.dec])
+//       object.position.set(x,y,z)
+//       linkToConstellation(object)
+//     })
+//   }, 3000) //5min 300000
+// }
+
 const Planets = async () => {
   system.compute()
   const planets = new THREE.Object3D()
@@ -17,8 +43,10 @@ const Planets = async () => {
       const map = new THREE.MeshBasicMaterial({color: info[planet.name].color})
       const sphere = new THREE.SphereBufferGeometry(info[planet.name].size*3,10,10)
       const planetBody = new THREE.Mesh(sphere, map)
+      planetBody.name = planet.name
       const {x,y,z} = vertex([planet.ra*15,planet.dec])
       planetBody.position.set(x,y,z)
+      linkToConstellation(planetBody)
       planets.add( planetBody )
     })
   ).then(res => {
