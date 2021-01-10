@@ -32,7 +32,8 @@ const Bounds = () => {
     bounds.add(outline)
     bounds.name = name
     bounds.userData = {
-      linkedObjects: new Set([])
+      linkedObjects: new Set([]), //string refrences for planets, messier objects and other bodies that might temporary appear in constellation
+      asterism: undefined
     }
     window.scene.selectable.push(bounds)
     boundaries.add(bounds)

@@ -13,7 +13,6 @@ function linkToConstellation(object) {
   //triangulation method is bugged causing boundaries to overlap sometimes
   //temporary fix
   intersections.forEach(constellation => {
-    console.log(constellation)
     constellation.object.userData.linkedObjects.add(object.name)
   })
 }

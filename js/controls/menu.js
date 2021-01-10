@@ -1,6 +1,5 @@
 const defaultSettings = {
   motionControl: (typeof window.orientation !== 'undefined') ? 1 : 0
-
 }
 
 const Menu = (scene) => {
@@ -12,19 +11,19 @@ const Menu = (scene) => {
   link.type = 'text/css'
   head.appendChild(link)
 
-  const settings = caches.has('skyAtlas_settings').then(exists => {
+  let settings
+  caches.has('skyAtlas_settings').then(exists => {
     if(!exists) {
-      return defaultSettings
+      settings = defaultSettings
     } else {
-      return caches.open('skyAtlas_settings').then(settings => {
-        console.log(settings)
-        return settings
+      return caches.open('skyAtlas_settings').then(cachedSettings => {
+        settings = cachedSettings
       })
     }
   }).catch(err => console.log(err))
 
   //HELPER FUNCTIONS
-  const ToggleSwitch = (id) => {
+  const ToggleSwitch = (id, fn) => {
     const label = document.createElement('label')
     label.textContent = id
 
@@ -32,7 +31,7 @@ const Menu = (scene) => {
     input.type = 'checkbox'
     input.id = id
     input.checked = true
-    input.addEventListener('change', toggleItem)
+    input.addEventListener('change', fn)
     
     label.appendChild(input)
     return label
@@ -61,12 +60,12 @@ const Menu = (scene) => {
   navList.appendChild(slider)
 
   //asterisms  
-  navList.appendChild(ToggleSwitch('asterisms'))
-  navList.appendChild(ToggleSwitch('boundaries'))
-  navList.appendChild(ToggleSwitch('graticule'))
-  navList.appendChild(ToggleSwitch('planets'))
-  navList.appendChild(ToggleSwitch('names'))
-  navList.appendChild(ToggleSwitch('motion camera'))
+  navList.appendChild(ToggleSwitch('asterisms', toggleItem))
+  navList.appendChild(ToggleSwitch('boundaries', toggleItem))
+  navList.appendChild(ToggleSwitch('graticule', toggleItem))
+  navList.appendChild(ToggleSwitch('planets', toggleItem))
+  navList.appendChild(ToggleSwitch('names', toggleItem))
+  navList.appendChild(ToggleSwitch('motion camera', switchControls))
 
   menu.appendChild(navList)
 
@@ -98,13 +97,22 @@ const Menu = (scene) => {
     menu.classList.toggle('menu--hidden')
   }
 
-
-  function switchCamera() {
+  function toggleGeolocation() {
 
   }
+
+  function switchControls() {
+    //device orientation controls does not support z axis ('zoom') movement and has to be set to default before
+    if(window.controls[1].constructor.name === 'DeviceOrientationControls') {
+      window.camera.position.set(0,0,1) //z has to be greater than zero due to prevent gimbal glitch
+    }
+    
+    window.controls.reverse()
+    window.controls[0].enabled=true
+    window.controls[1].enabled=false
+  }
+
   document.addEventListener('contextmenu', toggleMenu)
-  
-  return null
 }
 
 export default Menu

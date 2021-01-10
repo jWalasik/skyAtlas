@@ -25,13 +25,13 @@ export function highlight() {
     }
     SELECTED = intersects[0].object
     SELECTED.material.opacity = 0.05
-    //document.getElementById('object').innerHTML = intersects[0].object.name
+    document.getElementById('object-name').innerHTML = intersects[0].object.userData.asterism
   }
 }
 
 export function zoomSelect(e) {
   if(e.deltaY < 0 && window.camera.position.z <= 100) {
-    console.log('selected:',window.camera.position.z, SELECTED)
+    //console.log('selected:',window.camera.position.z, SELECTED)
   }
 }
 

@@ -10,11 +10,11 @@ const Asterisms = () => {
   asterisms.name = 'asterisms'
   const data = database.getData('lines')
 
-  data.features.forEach(({id, geometry}) => {
+  data.features.forEach(({id:[abbrv, fullName], geometry}) => {
     let asterism = new THREE.Object3D()
-    asterism.name = id[0]
-    asterism.userData = id[1]
-
+    asterism.name = fullName
+    //link asterism to constellation for easier event handling
+    window.scene.getObjectByName(abbrv).userData.asterism = fullName
     //lines are separated to prevent connecting incorrect points
     geometry.coordinates.forEach(path => {
       let lineGeometry = new THREE.Geometry()
