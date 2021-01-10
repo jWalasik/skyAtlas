@@ -21,8 +21,8 @@ const StarField = () => {
     
     colors.push(color.r,color.g,color.b)
 
-    if(star.mag<2.6){
-      sizes.push(scaleMag(star.mag)*2)
+    if(star.mag<6){ //threshold for naked eye visibility
+      sizes.push(scaleMag(star.mag)*1.7)
     } else {
       sizes.push(scaleMag(star.mag))
     }

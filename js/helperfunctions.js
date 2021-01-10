@@ -100,6 +100,16 @@ export function vertex([a,b]) {
   );
 }
 
+export function vertex2D(x,y,z, camera, width, height) {
+  const p = new THREE.Vector3(x,y,z)
+  const vector = p.project(camera.clone())
+
+  vector.x = (vector.x + 1) / 2 * width
+  vector.y = -(vector.y - 1) / 2 * height
+
+  return vector
+}
+
 export function computeZenith(lat, lon) {
   let test = 0
   const now = new Date().getTime()/1000/60/60/24 //days,

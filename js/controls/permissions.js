@@ -21,7 +21,7 @@ export function handlePermissions(scene) {
   if(window.DeviceOrientationEvent && 'ontouchstart' in window) useDeviceOrientation()
 }
 
-export function useLocation(e, scene) {
+export function useLocation() {
   navigator.geolocation.getCurrentPosition(position => {
     clearModal()
     const {latitude, longitude} = position.coords

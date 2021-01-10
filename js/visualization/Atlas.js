@@ -18,6 +18,7 @@ import Planets from './planets.js'
 import {handlePermissions} from '../controls/permissions.js'
 import {highlight, setControlEvents} from '../controls/selector.js'
 import { debounce } from '../helperfunctions.js'
+import { starFieldTwinkle } from './animate.js'
 
 const Atlas = function () {
   const {height, width, mobile, webGL} = deviceInfo()
@@ -41,18 +42,12 @@ const Atlas = function () {
   this.currentScene = 0
 
   const CONTROLS = window.controls = [new TrackballControls(CAMERA, renderer.domElement), new DeviceOrientationControls(CAMERA)]
-  
-  this.controllers = [
-    new TrackballControls(CAMERA, renderer.domElement),
-    new DeviceOrientationControls(CAMERA)
-  ]
 
-  this.controllers[0].noPan = true;
-  this.controllers[0].minDistance = 100;
-  this.currentController = 0
+  CONTROLS[0].noPan = true;
+  CONTROLS[0].minDistance = 100;
 
   this.clock = new THREE.Clock
-  CAMERA.position.set(0,0,1)
+  CAMERA.position.set(0,0,1) //z needs to be greater than 0 due to gimbal stuff
 
   //store geometries in master object to ease rotations
   const geometries = new THREE.Object3D()
@@ -77,11 +72,10 @@ const Atlas = function () {
     geometries.add( planets )
   })
   console.timeEnd('geometries')
-  
 
   //CONTROLS
-  Menu(this.scenes[this.currentScene])
-  //handlePermissions(this.scenes[this.currentScene])
+  Menu()
+  handlePermissions(this.scenes[this.currentScene])
   setControlEvents()
   
   //POSTPROCESSING
@@ -98,9 +92,10 @@ const Atlas = function () {
   //RENDER LOOP
   this.render = function () {
     CONTROLS[0].update(this.clock.getDelta())
-    debounce(highlight(), .5, false) 
+    debounce(highlight(), .5, false)
+    starFieldTwinkle()
     requestAnimationFrame(this.render.bind(this))
-    renderer.render(this.scenes[this.currentScene], CAMERA)
+    renderer.render(SCENE, CAMERA)
     composer.render()
   }
   this.render()
