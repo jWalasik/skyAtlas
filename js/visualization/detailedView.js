@@ -1,7 +1,5 @@
 import { GalaxyDB } from '../database.js'
-import { vertex2D } from '../helperfunctions.js'
 import * as THREE from '../lib/three.module.js'
-import StarField from './starField.js'
 
 const database = new GalaxyDB()
 
@@ -26,14 +24,10 @@ export function detailedView(object) {
       } else poi.push(star)
     }
   })
-  const background = StarField(stars)
 
-  container.add(background)
-  console.log(poi, object.userData)
-  window.scene.add(container)
 
-  window.scene.getObjectByName('geometries').traverse(child => {
-    child.visible=false
-  })
+  // window.scene.getObjectByName('geometries').traverse(child => {
+  //   child.visible=false
+  // })
   //DESCRIPTION
 }
