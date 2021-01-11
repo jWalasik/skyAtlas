@@ -39,7 +39,6 @@ export function useLocation() {
 }
 
 export function useDeviceOrientation() {
-  console.log('DEVICE ORIENTATION TRIGGER')
   var geometry = new THREE.BoxGeometry( 200, 200, 200 );
   var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
   var cube = new THREE.Mesh( geometry, material );

@@ -2,8 +2,8 @@ import { useLocation } from "./permissions.js"
 
 const defaultSettings = {
   motionControl: (typeof window.orientation !== 'undefined') ? true : false,
-  magnitudeFilter: 8.0,
-  asterisms: false,
+  magnitudeFilter: 12.0,
+  asterisms: true,
   boundaries: true,
   graticule: true,
   planets: true,
@@ -36,7 +36,7 @@ async function Menu() {
   head.appendChild(link)
 
   const SETTINGS = window.settings = await getSettings()
-  
+
   //Element Constructors
   const ToggleSwitch = (id, fn) => {
     const label = document.createElement('label')
@@ -47,8 +47,9 @@ async function Menu() {
     input.id = id
     input.checked = SETTINGS[id]
     input.addEventListener('change', fn)
-    
     label.appendChild(input)
+    //run function once to apply cached settings
+    input.dispatchEvent(new Event('change'))
     return label
   }
 
@@ -70,25 +71,25 @@ async function Menu() {
 
   inputMag.className = 'slider'
   inputMag.addEventListener('input', filterStars)
+  inputMag.dispatchEvent(new Event('input'))
   slider.appendChild(inputMag)
 
   navList.appendChild(slider)
 
   //visuals 
-  SETTINGS.entries().forEach()
   navList.appendChild(ToggleSwitch('asterisms', toggleItem))
   navList.appendChild(ToggleSwitch('boundaries', toggleItem))
   navList.appendChild(ToggleSwitch('graticule', toggleItem))
   navList.appendChild(ToggleSwitch('planets', toggleItem))
   navList.appendChild(ToggleSwitch('names', toggleItem))
-  navList.appendChild(ToggleSwitch('twinkling', ()=>window.settings.twinkling = !settings.twinkling))
+  navList.appendChild(ToggleSwitch('twinkling', toggleAnimation))
   //
   navList.appendChild(ToggleSwitch('motionControl', switchControls))
 
   menu.appendChild(navList)
 
-  function filterStars(e, mag) {
-    const value = e ? e.target.value : mag
+  function filterStars(e) {
+    const value = e ? e.target.value : SETTINGS['magnitudeFilter']
     const idx = Math.floor(value)
     const steps = [0,51,175,521,1616,5018,15450,41137,83112,107927,115505,117903,118735,118735] //magnitude ranges - 0.0, 1.0, 2.0 etc
     const interpolate = Math.round(steps[idx] + (steps[idx+1] - steps[idx]) * (value%1))
@@ -102,9 +103,12 @@ async function Menu() {
   function toggleItem(e) {
     window.scene.traverse(child => {
       if(child.name === e.target.id) {
-        child.visible = !child.visible
+        child.visible = e.target.checked
       }
     })
+  }
+  function toggleAnimation(e) {
+    window.settings.twinkling = e.target.checked
   }
 
   function toggleMenu({clientX, clientY}) {
@@ -115,19 +119,16 @@ async function Menu() {
     menu.classList.toggle('menu--hidden')
   }
 
-  function useGeolocation() {
-    useLocation()
-  }
-
-  function switchControls() {
-    //device orientation controls does not support z axis ('zoom') movement and has to be set to default before
-    if(window.controls[1].constructor.name === 'DeviceOrientationControls') {
-      window.camera.position.set(0,0,1) //z has to be greater than zero due to prevent gimbal glitch
-    }
+  function switchControls(e) {
+    const idx = +e.target.checked
     
-    window.controls.reverse()
-    window.controls[0].enabled=true
-    window.controls[1].enabled=false
+    //device orientation controls does not support z axis ('zoom') movement and has to be set to default before
+    if(window.controls.active.constructor.name !== 'DeviceOrientationControls') {
+      window.camera.position.set(0,0,1)
+    }
+    window.controls.active.enabled = false
+    window.controls.active = window.controls.options[idx]
+    window.controls.active.enabled = true
   }
 
   document.addEventListener('contextmenu', toggleMenu)

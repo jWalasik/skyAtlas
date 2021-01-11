@@ -14,10 +14,16 @@ export function debounce(func, wait, immediate) {
 		if (callNow) func.apply(context, args);
 	};
 };
-
+//true logarithmic scaling doesnt seem to work well, settled with non scientific version
 export function scaleMag(mag) {
-  //inverted logarithmic scale, account for negative values
-  return Math.log((mag-20)*-1)
+  //walasik constant aka stupid scale
+  let size
+  if(mag>6) { //naked eye visibility
+    size = 2.5
+  } else if(mag<3.5) {  //most named stars
+    size = 10
+  } else size = 5
+  return size
 }
 
 export function starColor(ci,type) {
@@ -57,20 +63,31 @@ export function starColor(ci,type) {
 }
 
 export function toJSON(csv) {
-  let lines=csv.split("\n");
-  let result = [];
-  let headers=lines[0].split(",");
+  let lines = [];
+const linesArray = csv.split('\n');
+// for trimming and deleting extra space 
+linesArray.forEach((e) => {
+    const row = e.replace(/[\s]+[,]+|[,]+[\s]+/g, ',').trim();
+    lines.push(row);
+});
+// for removing empty record
+lines.splice(lines.length - 1, 1);
+const result = [];
+const headers = lines[0].split(",");
 
-  for(let i=1;i<lines.length;i++){
-      let obj = {};
-      let currentline=lines[i].split(",");
+for (let i = 1; i < lines.length; i++) {
 
-      for(let j=0;j<headers.length;j++){
-          obj[headers[j]] = currentline[j];
-      }
-      result.push(obj);
-  }
-  return result
+    const obj = {};
+    const currentline = lines[i].split(",");
+
+    for (let j = 0; j < headers.length; j++) {
+    obj[headers[j]] = currentline[j];
+    }
+    result.push(obj);
+}
+//return result; //JavaScript object
+// return JSON.stringify(result); //JSON
+return result;
 }
 
 export function range(start, stop, step) {
@@ -106,6 +123,7 @@ export function vertex2D(x,y,z, camera, width, height) {
 
   vector.x = (vector.x + 1) / 2 * width
   vector.y = -(vector.y - 1) / 2 * height
+
 
   return vector
 }

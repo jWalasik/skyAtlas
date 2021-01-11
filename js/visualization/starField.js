@@ -4,13 +4,14 @@ import {scaleMag, starColor, vertex} from '../helperfunctions.js'
 
 const database = new GalaxyDB()
 
-const StarField = () => {
+const StarField = (constellation) => {
   let geometry = new THREE.BufferGeometry(),
       vertices = [], 
       colors = [], 
       sizes = [],
       constellations = []
-  const starData = database.getData('hyg')
+      
+  const starData = !constellation ? database.getData('hyg') : constellation
 
   starData.forEach(star=>{
     const {x,y,z} = vertex([star.ra*15, star.dec])
@@ -21,11 +22,8 @@ const StarField = () => {
     
     colors.push(color.r,color.g,color.b)
 
-    if(star.mag<6){ //threshold for naked eye visibility
-      sizes.push(scaleMag(star.mag)*1.7)
-    } else {
-      sizes.push(scaleMag(star.mag))
-    }
+    sizes.push(scaleMag(star.mag))
+    
     constellations.push(star.con)    
   })
   geometry.addAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));

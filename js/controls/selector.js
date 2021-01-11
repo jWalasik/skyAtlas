@@ -1,4 +1,5 @@
 import * as THREE from '../lib/three.module.js'
+import { detailedView } from '../visualization/detailedView.js';
 
 let SELECTED
 const mouse = new THREE.Vector2();
@@ -15,9 +16,11 @@ export function highlight() {
   const ray = new THREE.Raycaster()
   ray.setFromCamera(mouse, window.camera)
   ray.params.Points.threshold = 50
-
-  let intersects = ray.intersectObjects(window.scene.selectable)
-
+  
+  let intersects = ray.intersectObjects(window.scene.selectable, true)
+    .filter(({object}) => {
+      return object.visible
+    })
   if(intersects.length > 0) {
     //remove highlight from previous object
     if(SELECTED && intersects[0].object !== SELECTED) {
@@ -26,7 +29,7 @@ export function highlight() {
     SELECTED = intersects[0].object
     SELECTED.material.opacity = 0.05
     document.getElementById('object-name').innerHTML = intersects[0].object.userData.asterism
-  }
+  } else SELECTED = intersects
 }
 
 export function zoomSelect(e) {
@@ -53,7 +56,7 @@ function mouseSelect(e) {
   
   const delta = 10 //distance in pixels
   if(dX < delta && dY < delta) {
-    console.log('selected: ', SELECTED)
+    detailedView(SELECTED)
     //document.getElementById('object').innerHTML = intersects[0].object.name
   }
 }

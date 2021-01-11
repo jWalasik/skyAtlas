@@ -41,10 +41,11 @@ const Atlas = function () {
   this.scenes = [SCENE]
   this.currentScene = 0
 
-  const CONTROLS = window.controls = [new TrackballControls(CAMERA, renderer.domElement), new DeviceOrientationControls(CAMERA)]
-
-  CONTROLS[0].noPan = true;
-  CONTROLS[0].minDistance = 100;
+  const CONTROLS = window.controls = {}
+  CONTROLS.options = [new TrackballControls(CAMERA, renderer.domElement), new DeviceOrientationControls(CAMERA)]
+  CONTROLS.active = CONTROLS.options[0]
+  CONTROLS.active.noPan = true;
+  CONTROLS.active.minDistance = 100;
 
   this.clock = new THREE.Clock
   CAMERA.position.set(0,0,1) //z needs to be greater than 0 due to gimbal stuff
@@ -91,7 +92,7 @@ const Atlas = function () {
   composer.addPass(bloomPass)
   //RENDER LOOP
   this.render = function () {
-    CONTROLS[0].update(this.clock.getDelta())
+    CONTROLS.active.update(this.clock.getDelta())
     debounce(highlight(), .5, false)
     starFieldTwinkle()
     requestAnimationFrame(this.render.bind(this))
