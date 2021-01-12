@@ -17,10 +17,12 @@ export function highlight() {
   ray.setFromCamera(mouse, window.camera)
   ray.params.Points.threshold = 50
   
-  let intersects = ray.intersectObjects(window.scene.selectable, true)
+  const boundaries = window.scene.getObjectByName('boundaries')
+  let intersects = ray.intersectObjects(boundaries.children, true)
     .filter(({object}) => {
       return object.visible
     })
+    
   if(intersects.length > 0) {
     //remove highlight from previous object
     if(SELECTED && intersects[0].object !== SELECTED) {
@@ -29,7 +31,7 @@ export function highlight() {
     SELECTED = intersects[0].object
     SELECTED.material.opacity = 0.05
     document.getElementById('object-name').innerHTML = intersects[0].object.userData.asterism
-  } else SELECTED = intersects
+  }
 }
 
 export function zoomSelect(e) {
@@ -53,7 +55,7 @@ function getCoords({clientX, clientY}) {
 function mouseSelect(e) {
   const dX = e.offsetX - startX,
         dY = e.offsetY - startY
-  
+  console.log(window.scene)
   const delta = 10 //distance in pixels
   if(dX < delta && dY < delta) {
     detailedView(SELECTED)

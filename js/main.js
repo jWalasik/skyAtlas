@@ -1,6 +1,7 @@
 import deviceInfo from './deviceInfo.js'
 import {GalaxyDB} from './database.js'
 import Atlas from './visualization/Atlas.js'
+import { getWikiData } from './wikiLookup.js'
 
 const display = document.getElementById('WebGL-Output')
 const loadingScreen = document.getElementById('loading-screen')
