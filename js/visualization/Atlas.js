@@ -7,10 +7,10 @@ import {UnrealBloomPass} from '../lib/postprocessing/UnrealBloomPass.js'
 import {RenderPass} from '../lib/postprocessing/RenderPass.js'
 import {EffectComposer} from '../lib/postprocessing/EffectComposer.js'
 
-import Menu from '../controls/Menu.js'
+import Menu from '../controls/menu.js'
 
 import deviceInfo from '../deviceInfo.js'
-import Asterisms from './asterisms.js'
+import Asterisms from '/js/visualization/asterisms.js'
 import Bounds from './bounds.js'
 import Graticule from './graticule.js'
 import StarField from './starField.js'

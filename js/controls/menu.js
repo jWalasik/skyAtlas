@@ -20,7 +20,6 @@ function getSettings() {
         return caches.open('skyAtlas_settings')
       }
     }).then(settings => {
-      console.log(settings)
       return settings
     })
     .catch(err => console.log(err))

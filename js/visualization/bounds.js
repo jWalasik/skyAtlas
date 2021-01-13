@@ -8,7 +8,7 @@ const database = new GalaxyDB()
 const Bounds = () => {
   const boundaries = new THREE.Object3D()
   boundaries.name = 'boundaries'
-  const data = database.getData('bounds')
+  const data = database.getData('boundaries')
   data.boundaries.forEach(([name, ...rest]) => {
     const boundsGeometry = new THREE.Geometry(),  //bounds are used as 'face' to detect raycasting and highlight whole field
           outlineGeometry = new THREE.Geometry()  //outline 

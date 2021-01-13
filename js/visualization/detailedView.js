@@ -19,7 +19,7 @@ export function detailedView(object) {
   const stars = [] 
   starData.forEach(star => {
     if(star.con == object.name){
-      if(!star.proper) {
+      if(!star.name) {
         stars.push(star)
       } else poi.push(star)
     }

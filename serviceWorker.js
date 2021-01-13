@@ -1,37 +1,17 @@
 const CACHE_NAME = 'sky-atlas';
 
 let filesToCache = [
-  './',
-  './index.html',
-  './manifest.json',
-  './serviceWorker.js',
-  './css/style.css',
-  './assets/icons/return-icon.png',
-  './assets/icons/scroll-icon.png',
-  './lib/dat.gui.js',
-  './lib/d3.min.js',
-  './lib/TrackballControls.js',
-  './lib/DeviceOrientationControls.js',
-  './lib/three.min.js',
-  './js/constellation.js',
-  './js/galaxy.js',
-  './js/geolocation.js',
-  './js/helperfunctions.js',
-  './js/highlight.js',
-  './js/index.js',
-  './js/object.js',
-  './js/return.js',
-  './js/skybox.js',
-  './js/wikiLookup.js',
-  './js/parseData.js'
+  '.'
 ]
 
 self.addEventListener('install', (event) => {
+  console.log('installing')
   event.waitUntil(handleInstall())
 })
 
 async function handleInstall() {
   const cache = await caches.open(CACHE_NAME)
+  console.log(cache)
   await cache.addAll(filesToCache)
   return self.skipWaiting()
 }
