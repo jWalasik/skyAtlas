@@ -36,6 +36,13 @@ const Atlas = function () {
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(width, height)
   
+  //flipping screen glitches coordinate system, block it
+  window.addEventListener('resize', ()=> {
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    CAMERA.fov = 70;
+    CAMERA.aspect = window.innerWidth / window.innerHeight;
+    CAMERA.updateProjectionMatrix();
+  })
   document.getElementById('WebGL-Output').appendChild(renderer.domElement)
   
   this.scenes = [SCENE]
@@ -54,6 +61,7 @@ const Atlas = function () {
   const geometries = new THREE.Object3D()
   this.scenes[this.currentScene].add( geometries )
   geometries.name = 'geometries'
+
   //GEOMETRIES
   console.time('geometries')
   const graticule = Graticule()
@@ -72,7 +80,6 @@ const Atlas = function () {
   Planets().then(planets => {
     geometries.add( planets )
   })
-  console.timeEnd('geometries')
 
   //CONTROLS
   Menu()
@@ -90,6 +97,7 @@ const Atlas = function () {
   let composer = new EffectComposer(renderer)
   composer.addPass(renderScene)
   composer.addPass(bloomPass)
+  
   //RENDER LOOP
   this.render = function () {
     CONTROLS.active.update(this.clock.getDelta())

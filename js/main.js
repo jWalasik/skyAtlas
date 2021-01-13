@@ -3,16 +3,13 @@ import {GalaxyDB} from './database.js'
 import Atlas from './visualization/Atlas.js'
 
 const loadingScreen = document.getElementById('loading-screen')
-const status = document.getElementById('loading-screen__status')
+const status = document.getElementById('status')
 const galaxyDB = new GalaxyDB()
 
 export default async function init() {
   //check device compatibility
-  (()=>{
-    console.log('xxx')
-  })
-  status.innerHTML = 'Checking device compatibility'
   deviceInfo()
+  status.innerHTML = 'Checking device compatibility'
   //load data
   status.innerHTML = 'Loading stellar data'
   await galaxyDB.fetchData()
@@ -22,7 +19,7 @@ export default async function init() {
   status.innerHTML = 'Forging galaxies'
   new Atlas()
 
-  // render()
+  //ready to render
   status.innerHTML = 'Welcome to skyAtlas'
   loadingScreen.classList.toggle('loading-screen--hidden')
 }
