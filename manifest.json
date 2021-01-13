@@ -3,6 +3,7 @@
   "short_name": "skyAtlas",
   "description": "Interactive map of night sky",
   "start_url": "./",
+  "scope": "/",
   "icons": [{
     "src": "./assets/icons/icon512.png",
     "sizes": "512x512",

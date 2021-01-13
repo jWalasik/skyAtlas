@@ -1,7 +1,9 @@
-const CACHE_NAME = 'sky-atlas';
+const CACHE_NAME = 'sky-atlas-shell';
 
 let filesToCache = [
-  '.'
+  './js/main.js',
+  './js/lib/three.module.js',
+  './'
 ]
 
 self.addEventListener('install', (event) => {
@@ -11,15 +13,19 @@ self.addEventListener('install', (event) => {
 
 async function handleInstall() {
   const cache = await caches.open(CACHE_NAME)
-  console.log(cache)
   await cache.addAll(filesToCache)
   return self.skipWaiting()
 }
 
-self.addEventListener('fetch', (event) => {
+self.addEventListener('fetch', function(event) {
   event.respondWith(
-    fetch(event.request).catch(()=>{
-      return caches.match(event.request)
+    caches.open(CACHE_NAME).then(function(cache) {
+      return cache.match(event.request).then(function (response) {
+        return response || fetch(event.request).then(function(response) {
+          cache.put(event.request, response.clone());
+          return response;
+        });
+      });
     })
-  )
-})
+  );
+});

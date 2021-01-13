@@ -26,8 +26,6 @@ const Menu = async (initialValues) => {
 
   //handle settings
   function updateSettings() {
-    console.log(SETTINGS)
-    console.log('update')
     debounce(
       caches.open('skyAtlas-settings').then(cache => {
         const jsonRes = new Response(JSON.stringify(SETTINGS), {
