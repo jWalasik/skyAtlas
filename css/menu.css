@@ -8,16 +8,10 @@
   display: none;
 }
 
-.slider {
-  width: 90%;
+ul {
+  list-style: none;
 }
 
-#object-name {
-  position: absolute;
-  top: 10%;
-  left: 50%;
-  transform: translate(-50%, 0);
-  color: white;
-  background-color: rgba(0, 0, 0, .5);
-  font-size: 20px;
+.slider {
+  width: 90%;
 }

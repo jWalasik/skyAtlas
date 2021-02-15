@@ -21,7 +21,8 @@ export default async function init() {
 
   //ready to render
   status.innerHTML = 'Welcome to skyAtlas'
-  loadingScreen.classList.toggle('loading-screen--hidden')
+  loadingScreen.classList.toggle('loading-screen--fade')
+  setTimeout(()=>loadingScreen.classList.toggle('loading-screen--hidden'), 1500)
 }
 
 if('serviceWorker' in navigator){

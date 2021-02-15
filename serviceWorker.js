@@ -16,16 +16,16 @@ async function handleInstall() {
   await cache.addAll(filesToCache)
   return self.skipWaiting()
 }
-
-self.addEventListener('fetch', function(event) {
-  event.respondWith(
-    caches.open(CACHE_NAME).then(function(cache) {
-      return cache.match(event.request).then(function (response) {
-        return response || fetch(event.request).then(function(response) {
-          cache.put(event.request, response.clone());
-          return response;
-        });
-      });
-    })
-  );
-});
+//cache first approach - disable for developement as each update will require purging data
+// self.addEventListener('fetch', function(event) {
+//   event.respondWith(
+//     caches.open(CACHE_NAME).then(function(cache) {
+//       return cache.match(event.request).then(function (response) {
+//         return response || fetch(event.request).then(function(response) {
+//           cache.put(event.request, response.clone());
+//           return response;
+//         });
+//       });
+//     })
+//   );
+// });

@@ -18,11 +18,13 @@ body {
   position: absolute;
   top: 0;
   left: 0;
+  transition: all 1.5s ease-out;
+}
+.loading-screen--fade {
+  opacity: 0;
 }
 .loading-screen--hidden {
-  animation: fade-out 2s 1 ease;
-  animation-fill-mode: forwards;
-  z-index: -100;
+  display: none;
 }
 .loading-screen__title {
   font-family: Andromeda;
@@ -86,6 +88,16 @@ body {
   display: none;
 }
 
+#object-name {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  color: white;
+  background-color: rgba(0, 0, 0, .5);
+  font-size: 20px;
+}
+
 @font-face {
   font-family: Andromeda;
   src: url(../assets/fonts/andromeda.ttf);
@@ -97,14 +109,6 @@ body {
   src: url(../assets/fonts/supermolot.otf);
   font-weight: 500;
   font-style: normal;
-}
-
-
-@keyframes fade-out {
-  100% {
-    opacity: 0;
-  }
-
 }
 /* body {
   background-color: black;

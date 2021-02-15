@@ -21,7 +21,7 @@ export function scaleMag(mag) {
   if(mag>6) { //naked eye visibility
     size = 2.5
   } else if(mag<3.5) {  //most named stars
-    size = 10
+    size = 8
   } else size = 5
   return size
 }

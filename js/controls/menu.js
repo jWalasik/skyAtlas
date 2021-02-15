@@ -48,20 +48,25 @@ const Menu = async (initialValues) => {
           cache.match('skyAtlas-settings').then(settings => settings.json())
         )
       }
-    }).then(settings => {
-      console.log(settings)
-      return settings
     })
     .catch(err => console.log(err))
   }
   const SETTINGS = window.settings = await getSettings()
 
   //Element Constructors
+  const LI = (element) => {
+    const li = document.createElement('li')
+    li.classList.add('menu-item')
+    //li.classList.add('--centered')
+    li.appendChild(element)
+    return li
+  }
   const ToggleSwitch = (id, fn) => {
     const label = document.createElement('label')
     label.textContent = id
 
     const input = document.createElement('input')
+    input.classList = 'input__checkboxs'
     input.type = 'checkbox'
     input.id = id
     input.checked = SETTINGS[id]
@@ -72,17 +77,19 @@ const Menu = async (initialValues) => {
     return label
   }
 
-  const Button = (id, fn) => {
+  const Button = (id, fn, css) => {
     const button = document.createElement('button')
+    button.id = id
+    button.classList = css
     button.textContent = id
     button.addEventListener('click', fn)
     return button
   }
 
   const Slider = (id, fn) => {
-    const slider = document.createElement('div'),
+    const slider = document.createElement('label'),
           input = document.createElement('input')
-
+    slider.innerText = id
     input.id = id
     input.type = 'range'
     input.value = SETTINGS.magnitudeFilter
@@ -91,7 +98,7 @@ const Menu = async (initialValues) => {
     input.step = 0.1
     input.orient = 'vertical'
 
-    input.className = 'slider'
+    input.classList = 'input__slider'
     input.addEventListener('input', fn)
     input.dispatchEvent(new Event('input'))
     slider.appendChild(input)
@@ -101,7 +108,7 @@ const Menu = async (initialValues) => {
   //MENU CONTAINER
   const menu = document.getElementById('menu')
   const navList = document.createElement('ul')
-
+  
   function toggleMenu({clientX, clientY}) {
     menu.style.left = clientX + 'px'
     menu.style.top = clientY + 'px'
@@ -109,22 +116,28 @@ const Menu = async (initialValues) => {
     
     menu.classList.toggle('menu--hidden')
   }
+  function outsideClick(e) {
+    if(e.target.tagName === 'CANVAS') menu.classList.add('menu--hidden')
+  }
+
   menu.appendChild(navList)
+  menu.appendChild(Button('menu-button__close', toggleMenu, '--centered'))
   document.addEventListener('contextmenu', toggleMenu)
+  document.addEventListener('click', outsideClick)
 
   //HANDLERS
   //visuals
-  navList.appendChild(Slider('magnitudeFilter', filterStars))
-  navList.appendChild(ToggleSwitch('asterisms', toggleItem))
-  navList.appendChild(ToggleSwitch('boundaries', toggleItem))
-  navList.appendChild(ToggleSwitch('graticule', toggleItem))
-  navList.appendChild(ToggleSwitch('planets', toggleItem))
-  navList.appendChild(ToggleSwitch('names', toggleItem))
-  navList.appendChild(ToggleSwitch('twinkling', toggleAnimation))
+  navList.appendChild(LI(Slider('magnitudeFilter', filterStars)))
+  navList.appendChild(LI(ToggleSwitch('asterisms', toggleItem)))
+  navList.appendChild(LI(ToggleSwitch('boundaries', toggleItem)))
+  navList.appendChild(LI(ToggleSwitch('graticule', toggleItem)))
+  navList.appendChild(LI(ToggleSwitch('planets', toggleItem)))
+  navList.appendChild(LI(ToggleSwitch('names', toggleItem)))
+  navList.appendChild(LI(ToggleSwitch('twinkling', toggleAnimation)))
   
   //sensors
-  navList.appendChild(ToggleSwitch('motionControl', switchControls))
-  navList.appendChild(Button('geolocation', useLocation))
+  navList.appendChild(LI(ToggleSwitch('motionControl', switchControls)))
+  navList.appendChild(LI(Button('geolocation', useLocation)))
 
   navList.addEventListener('input', updateSettings)
 
