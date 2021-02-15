@@ -39,7 +39,7 @@ const StarField = (constellation) => {
   geometry.addAttribute('alpha', new THREE.Float32BufferAttribute(alphas, 1));
 
   const uniforms = {
-    texture: {type: 't', value: new THREE.TextureLoader().load('/assets/lensflare0_alpha.png')},
+    texture: {type: 't', value: new THREE.TextureLoader().load('./assets/lensflare0_alpha.png')},
     scale: {type: 'f', value: 235}, 
     time: {type: 'f', value: 0.1 }
   };
