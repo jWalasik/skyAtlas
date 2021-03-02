@@ -23,76 +23,6 @@
   <div class='loading-screen' id='loading-screen'>
     <h3 class='loading-screen__title'>sky Atlas</h3>
     <div id='status' class='loading-screen__status'>...loading</div>
-
-    <svg class='loading-screen__svg' viewBox="0 0 600 600" preserveAspectRatio=none>
-      <defs>    
-        <radialGradient id="grad1" cx="50%" cy="0%" r="50%" fx="50%" fy="0%">
-          <stop offset="5%"
-          style="stop-color:#b0dfff;stop-opacity:.7" />
-          <stop offset="12.5%"
-          style="stop-color:#1c7afd;stop-opacity:.7" />
-          <stop offset="25%"
-          style="stop-color:#0024b5;stop-opacity:.7" />
-          <stop offset="70%"
-          style="stop-color:#000e45;stop-opacity:1" />
-          <stop offset="100%"
-          style="stop-color:#000000;stop-opacity:1" />
-        </radialGradient>
-        
-        <filter id="light" filterUnits="userSpaceOnUse">
-          <feSpecularLighting result="spotlight" specularConstant="1.5"
-              specularExponent="80" lighting-color="white">
-            <fePointLight x="300" y="460" z="40"/>
-          </feSpecularLighting>
-          <feComposite in="SourceGraphic" in2="spotlight" operator="arithmetic"
-              k1="0" k2="1" k3="1" k4="0"/>
-        </filter>
-        
-        <filter id="glow" y='-150%' height='400%'>
-          <!-- Thicken out the original shape -->
-          <feMorphology operator="dilate" radius="18" in="SourceAlpha" result="thicken" />
-    
-          <!-- Use a gaussian blur to create the soft blurriness of the glow -->
-          <feGaussianBlur in='SourceAlpha' stdDeviation='10' result='inner' />
-          <feGaussianBlur in="thicken" stdDeviation="20" result="blurred" />
-          <feGaussianBlur in="SourceGraphic" result="gaussian-1" stdDeviation="1" />        
-          <feGaussianBlur in="SourceGraphic" result="gaussian-4" stdDeviation="4" />
-          <feGaussianBlur in="SourceGraphic" result="gaussian-10" stdDeviation="10" />
-          <feGaussianBlur in="SourceGraphic" result="gaussian-15" stdDeviation="15" />
-          
-          <!-- Change the colour -->
-          <feFlood flood-color="#036ffc" flood-opacity="0.5" result="glowColor" />
-    
-          <!-- Color in the glows -->
-          <feComposite in="glowColor" in2="blurred" operator="in" result="softGlow_colored" />
-    
-          <!--	Layer the effects together -->
-          <feMerge>
-            <feMergeNode in='inner' />
-            <feMergeNode in="gaussian-15" />
-            <feMergeNode in="gaussian-10" />
-            <feMergeNode in="gaussian-4" />
-            <feMergeNode in="gaussian-1" />
-            <feMergeNode in="softGlow_colored"/>
-    
-            <feMergeNode in="SourceGraphic"/>
-          </feMerge>
-    
-      </filter>
-      </defs>
-      
-      <g id='halo'>
-        <path id='earth-body' d="M50,500 C185,435 415,435 550,500 " filter='url(#glow1)' fill='none' stroke='#4f9cff' stroke-width='2' />
-      </g>
-      
-      <g id='sun'>
-        
-      </g>
-      
-      <g id='earth'>
-        <path id='earth-body' d="M0,500 C185,450 413,450 600,500 L600,600 0,600 z" fill='url(#grad1)' />
-      </g>      
-    </svg>    
   </div>
   <!-- MENU -->
   <nav id='menu' class='menu menu--hidden'>
@@ -102,8 +32,8 @@
 
   <!-- DISPLAY SCREEN -->
   <main class='display' id='display'>
-    <div id="WebGL-Output">
-    </div>
+    <div id='display'></div>
+    <div id="WebGL-Output"></div>
     <div id='info' class='collapsed'></div>
     <div id="Stats-Output"></div>
   </main>
