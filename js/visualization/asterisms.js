@@ -22,7 +22,7 @@ const Asterisms = () => {
         const point = vertex(coord)
         lineGeometry.vertices.push(point)
       })
-      const lineMaterial = new THREE.LineBasicMaterial({color: 0x98db5a})
+      const lineMaterial = new THREE.LineBasicMaterial({color: 0x28c4c9})
       const line = new THREE.Line(lineGeometry, lineMaterial)
       asterism.add(line)
     })

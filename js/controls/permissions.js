@@ -61,7 +61,7 @@ export function useDeviceOrientation() {
         const geometries = window.scene.getObjectByName('geometries').quaternion
         rotateCameraTo(geometries,target,1)
       },
-      0, 
+      100, 
       true // 
     ), 
     true  //absolute uses north magnetic declination instead of device frame

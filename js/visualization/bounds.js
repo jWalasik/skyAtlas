@@ -19,7 +19,7 @@ const Bounds = () => {
       outlineGeometry.vertices.push(point)
     }
 
-    const outlineMaterial = new THREE.LineBasicMaterial({color: 0x3d7691})
+    const outlineMaterial = new THREE.LineBasicMaterial({color: 0x0072f5})
     const outline = new THREE.Line(outlineGeometry, outlineMaterial)
 
     //face shape triangulation
