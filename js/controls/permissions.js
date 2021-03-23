@@ -58,6 +58,7 @@ export function useDeviceOrientation() {
           north.normalize(),
           center.normalize()
         )
+        cube.position.set(target)
         const geometries = window.scene.getObjectByName('geometries').quaternion
         rotateCameraTo(geometries,target,1)
       },

@@ -1,5 +1,9 @@
 import * as THREE from './lib/three.module.js'
 
+Number.prototype.clamp = function(min, max) {
+  return Math.min(Math.max(this, min), max)
+}
+
 export function debounce(func, wait, immediate) {
 	var timeout;
 	return function() {
@@ -56,9 +60,9 @@ export function starColor(ci,type) {
   var B = (b <= 0.0031308)? 12.92*b : 1.055*Math.pow(b,1/0.5)-0.055
 
   return [
-    Math.round(R*255),
-    Math.round(G*255),
-    Math.round(B*255)
+    Math.round(R*255).clamp(0,255),
+    Math.round(G*255).clamp(0,255),
+    Math.round(B*255).clamp(0,255)
   ]
 }
 

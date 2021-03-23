@@ -4,7 +4,7 @@ import * as THREE from '../lib/three.module.js'
 const database = new GalaxyDB()
 
 export function detailedView(object) {
-  console.log(object)
+
   const starData = database.getData('hyg')
   const container = new THREE.Object3D()
   container.name = object.name + 'detailed'
@@ -12,8 +12,8 @@ export function detailedView(object) {
   //prevent camera movements
 
   //POINTS OF INTEREST
-  const poi = [...object.userData.linkedObjects]
-
+  const poi = []
+  const planets = object.userData.linkedObjects
   //COMPUTE GEOMETRY
   //extract stars
   const stars = [] 
@@ -24,6 +24,7 @@ export function detailedView(object) {
       } else poi.push(star)
     }
   })
+  console.log(poi)
 
 
   // window.scene.getObjectByName('geometries').traverse(child => {

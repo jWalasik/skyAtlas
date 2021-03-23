@@ -22,24 +22,23 @@ import { starFieldTwinkle } from './animate.js'
 
 const Atlas = function () {
   const {height, width, mobile, webGL} = deviceInfo()
-  
   /*
     storing scene and camera in window scope ease the access for utilies like animated transitions
     considered bad practice might need refactor
   */
   const SCENE = window.scene = new THREE.Scene()
   SCENE.selectable = []
-  const CAMERA = window.camera = new THREE.PerspectiveCamera(70, width/height, 1, 100000)
-
+  const CAMERA = window.camera = new THREE.PerspectiveCamera(60, width/height, .1, 100000)
+  CAMERA.zoom = 1
   //old shaders are not compatible with webgl2, thus using previous renderer version - deprecation incoming, upgrade advised
   const renderer = new THREE.WebGL1Renderer({alpha: true});
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(width, height)
-  
+
   //flipping screen glitches coordinate system, block it
   window.addEventListener('resize', ()=> {
     renderer.setSize(window.innerWidth, window.innerHeight);
-    CAMERA.fov = 70;
+    CAMERA.fov = 60;
     CAMERA.aspect = window.innerWidth / window.innerHeight;
     CAMERA.updateProjectionMatrix();
   })
@@ -60,6 +59,7 @@ const Atlas = function () {
   //store geometries in master object to ease rotations
   const geometries = new THREE.Object3D()
   this.scenes[this.currentScene].add( geometries )
+  this.scenes[this.currentScene].add( CAMERA )
   geometries.name = 'geometries'
 
   //GEOMETRIES

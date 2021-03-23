@@ -183,7 +183,6 @@ const TrackballControls = function ( object, domElement ) {
 
 
 			return function () {
-
 				var angle = Math.acos( _rotateStart.dot( _rotateEnd ) / _rotateStart.length() / _rotateEnd.length() );
 
 				 if ( angle ) {
@@ -213,12 +212,17 @@ const TrackballControls = function ( object, domElement ) {
 						}
 
 					}
-
 				}
 			}
-
 		}());
-
+	//custom function
+	this.rotateCameraTowards = function (quaternion) {
+		const target = new THREE.Quaternion().setFromUnitVectors(
+      SELECTED.geometry.boundingSphere.center,
+      new THREE.Vector3(0, 12000,0)
+    )
+		_rotateStart.applyQuaternion(quaternion)
+	}
 
 	this.zoomCamera = function () {
 

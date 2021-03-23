@@ -1,4 +1,5 @@
 import * as THREE from '../lib/three.module.js'
+import { rotateCameraTo } from '../visualization/animate.js';
 import { detailedView } from '../visualization/detailedView.js';
 
 let SELECTED
@@ -36,7 +37,7 @@ export function highlight() {
 
 export function zoomSelect(e) {
   if(e.deltaY < 0 && window.camera.position.z <= 100) {
-    //console.log('selected:',window.camera.position.z, SELECTED)
+    detailedView(SELECTED)
   }
 }
 
@@ -53,13 +54,13 @@ function getCoords({clientX, clientY}) {
 }
 
 function mouseSelect(e) {
-  const dX = e.offsetX - startX,
-        dY = e.offsetY - startY
-  console.log(window.scene)
+  const dX = Math.abs(e.offsetX - startX),
+        dY = Math.abs(e.offsetY - startY)
+
   const delta = 10 //distance in pixels
   if(dX < delta && dY < delta) {
     detailedView(SELECTED)
-    //document.getElementById('object').innerHTML = intersects[0].object.name
+    window.controls.active.rotateCameraTowards(SELECTED.geometry.boundingSphere.center)
   }
 }
 
