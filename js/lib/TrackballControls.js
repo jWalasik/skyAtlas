@@ -216,12 +216,18 @@ const TrackballControls = function ( object, domElement ) {
 			}
 		}());
 	//custom function
-	this.rotateCameraTowards = function (quaternion) {
-		const target = new THREE.Quaternion().setFromUnitVectors(
-      SELECTED.geometry.boundingSphere.center,
-      new THREE.Vector3(0, 12000,0)
-    )
-		_rotateStart.applyQuaternion(quaternion)
+	this.rotateCameraTowards = function (target, mouse) {
+		// _rotateStart.copy( getMouseProjectionOnBall( mouse.x, mouse.y ) );
+		// _rotateEnd.copy( _rotateStart );
+		// const proj = getMouseProjectionOnBall(mouse.x, mouse.y)
+		// console.log(proj)
+		// this.object.lookAt(target)
+
+		// const q = new THREE.Quaternion(-this.object.quaternion.x, -this.object.quaternion.y, this.object.quaternion.z, this.object.quaternion.w)
+		// _eye.applyQuaternion(q)
+		// _rotateEnd.applyQuaternion(q)
+		// _rotateEnd.copy( getMouseProjectionOnBall( -mouse.x, -mouse.y ) );
+		_rotateEnd.add(new THREE.Vector3(0.1,0.1,0.1))
 	}
 
 	this.zoomCamera = function () {
@@ -334,7 +340,6 @@ const TrackballControls = function ( object, domElement ) {
 		_this.object.position.addVectors( _this.target, _eye );
 
 		_this.checkDistances();
-
 
 		_this.object.lookAt( _this.target );
 
