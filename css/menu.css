@@ -15,3 +15,58 @@ ul {
 .slider {
   width: 90%;
 }
+
+.menu-svg {
+  border: 1px solid greenyellow;
+  fill: none;
+  stroke: #03cafc;
+  transform-origin: center;
+  pointer-events: visiblePainted;
+  z-index: 100;
+}
+
+#or-dashed {
+  animation: spin_counterClockwise 12s linear infinite;
+  transform-origin: center;
+}
+
+#mr-small {
+  animation: spin_clockwise 6s linear infinite;
+  transform-origin: center;
+}
+#mr-medium {
+  animation: spin_counterClockwise 6s linear infinite;
+  transform-origin: center;
+}
+#mr-large {
+  animation: spin_clockwise 8s linear infinite;
+  transform-origin: center;
+}
+
+#ir-bevel {
+  animation: offset 3s alternate infinite;
+  transform-origin: center;
+}
+
+#button:hover {
+  fill: rgba(3, 202, 252, 0.1);
+  pointer-events: all;
+
+}
+@keyframes spin_clockwise {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes spin_counterClockwise {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes offset {
+  to {
+    stroke-dasharray: 120;
+    transform: rotate(90deg);
+  }
+}

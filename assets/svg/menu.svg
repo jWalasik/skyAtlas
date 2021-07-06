@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <svg version="1.1" id="widget" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 320 320" vector-effect='non-scaling-stroke' filter='url(#glow)'>
   <defs>
@@ -14,30 +15,36 @@
   </defs>
   <!-- outer ring -->
   <circle id="dashed" stroke-width="25" stroke-dasharray='2.3' cx="160" cy="160" r="100"/>
-  <circle id="XMLID_4_" stroke-width="2" cx="160" cy="160" r="115"/>
+  <circle id="inner-border" stroke-width="2" cx="160" cy="160" r="115"/>
 
   <!-- middle ring -->
-  <g id="XMLID_5_">
-    <circle id="XMLID_6_" stroke-width="2" stroke-dasharray="90" cx="160" cy="160" r="77.9"/>
-    <circle id="XMLID_7_" stroke-width="2" stroke-dasharray="120" cx="160" cy="160" r="80.2"/>
-    <circle id="XMLID_8_" stroke-width="2" stroke-dasharray="50" cx="160" cy="160" r="82.5"/>
+  <g id="middle-ring">
+    <circle id="mr-small" stroke-width="2" stroke-dasharray="90" cx="160" cy="160" r="77.9"/>
+    <circle id="mr-medium" stroke-width="2" stroke-dasharray="120" cx="160" cy="160" r="80.2"/>
+    <circle id="mr-large" stroke-width="2" stroke-dasharray="50" cx="160" cy="160" r="82.5"/>
   </g>
   <!-- inner ring -->
-  <g id="inner">
-    <circle id="bevel" stroke-width="10" stroke-dasharray="80" stroke-linecap="round" cx="160" cy="160" r="60.3"/>
-    <circle id="base" stroke-width="7" cx="160" cy="160" r="62.5"/>
+  <g id="inner-ring">
+    <circle id="ir-bevel" stroke-width="10" stroke-dasharray="80" stroke-linecap="round" cx="160" cy="160" r="60.3"/>
+    <circle id="ir-base" stroke-width="7" cx="160" cy="160" r="62.5"/>
   </g>
 
   <!-- outer border -->
   <path id="outer-border" d="M280,160c0,12.9-2,25.1-5.7,36.7c-7.8,24.3-23.2,45.3-43.3,60c-19.9,14.7-44.4,23.3-71,23.3 c-26.6,0-51.1-8.6-71-23.3c-20.1-14.7-35.5-35.6-43.3-60C42,185.2,40,172.8,40,160c0-12.8,2-25.1,5.7-36.7C53.5,99,68.8,78,89,63.3 C108.9,48.6,133.4,40,160,40s51.1,8.6,71,23.3c20.1,14.7,35.5,35.6,43.3,60C278,134.7,280,147.1,280,160z"/>
 
   <g id='buttons'>
-    <use id='first' href='#button' transform='rotate(-0)' transform-origin='center' />
+    <use id='first' href='#button' transform='rotate(-0)' transform-origin='center' >
+      
+    </use>
     <use id='second' href='#button' transform='rotate(-45)' transform-origin='center' />
     <use id='third' href='#button' transform='rotate(45)' transform-origin='center' />
     <use id='fourth' href='#button' transform='rotate(90)' transform-origin='center' />
     <use id='fifth' href='#button' transform='rotate(-90)' transform-origin='center' />
     <use id='sixth' href='#button' transform='rotate(135)' transform-origin='center' />
     <use id='seventh' href='#button' transform='rotate(-135)' transform-origin='center' />
+  </g>
+
+  <g>
+    <path pointer-event='all' onclick='handleClose()' d='M140,140 L180,180 M180,140 L140,180' stroke='red' stroke-width='4' />
   </g>
 </svg>

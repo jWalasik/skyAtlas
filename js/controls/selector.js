@@ -60,7 +60,8 @@ function mouseSelect(e) {
   const delta = 10 //distance in pixels
   if(dX < delta && dY < delta) {
     detailedView(SELECTED)
-    window.controls.active.rotateCameraTowards(SELECTED.geometry.boundingSphere.center, mouse)
+    //window.controls.active.rotateCameraTowards(SELECTED.geometry.boundingSphere.center, mouse)
+    
   }
 }
 

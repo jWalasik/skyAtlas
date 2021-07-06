@@ -1,6 +1,7 @@
 import * as THREE from '../lib/three.module.js'
 import {computeZenith, vertex, compassHeading, debounce} from '../helperfunctions.js'
 import { rotateCameraTo } from '../visualization/animate.js'
+import { setModal } from './modal.js'
 
 const modal = document.getElementById('modal')
 
@@ -23,7 +24,7 @@ export function handlePermissions(scene) {
 
 export function useLocation() {
   navigator.geolocation.getCurrentPosition(position => {
-    clearModal()
+    //clearModal()
     const {latitude, longitude} = position.coords
     const center = new THREE.Vector3(0,12000,0)
     const target = new THREE.Quaternion().setFromUnitVectors(
@@ -75,7 +76,9 @@ function clearModal() {
 }
 
 function handleModal() {
-  modal.innerText = 'Enable geolocation to display current sky in your area'
+  const node = document.createElement('div')
+
+  node.innerText = 'Enable geolocation to display current sky in your area'
   const enableButton = document.createElement('button'),
         dismissButton = document.createElement('button')
   enableButton.innerText = 'Enable'
@@ -83,7 +86,9 @@ function handleModal() {
   dismissButton.innerText = 'Dismiss'
   dismissButton.addEventListener('click', clearModal)
 
-  modal.appendChild(enableButton)
-  modal.appendChild(dismissButton)
-  modal.classList.toggle('modal--hidden')
+  node.appendChild(enableButton)
+  node.appendChild(dismissButton)
+  node.classList.toggle('modal--hidden')
+
+  setModal(node)
 }

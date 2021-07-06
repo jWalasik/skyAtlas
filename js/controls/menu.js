@@ -62,18 +62,30 @@ const Menu = async (initialValues) => {
     return li
   }
   const ToggleSwitch = (id, fn) => {
+    const buttonContainer = document.getElementById('buttons')
+    const btn = document.createElementNS('http://www.w3.org/2000/svg', 'use')
+    btn.setAttribute('id', id)
+    btn.setAttribute('href', '#menu-svg__button')
+    
+    btn.addEventListener('click', fn)
+    const angle = buttonContainer.children.length * 45
+    btn.setAttribute('transform', `rotate(${angle})`)
+    btn.setAttribute('transform-origin', 'center')
+    btn.setAttribute('active', SETTINGS[id])
+    buttonContainer.appendChild(btn)
     const label = document.createElement('label')
     label.textContent = id
+    btn.dispatchEvent(new Event('click'))
 
     const input = document.createElement('input')
-    input.classList = 'input__checkboxs'
-    input.type = 'checkbox'
-    input.id = id
-    input.checked = SETTINGS[id]
-    input.addEventListener('change', fn)
-    label.appendChild(input)
-    //run function once to apply cached settings
-    input.dispatchEvent(new Event('change'))
+    // input.classList = 'input__checkboxs'
+    // input.type = 'checkbox'
+    // input.id = id
+    // input.checked = SETTINGS[id]
+    // input.addEventListener('change', fn)
+    // label.appendChild(input)
+    // //run function once to apply cached settings
+    // input.dispatchEvent(new Event('change'))
     return label
   }
 
@@ -108,7 +120,13 @@ const Menu = async (initialValues) => {
   //MENU CONTAINER
   const menu = document.getElementById('menu')
   const navList = document.createElement('ul')
-  
+
+  const closeBtn = document.getElementById('menu-button__close')
+  closeBtn.addEventListener('click', () => {
+    console.log('CLOSE MENU')
+    menu.classList.toggle('menu--hidden')
+  })
+
   function toggleMenu({clientX, clientY}) {
     menu.style.left = clientX + 'px'
     menu.style.top = clientY + 'px'
@@ -132,14 +150,14 @@ const Menu = async (initialValues) => {
   navList.appendChild(LI(ToggleSwitch('boundaries', toggleItem)))
   navList.appendChild(LI(ToggleSwitch('graticule', toggleItem)))
   navList.appendChild(LI(ToggleSwitch('planets', toggleItem)))
-  navList.appendChild(LI(ToggleSwitch('names', toggleItem)))
+  //navList.appendChild(LI(ToggleSwitch('names', toggleItem)))
   navList.appendChild(LI(ToggleSwitch('twinkling', toggleAnimation)))
   
   //sensors
-  navList.appendChild(LI(ToggleSwitch('motionControl', switchControls)))
-  navList.appendChild(LI(Button('geolocation', useLocation)))
+  // navList.appendChild(LI(ToggleSwitch('motionControl', switchControls)))
+  // navList.appendChild(LI(Button('geolocation', useLocation)))
 
-  navList.addEventListener('input', updateSettings)
+  // navList.addEventListener('input', updateSettings)
 
   //functions
   function filterStars(e) {
@@ -156,15 +174,17 @@ const Menu = async (initialValues) => {
   }
   
   function toggleItem(e) {
-    window.settings[e.target.id] = e.target.checked
+    const active = e.target.getAttribute('active') === 'true'
+    e.target.setAttribute('active', !active)
+    window.settings[e.target.id] = !active
     window.scene.traverse(child => {
       if(child.name === e.target.id) {
-        child.visible = e.target.checked
+        child.visible = !active
       }
     })
   }
   function toggleAnimation(e) {
-    window.settings.twinkling = e.target.checked
+    window.settings.twinkling = e.target.getAttribute('active')
   }
   
   function switchControls(e) {
