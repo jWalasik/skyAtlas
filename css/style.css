@@ -113,8 +113,8 @@ body {
 .modal-checkbox {
   height: 20px;
   width: 20px;
-  top: 10px;
   position: relative;
+  top: 0;
 }
 /* checkbox styling hacks */
 .modal-checkbox:before {

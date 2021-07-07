@@ -16,8 +16,8 @@ const StarField = (constellation) => {
   starData.forEach(star=>{
     const {x,y,z} = vertex([star.ra*15, star.dec])
     vertices.push(x,y,z)
-
-    const [r,g,b] = starColor(star.ci, star.spect)
+    
+    const {r,g,b} = starColor(star.ci, star.spect)
     const color = new THREE.Color(`rgb(${r},${g},${b})`)
     
     colors.push(color.r,color.g,color.b)

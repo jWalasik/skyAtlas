@@ -30,40 +30,30 @@ export function scaleMag(mag) {
   return size
 }
 
+export function hexToRgb(hex) {
+  var result = /^0x?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16)
+  } : null;
+}
+//heavy approximations
 export function starColor(ci,type) {
-  const t = 4600 * ((1 / ((0.92 * ci) + 1.7)) +(1 / ((0.92 * ci) + 0.62)) )
-
-  var x, y = 0
-
-  if (t >= 1667 & t <= 4000) {
-    x = ((-0.2661239 * Math.pow(10,9)) / Math.pow(t,3)) + ((-0.2343580 * Math.pow(10,6)) / Math.pow(t,2)) + ((0.8776956 * Math.pow(10,3)) / t) + 0.179910
-  } else if (t > 4000) {
-    x = ((-3.0258469 * Math.pow(10,9)) / Math.pow(t,3)) + ((2.1070379 * Math.pow(10,6)) / Math.pow(t,2)) + ((0.2226347 * Math.pow(10,3)) / t) + 0.240390
+  //http://www.vendian.org/mncharity/dir3/starcolor/details.html
+  const ciTemp = ['0x9bb2ff','0x9eb5ff','0xa3b9ff','0xaabfff','0xb2c5ff','0xbbccff','0xc4d2ff','0xccd8ff','0xd3ddff','0xdae2ff','0xdfe5ff','0xe4e9ff','0xe9ecff','0xeeefff','0xf3f2ff','0xf8f6ff','0xfef9ff','0xfff9fb','0xfff7f5','0xfff5ef','0xfff3ea','0xfff1e5','0xffefe0','0xffeddb','0xffebd6','0xffe9d2','0xffe8ce','0xffe6ca','0xffe5c6','0xffe3c3','0xffe2bf','0xffe0bb','0xffdfb8','0xffddb4','0xffdbb0','0xffdaad','0xffd8a9','0xffd6a5','0xffd5a1','0xffd29c','0xffd096','0xffcc8f','0xffc885','0xffc178','0xffb765','0xffa94b','0xff9523','0xff7b00','0xff5200']
+  
+  if(!ci) {
+    console.log('no color index!')
+    return hexToRgb('0xdfe5ff')
   }
-
-  if (t >= 1667 & t <= 2222) {
-    y = -1.1063814 * Math.pow(x,3) - 1.34811020 * Math.pow(x,2) + 2.18555832 * x - 0.20219683
-  } else if (t > 2222 & t <= 4000) {
-    y = -0.9549476 * Math.pow(x,3) - 1.37418593 * Math.pow(x,2) + 2.09137015 * x - 0.16748867
-  } else if (t > 4000) {
-    y = 3.0817580 * Math.pow(x,3) - 5.87338670 * Math.pow(x,2) + 3.75112997 * x - 0.37001483
+  const min = -0.4, max = 2.0
+  for(let i=0; i<ciTemp.length; i++) {
+    if(ci <= min + i*0.05) {
+      return hexToRgb(ciTemp[i])
+    }
   }
-
-  var Y = 1.0
-  var X = (y == 0)? 0 : (x * Y) / y
-  var Z = (y == 0)? 0 : ((1 - x - y) * Y) / y
-  var r = 3.2406 * X - 1.5372 * Y - 0.4986 * Z
-  var g = -0.9689 * X + 1.8758 * Y + 0.0415 * Z
-  var b = 0.0557 * X - 0.2040 * Y + 1.0570 * Z
-  var R = (r <= 0.0031308)? 12.92*r : 1.055*Math.pow(r,1/0.5)-0.055
-  var G = (g <= 0.0031308)? 12.92*g : 1.055*Math.pow(g,1/0.5)-0.055
-  var B = (b <= 0.0031308)? 12.92*b : 1.055*Math.pow(b,1/0.5)-0.055
-
-  return [
-    Math.round(R*255).clamp(0,255),
-    Math.round(G*255).clamp(0,255),
-    Math.round(B*255).clamp(0,255)
-  ]
+  return hexToRgb('0xff5200')
 }
 
 export function toJSON(csv) {
