@@ -33,9 +33,7 @@ export default async function init() {
   //display welcome message if user did not chose to hide it
   caches.has('skyAtlas-prevent-welcome').then(exists => {
     if(!exists) {
-
       const handleClose = () => {
-        console.log(checkbox)
         //save setting
         if(checkbox.checked) {
           caches.open('skyAtlas-prevent-welcome').then(cache => {
@@ -71,7 +69,7 @@ export default async function init() {
       info.appendChild(addInfo("You may access menu by using Right Mouse Button or Long Press on mobile"))
 
       const close = document.createElement('div')
-      close.classList.add('modal-close')
+      close.classList.add('modal-controls')
       
       const checkbox = document.createElement('input')
       checkbox.classList.add('modal-checkbox')

@@ -88,6 +88,9 @@ body {
   transform: scale(1);
   z-index: 1;
 }
+.modal-container__hidden {
+  transform: scale(0);
+}
 #modal-overlay {
   background: #00303b6c;
   box-shadow:0 0 15px #03cafc;
@@ -106,7 +109,7 @@ body {
   margin: 10px;
 }
 
-.modal-close {
+.modal-controls {
   display: flex;
   justify-content: space-between;
 }

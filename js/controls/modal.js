@@ -1,14 +1,14 @@
 const modal = document.getElementById('modal')
+const dialog = document.getElementById('modal-dialog')
 
 export function setModal(node){
-  modal.appendChild(node)
-  modal.classList.toggle('modal--open')
-  console.log(modal)
+  dialog.appendChild(node)
+  modal.classList.toggle('modal-container__hidden')
 }
 
 export function clearModal() {
-  modal.clearChildren()
-  modal.classList.toggle('modal--open')
+  //modal.clearChildren()
+  modal.classList.toggle('modal-container__hidden')
 }
 
 export function appendNode(items) {

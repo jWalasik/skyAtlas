@@ -20,13 +20,20 @@ export function debounce(func, wait, immediate) {
 };
 //true logarithmic scaling doesnt seem to work well, settled with non scientific version
 export function scaleMag(mag) {
-  //walasik constant aka stupid scale
+  //prevent expontential scaling for brightest objects
+  // const maxMag = 3.0
+  // let intensity = (1 / Math.pow(10, (mag - maxMag) / 2.5)).clamp(0, 10)
+  // if(intensity < .5) intensity = intensity * 0.75 + 0.125
+  // const radius = (Math.sqrt(intensity)).clamp(1,6)
+  // return radius*2
+
+  //walasik constants aka stupid scale
   let size
   if(mag>6) { //naked eye visibility
-    size = 2.5
+    size = 1.1
   } else if(mag<3.5) {  //most named stars
-    size = 8
-  } else size = 5
+    size = 6
+  } else size = 2.2
   return size
 }
 
@@ -44,7 +51,6 @@ export function starColor(ci,type) {
   const ciTemp = ['0x9bb2ff','0x9eb5ff','0xa3b9ff','0xaabfff','0xb2c5ff','0xbbccff','0xc4d2ff','0xccd8ff','0xd3ddff','0xdae2ff','0xdfe5ff','0xe4e9ff','0xe9ecff','0xeeefff','0xf3f2ff','0xf8f6ff','0xfef9ff','0xfff9fb','0xfff7f5','0xfff5ef','0xfff3ea','0xfff1e5','0xffefe0','0xffeddb','0xffebd6','0xffe9d2','0xffe8ce','0xffe6ca','0xffe5c6','0xffe3c3','0xffe2bf','0xffe0bb','0xffdfb8','0xffddb4','0xffdbb0','0xffdaad','0xffd8a9','0xffd6a5','0xffd5a1','0xffd29c','0xffd096','0xffcc8f','0xffc885','0xffc178','0xffb765','0xffa94b','0xff9523','0xff7b00','0xff5200']
   
   if(!ci) {
-    console.log('no color index!')
     return hexToRgb('0xdfe5ff')
   }
   const min = -0.4, max = 2.0
