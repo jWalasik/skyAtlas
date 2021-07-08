@@ -20,7 +20,7 @@ export default async function init() {
   status.innerHTML = 'Igniting star cores'
   //shaderLoader().then(shaders => console.log(shaders))
   status.innerHTML = 'Forging galaxies'
-  new Atlas()
+
 
   //ready to render
   status.innerHTML = 'Welcome to skyAtlas'
@@ -88,7 +88,7 @@ export default async function init() {
       closeButton.addEventListener('click', handleClose)
       closeButton.innerText = 'Close'
       
-      const node = document.createElement('div')
+      const node = document.getElementById('modal-dialog')
       node.classList.add('modal')
 
       node.appendChild(h)
@@ -100,6 +100,8 @@ export default async function init() {
       setModal(node)
     }
   })
+
+  new Atlas()
 }
 
 if('serviceWorker' in navigator){

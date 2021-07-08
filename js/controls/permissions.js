@@ -1,7 +1,7 @@
 import * as THREE from '../lib/three.module.js'
 import {computeZenith, vertex, compassHeading, debounce} from '../helperfunctions.js'
 import { rotateCameraTo } from '../visualization/animate.js'
-import { setModal } from './modal.js'
+import { clearModal, setModal } from './modal.js'
 
 const modal = document.getElementById('modal')
 
@@ -70,25 +70,28 @@ export function useDeviceOrientation() {
   )
 }
 
-function clearModal() {
-  modal.innerHTML = ''
-  modal.className = 'modal--hidden'
-}
-
 function handleModal() {
   const node = document.createElement('div')
+  node.classList.add('modal-permission')
 
   node.innerText = 'Enable geolocation to display current sky in your area'
-  const enableButton = document.createElement('button'),
-        dismissButton = document.createElement('button')
+  const enableButton = document.createElement('button')
+
+  enableButton.classList.add('modal-button')
+
   enableButton.innerText = 'Enable'
   enableButton.addEventListener('click', useLocation)
-  dismissButton.innerText = 'Dismiss'
-  dismissButton.addEventListener('click', clearModal)
 
   node.appendChild(enableButton)
-  node.appendChild(dismissButton)
-  node.classList.toggle('modal--hidden')
+
+  caches.has('skyAtlas-prevent-welcome').then(exists => {
+    if(exists) {
+      const dismissButton = document.createElement('button')
+      dismissButton.classList.add('modal-button')
+      dismissButton.innerText = 'Dismiss'
+      dismissButton.addEventListener('click', clearModal)
+      node.appendChild(dismissButton)
+    }})
 
   setModal(node)
 }

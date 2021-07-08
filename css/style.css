@@ -85,12 +85,54 @@ body {
   width: 100%;
   top: 0;
   left: 0;
-  transform: scale(1);
+  transform: scale(0);
   z-index: 1;
+  transition: all .3s;
 }
-.modal-container__hidden {
+.modal-container > * > * {
   transform: scale(0);
 }
+.modal-container__shown {
+  transform: scaleY(.01) scaleX(0);
+  animation: modal-in .5s ease forwards;
+}
+.modal-container__shown > * > * {
+  animation: fade-in .5s ease-out .5s forwards;
+}
+.modal-container__hidden {
+  transform: scaleY(.01) scaleX(0);
+  animation: modal-out .5s ease forwards;
+}
+
+@keyframes modal-out {
+  0% {
+    transform: scale(1, 1);
+  }
+  50% {
+    transform: scale(.005, 1);
+  }
+  100% {
+    transform: scale(0, .005);
+  }
+}
+@keyframes modal-in {
+  0% {
+    transform: scale(.005, 0);
+  }
+  50% {
+    transform: scale(.005, 1);
+  }
+  100% {
+    transform: scale(1, 1);
+  }
+}
+
+@keyframes fade-in {
+  to {
+    transform: scale(1);
+  }
+}
+
 #modal-overlay {
   background: #00303b6c;
   box-shadow:0 0 15px #03cafc;
@@ -102,14 +144,18 @@ body {
 }
 .modal {
   background-color: rgb(10, 20, 25);
+  display: flex;
+  flex-direction: column;
   border-radius: 10px;
   color: white;
   box-shadow:0 0 15px #03cafc;
   padding: 20px;
   margin: 10px;
+  width: 100%;
 }
 
 .modal-controls {
+  order: 99;
   display: flex;
   justify-content: space-between;
 }
@@ -143,21 +189,15 @@ body {
   content: '✓';
 }
 
-@keyframes modal-open {
-  50% {
-    min-height: 50vh;
-    transform: scale(0,1) translate(-50%, -50%);
-  }
-  100% {
-    transform: scale(1) translate(-50%, -50%);
-    min-height: 50vh;
-    min-width: 50%;
-    padding: 30px;
-  }  
-}
 .modal-header {
   text-align: center;
-} 
+}
+.modal-permission {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 15px 0 15px 0;
+}
 
 .modal-button {
   background: black;

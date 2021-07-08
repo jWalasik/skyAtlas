@@ -61,7 +61,20 @@ function mouseSelect(e) {
   if(dX < delta && dY < delta) {
     detailedView(SELECTED)
     //window.controls.active.rotateCameraTowards(SELECTED.geometry.boundingSphere.center, mouse)
-    
+    // console.log(window.controls, window.camera)
+    // const vector = window.controls.active.target.clone()
+    // const l = (new THREE.Vector3()).subVectors(window.camera.position, vector).length()
+    // const up = window.camera.up.clone()
+    // const q = new THREE.Quaternion()
+
+    // window.camera.translateZ(l);
+    // q.setFromAxisAngle(up, 0.015)
+    // window.camera.position.applyQuaternion(q)
+    // window.camera.lookAt(vector)
+
+
+    // window.camera.position.x = 1000 * Math.cos(30)
+    // window.camera.position.z = 1000 * Math.sin(30)
   }
 }
 
