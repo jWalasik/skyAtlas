@@ -2,7 +2,7 @@
 <html lang="en" >
 
 <head>
-  <meta charset="UTF-8">  
+  <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">  
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Interactive map of the night sky">
   <meta name="keywords" content="stars, sky, astronomy, constellations">
@@ -25,8 +25,11 @@
     <div id='status' class='loading-screen__status'>...loading</div>
   </div>
   <!-- MENU -->
-  <nav id='menu' class='menu menu--hidden'>
-  </nav>
+  <div class='menu-container'>
+    <nav id='menu' class='menu'>
+    </nav>
+  </div>
+
 
   <div id='object-name'></div>
   <div id='modal' class='modal-container'>
@@ -37,7 +40,6 @@
 
   <!-- DISPLAY SCREEN -->
   <main class='display' id='display'>
-    <div id='display'></div>
     <div id="WebGL-Output"></div>
     <div id='info' class='collapsed'></div>
     <div id="Stats-Output"></div>

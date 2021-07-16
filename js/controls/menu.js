@@ -63,10 +63,17 @@ const Menu = async (initialValues) => {
   }
   const ToggleSwitch = (id, fn) => {
     const label = document.createElement('label')
-    label.textContent = id
+    label.htmlFor = id
+    label.classList = 'menu-item__label';
+
+    const text = document.createElement('span')
+    text.innerText = id.split(/(?=[A-Z])/).join(' ')
+    text.style = 'text-transform: capitalize'
+    label.appendChild(text)
 
     const input = document.createElement('input')
-    input.classList = 'input__checkboxs'
+    input.hidden = true
+    input.classList = 'menu-item__checkbox'
     input.type = 'checkbox'
     input.id = id
     input.checked = SETTINGS[id]
@@ -80,16 +87,19 @@ const Menu = async (initialValues) => {
   const Button = (id, fn, css) => {
     const button = document.createElement('button')
     button.id = id
-    button.classList = css
-    button.textContent = id
+    button.classList = css || 'menu-item__button'
+    button.textContent = id.split(/(?=[A-Z])/).join(' ')
     button.addEventListener('click', fn)
     return button
   }
 
   const Slider = (id, fn) => {
     const slider = document.createElement('label'),
-          input = document.createElement('input')
-    slider.innerText = id
+          input = document.createElement('input'),
+          output = document.createElement('output')
+
+    slider.innerText = id.split(/(?=[A-Z])/).join(' ')
+    slider.classList = 'menu-item__slider'
     input.id = id
     input.type = 'range'
     input.value = SETTINGS.magnitudeFilter
@@ -97,11 +107,19 @@ const Menu = async (initialValues) => {
     input.max = 12.0
     input.step = 0.1
     input.orient = 'vertical'
+    input.oninput = 'output.value=parseInt(id.value)'
 
-    input.classList = 'input__slider'
+    input.classList = 'slider-input'
     input.addEventListener('input', fn)
     input.dispatchEvent(new Event('input'))
     slider.appendChild(input)
+
+    output.classList = 'slider-output'
+    output.htmlFor = id
+    output.id = id + '-output'
+    output.innerText = input.value
+    slider.appendChild(output)
+    
     return slider
   }
 
@@ -114,14 +132,14 @@ const Menu = async (initialValues) => {
     menu.style.top = clientY + 'px'
     menu.style.transform = 'translate(-50%, -50%)'
     
-    menu.classList.toggle('menu--hidden')
+    menu.classList.toggle('menu--open')
   }
   function outsideClick(e) {
-    if(e.target.tagName === 'CANVAS') menu.classList.add('menu--hidden')
+    if(e.target.tagName === 'CANVAS') menu.classList.remove('menu--open')
   }
 
   menu.appendChild(navList)
-  menu.appendChild(Button('menu-button__close', toggleMenu, '--centered'))
+  menu.appendChild(Button('close', toggleMenu, 'menu-button__close'))
   document.addEventListener('contextmenu', toggleMenu)
   document.addEventListener('click', outsideClick)
 
@@ -144,8 +162,11 @@ const Menu = async (initialValues) => {
   //functions
   function filterStars(e) {
     window.settings[e.target.id] = e.target.value
+    const output = document.getElementById(`${e.target.id}-output`)
     const value = e ? e.target.value : SETTINGS[e.target.id]
     const idx = Math.floor(value)
+
+    output.innerText = e.target.value === '12' ? '12+' : e.target.value
     const steps = [0,51,175,521,1616,5018,15450,41137,83112,107927,115505,117903,118735,118735] //magnitude ranges - 0.0, 1.0, 2.0 etc
     const interpolate = Math.round(steps[idx] + (steps[idx+1] - steps[idx]) * (value%1))
     window.scene.traverse(child => {
@@ -157,6 +178,8 @@ const Menu = async (initialValues) => {
   
   function toggleItem(e) {
     window.settings[e.target.id] = e.target.checked
+    e.target.parentElement.classList.toggle('checked')
+    
     window.scene.traverse(child => {
       if(child.name === e.target.id) {
         child.visible = e.target.checked
