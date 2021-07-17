@@ -123,23 +123,28 @@ const Menu = async (initialValues) => {
     return slider
   }
 
-  //MENU CONTAINER
+  const container = document.getElementById('menu-container')
   const menu = document.getElementById('menu')
   const navList = document.createElement('ul')
   
   function toggleMenu({clientX, clientY}) {
-    menu.style.left = clientX + 'px'
-    menu.style.top = clientY + 'px'
-    menu.style.transform = 'translate(-50%, -50%)'
-    
-    menu.classList.toggle('menu--open')
+    //menu opens on click/touch location, prevent it from going out of bounds
+    const x = clientX.clamp(0 + container.clientWidth / 2, window.innerWidth - container.clientWidth / 2), 
+          y = clientY.clamp(0 + container.clientHeight / 2, window.innerHeight - container.clientHeight / 2)
+          console.log('x:',clientX,x, 'y:',clientY,y)
+    container.style.left = x + 'px'
+    container.style.top = y + 'px'
+
+    container.style.transform = `translate(-50%, -50%) scale(${container.classList.contains('menu--open') ? 0 : 1 })`
+    container.classList.toggle('menu--open')
   }
+
   function outsideClick(e) {
     if(e.target.tagName === 'CANVAS') menu.classList.remove('menu--open')
   }
 
   menu.appendChild(navList)
-  menu.appendChild(Button('close', toggleMenu, 'menu-button__close'))
+  menu.appendChild(Button('close', toggleMenu, 'menu-button button__close'))
   document.addEventListener('contextmenu', toggleMenu)
   document.addEventListener('click', outsideClick)
 
@@ -166,7 +171,7 @@ const Menu = async (initialValues) => {
     const value = e ? e.target.value : SETTINGS[e.target.id]
     const idx = Math.floor(value)
 
-    output.innerText = e.target.value === '12' ? '12+' : e.target.value
+    output.innerText = e.target.value == 12 ? '12+' : e.target.value
     const steps = [0,51,175,521,1616,5018,15450,41137,83112,107927,115505,117903,118735,118735] //magnitude ranges - 0.0, 1.0, 2.0 etc
     const interpolate = Math.round(steps[idx] + (steps[idx+1] - steps[idx]) * (value%1))
     window.scene.traverse(child => {
