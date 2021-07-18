@@ -87,7 +87,7 @@ const Menu = async (initialValues) => {
   const Button = (id, fn, css) => {
     const button = document.createElement('button')
     button.id = id
-    button.classList = css || 'menu-item__button'
+    button.classList = css || 'menu-button menu-button__item'
     button.textContent = id.split(/(?=[A-Z])/).join(' ')
     button.addEventListener('click', fn)
     return button
@@ -129,9 +129,8 @@ const Menu = async (initialValues) => {
   
   function toggleMenu({clientX, clientY}) {
     //menu opens on click/touch location, prevent it from going out of bounds
-    const x = clientX.clamp(0 + container.clientWidth / 2, window.innerWidth - container.clientWidth / 2), 
-          y = clientY.clamp(0 + container.clientHeight / 2, window.innerHeight - container.clientHeight / 2)
-          console.log('x:',clientX,x, 'y:',clientY,y)
+    const x = clientX.clamp(5 + container.clientWidth / 2, window.innerWidth - 5 - container.clientWidth / 2), 
+          y = clientY.clamp(5 + container.clientHeight / 2, window.innerHeight - 5 - container.clientHeight / 2)
     container.style.left = x + 'px'
     container.style.top = y + 'px'
 
@@ -144,7 +143,7 @@ const Menu = async (initialValues) => {
   }
 
   menu.appendChild(navList)
-  menu.appendChild(Button('close', toggleMenu, 'menu-button button__close'))
+  menu.appendChild(Button('close', toggleMenu, 'menu-button menu-button__close'))
   document.addEventListener('contextmenu', toggleMenu)
   document.addEventListener('click', outsideClick)
 

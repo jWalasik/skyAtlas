@@ -1,16 +1,11 @@
 .menu-container {
-  padding: 1rem;
   position: relative;
-  background: linear-gradient(to right, rgb(0, 174, 255), white, rgb(0, 119, 255), white);
-  border-radius: 15px;
-  padding: 2px;
+  border: 1px solid rgb(0, 181, 236);
+  border-radius: 22px;
   position: absolute;
   transform: scale(0);
   transition: all .4s;
-  background-size: 300% 300%;
   z-index: 3;
-  animation: gradientFloat 3s ease alternate infinite;
-  box-shadow: greenyellow;
 }
 
 @keyframes gradientFloat {
@@ -26,7 +21,7 @@
 }
 
 .menu {
-  background: black;
+  background: rgba(50, 50, 50, 0.75);
   color: white;
   display: flex;
   flex-direction: column;
@@ -34,9 +29,12 @@
   align-items: center;
   min-width: 320px;
   min-height: 568px;
-  border-radius: 15px;
+  border-radius: 22px;
+  padding: 22px;
+  /* box-shadow: 0px 7px 10px 0px rgb(17,17,17),
+  inset 0px 1px 1px 0px rgba(250, 250, 250, .2),
+  inset 0px -12px 35px 0px rgba(0, 0, 0, .5); */
 }
-
 .menu--open {
   transform: scale(1);
   top: 50%;
@@ -45,8 +43,8 @@
 
 .menu-button {
   box-shadow: 0px 7px 10px 0px rgb(17,17,17),
-  inset 0px 1px 1px 0px rgba(250, 250, 250, .2),
-  inset 0px -12px 35px 0px rgba(0, 0, 0, .5);
+              inset 0px 1px 1px 0px rgba(250, 250, 250, .2),
+              inset 0px -12px 35px 0px rgba(0, 0, 0, .5);
   height: 44px;
   border: none;
   border-radius: 22px;
@@ -54,13 +52,29 @@
   background-color: rgb(83,87,93);
   text-transform: capitalize;
 }
-
-.button__close {
-  width: 100px;
-  color: rgb(233, 57, 57);
+.menu-button:hover {
+  filter: drop-shadow(0 0 7px #00ccff);
 }
-.button__item {
+.menu-button:active {
+  box-shadow: 0px 0px 0px 0px rgb(34,34,34),
+              0px 3px 7px 0px rgb(17,17,17),
+              inset 0px 2px 2px 0px rgba(250, 250, 250, .2),
+              inset 0px -10px 35px 5px rgba(0, 0, 0, .5);
+  background-color: rgb(83,87,93);
+}
 
+.menu-button__close {
+  width: 100px;
+  color: rgb(202, 50, 50);
+}
+.menu-button__close:hover {
+  filter: drop-shadow(0 0 7px rgb(202, 50, 50));
+}
+
+.menu-button__item {
+  width: 100%;
+  color: #68bbff;
+  margin: 10px 10px 10px 0;
 }
 
 ul {
@@ -115,35 +129,6 @@ ul {
 
 .menu-item__label:hover::after {
   box-shadow:0 0 25px #00ccff;
-}
-
-.menu-item__button {
-  color: #68bbff;
-  background-color: rgb(83,87,93);
-  margin: 10px 10px 10px 0;
-  font-size: 18px;
-  width: 100%;
-  height: 44px;
-  border: 0;
-  border-radius: 20px;
-  text-align: center;
-  /* text-shadow: 0px 1px 1px rgba(250,250,250,0.1); */
-  box-shadow: 0px 7px 10px 0px rgb(17,17,17),
-              inset 0px 1px 1px 0px rgba(250, 250, 250, .2),
-              inset 0px -12px 35px 0px rgba(0, 0, 0, .5);
-  text-transform: capitalize;
-  transition: all .3s;
-}
-
-.menu-item__button:active {
-  box-shadow: 0px 0px 0px 0px rgb(34,34,34),
-              0px 3px 7px 0px rgb(17,17,17),
-              inset 0px 2px 2px 0px rgba(250, 250, 250, .2),
-              inset 0px -10px 35px 5px rgba(0, 0, 0, .5);
-  background-color: rgb(83,87,93);
-}
-.menu-item__button:hover {
-  filter: drop-shadow(0 0 7px #00ccff);
 }
 
 .menu-item__slider {
