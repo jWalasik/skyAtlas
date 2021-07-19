@@ -1,5 +1,6 @@
 import { debounce } from "../helperfunctions.js";
 import { useLocation } from "./permissions.js"
+import * as THREE from '../lib/three.module.js'
 
 const defaultSettings = {
   motionControl: (typeof window.orientation !== 'undefined') ? true : false,
@@ -9,7 +10,8 @@ const defaultSettings = {
   graticule: true,
   planets: true,
   names: false,
-  twinkling: true
+  twinkling: true,
+  intensity: 1
 }
 
 const Menu = async (initialValues) => {
@@ -39,7 +41,7 @@ const Menu = async (initialValues) => {
       true
     )    
   }
-  function getSettings() {
+  async function getSettings() {
     return caches.has('skyAtlas-settings').then(exists => {
       if(!exists) {
         return initialValues ? initialValues : defaultSettings
@@ -93,33 +95,38 @@ const Menu = async (initialValues) => {
     return button
   }
 
-  const Slider = (id, fn) => {
+  const Slider = (id, fn, min, max, step) => {
     const slider = document.createElement('label'),
           input = document.createElement('input'),
           output = document.createElement('output')
 
     slider.innerText = id.split(/(?=[A-Z])/).join(' ')
     slider.classList = 'menu-item__slider'
+
+    slider.appendChild(input)
     input.id = id
     input.type = 'range'
-    input.value = SETTINGS.magnitudeFilter
-    input.min = 0.0
-    input.max = 12.0
-    input.step = 0.1
+    input.min = min || 0.0
+    input.max = max || 12.0
+    input.step = step || 0.1
     input.orient = 'vertical'
-    input.oninput = 'output.value=parseInt(id.value)'
-
+    input.value = SETTINGS[id]
     input.classList = 'slider-input'
-    input.addEventListener('input', fn)
-    input.dispatchEvent(new Event('input'))
-    slider.appendChild(input)
 
     output.classList = 'slider-output'
     output.htmlFor = id
-    output.id = id + '-output'
-    output.innerText = input.value
-    slider.appendChild(output)
-    
+    output.name= id+'-output'
+    output.id = id+'-output'
+    output.innerHTML = input.value;
+
+    (async() => {
+      //need to wait for dom operation to complete before accessing output
+      await slider.appendChild(output)
+      input.dispatchEvent(new Event('input'))
+    })()
+
+    input.addEventListener('input', fn)
+
     return slider
   }
 
@@ -150,6 +157,8 @@ const Menu = async (initialValues) => {
   //HANDLERS
   //visuals
   navList.appendChild(LI(Slider('magnitudeFilter', filterStars)))
+  navList.appendChild(LI(Slider('intensity', setIntensity, 0.5, 3, 0.1)))
+
   navList.appendChild(LI(ToggleSwitch('asterisms', toggleItem)))
   navList.appendChild(LI(ToggleSwitch('boundaries', toggleItem)))
   navList.appendChild(LI(ToggleSwitch('graticule', toggleItem)))
@@ -166,11 +175,10 @@ const Menu = async (initialValues) => {
   //functions
   function filterStars(e) {
     window.settings[e.target.id] = e.target.value
-    const output = document.getElementById(`${e.target.id}-output`)
     const value = e ? e.target.value : SETTINGS[e.target.id]
     const idx = Math.floor(value)
-
-    output.innerText = e.target.value == 12 ? '12+' : e.target.value
+    const output = document.getElementById(`${e.target.id}-output`)
+    output.innerHTML = e.target.value
     const steps = [0,51,175,521,1616,5018,15450,41137,83112,107927,115505,117903,118735,118735] //magnitude ranges - 0.0, 1.0, 2.0 etc
     const interpolate = Math.round(steps[idx] + (steps[idx+1] - steps[idx]) * (value%1))
     window.scene.traverse(child => {
@@ -179,10 +187,24 @@ const Menu = async (initialValues) => {
       }
     })
   }
+
+  function setIntensity(e) {
+    const prev = window.settings[e.target.id] || 1
+    const output = document.getElementById(`${e.target.id}-output`)
+
+    window.settings[e.target.id] = e.target.value
+    output.innerHTML = e.target.value
+    window.scene.traverse(child => {
+      if(child.type === 'Points') {
+        const newSizes = child.geometry.attributes.size.array.map(val => val / prev * e.target.value)
+        child.geometry.setAttribute('size', new THREE.Float32BufferAttribute(newSizes, 1))
+      }
+    })
+  }
   
   function toggleItem(e) {
     window.settings[e.target.id] = e.target.checked
-    e.target.parentElement.classList.toggle('checked')
+    e.target.checked && e.target.parentElement.classList.toggle('checked')
     
     window.scene.traverse(child => {
       if(child.name === e.target.id) {
