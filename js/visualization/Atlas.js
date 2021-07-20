@@ -31,7 +31,7 @@ const Atlas = function () {
   const CAMERA = window.camera = new THREE.PerspectiveCamera(60, width/height, .1, 100000)
   CAMERA.zoom = 1
   //old shaders are not compatible with webgl2, thus using previous renderer version - deprecation incoming, upgrade advised
-  const renderer = new THREE.WebGL1Renderer({alpha: true});
+  const renderer = window.renderer = new THREE.WebGL1Renderer({alpha: true});
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(width, height)
 

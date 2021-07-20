@@ -189,11 +189,13 @@ const Menu = async (initialValues) => {
   }
 
   function setIntensity(e) {
-    const prev = window.settings[e.target.id] || 1
+    const prev = SETTINGS[e.target.id] !== e.target.value ? SETTINGS[e.target.id] : 1
+
     const output = document.getElementById(`${e.target.id}-output`)
 
     window.settings[e.target.id] = e.target.value
     output.innerHTML = e.target.value
+
     window.scene.traverse(child => {
       if(child.type === 'Points') {
         const newSizes = child.geometry.attributes.size.array.map(val => val / prev * e.target.value)
@@ -204,7 +206,7 @@ const Menu = async (initialValues) => {
   
   function toggleItem(e) {
     window.settings[e.target.id] = e.target.checked
-    e.target.checked && e.target.parentElement.classList.toggle('checked')
+    e.target.checked ? e.target.parentElement.classList.add('checked') : e.target.parentElement.classList.remove('checked')
     
     window.scene.traverse(child => {
       if(child.name === e.target.id) {
