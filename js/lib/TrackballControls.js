@@ -179,12 +179,11 @@ const TrackballControls = function ( object, domElement ) {
 		this.rotateCamera = (function(){
 
 			var axis = new THREE.Vector3(),
-				quaternion = new THREE.Quaternion();
+					quaternion = new THREE.Quaternion();
 
 
 			return function () {
 				var angle = Math.acos( _rotateStart.dot( _rotateEnd ) / _rotateStart.length() / _rotateEnd.length() );
-
 				 if ( angle ) {
 
 					axis.crossVectors( _rotateStart, _rotateEnd ).normalize();
@@ -194,6 +193,7 @@ const TrackballControls = function ( object, domElement ) {
 					quaternion.setFromAxisAngle( axis, -angle );
 					if(1 == 2){
 						//_eye.applyQuaternion( quaternion );
+						console.log('wut')
 						_this.object.up.applyQuaternion( quaternion );
 						_rotateEnd.applyQuaternion( quaternion );
 					}
@@ -216,18 +216,10 @@ const TrackballControls = function ( object, domElement ) {
 			}
 		}());
 	//custom function
-	this.rotateCameraTowards = function (target, mouse) {
-		// _rotateStart.copy( getMouseProjectionOnBall( mouse.x, mouse.y ) );
-		// _rotateEnd.copy( _rotateStart );
-		// const proj = getMouseProjectionOnBall(mouse.x, mouse.y)
-		// console.log(proj)
-		// this.object.lookAt(target)
-
-		// const q = new THREE.Quaternion(-this.object.quaternion.x, -this.object.quaternion.y, this.object.quaternion.z, this.object.quaternion.w)
-		// _eye.applyQuaternion(q)
-		// _rotateEnd.applyQuaternion(q)
-		// _rotateEnd.copy( getMouseProjectionOnBall( -mouse.x, -mouse.y ) );
-		_rotateEnd.add(new THREE.Vector3(0.1,0.1,0.1))
+	this.rotateCameraTowards = function (quaternion) {
+		_eye.applyQuaternion(quaternion)
+		_this.object.up.applyQuaternion(quaternion)
+		_rotateEnd.applyQuaternion(quaternion)
 	}
 
 	this.zoomCamera = function () {

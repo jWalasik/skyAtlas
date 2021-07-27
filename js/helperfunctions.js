@@ -117,6 +117,14 @@ export function vertex([a,b]) {
   );
 }
 
+export function celestialToCartesian(ra, dec, dist) {
+  const x = ((dist * Math.cos(dec)) * Math.cos(ra)),
+        y = ((dist * Math.cos(dec)) * Math.sin(ra)),
+        z = dist * Math.sin(dec);
+
+  return new THREE.Vector3().set(x,y,z)
+}
+
 export function vertex2D(x,y,z, camera, width, height) {
   const p = new THREE.Vector3(x,y,z)
   const vector = p.project(camera.clone())

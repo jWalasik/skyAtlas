@@ -19,7 +19,8 @@ export function highlight() {
   ray.params.Points.threshold = 50
   
   const boundaries = window.scene.getObjectByName('boundaries')
-  let intersects = ray.intersectObjects(boundaries.children, true)
+  if(boundaries) {
+    let intersects = ray.intersectObjects(boundaries.children, true)
     .filter(({object}) => {
       return object.visible
     })
@@ -33,6 +34,8 @@ export function highlight() {
     SELECTED.material.opacity = 0.05
     document.getElementById('object-name').innerHTML = intersects[0].object.userData.asterism
   }
+  }
+
 }
 
 export function zoomSelect(e) {
@@ -60,15 +63,45 @@ function mouseSelect(e) {
   const delta = 10 //distance in pixels
   if(dX < delta && dY < delta) {
     detailedView(SELECTED)
-    const q = new THREE.Quaternion()
-    const ray = new THREE.Raycaster()
-    //use raycaster to project 2d mouse position onto 3d space  
-    ray.setFromCamera(new THREE.Vector2(mouse.x, mouse.y), window.camera)
-    const target = ray.intersectObject(SELECTED)[0].point
+    //geometries are rotated by geolocation, because of that there is an offset between camera and objects
+    //for now use raycasters to get proper angle to rotate, test adding new logic to trackball controls or wrapping camera in rotating object
+    const cRay = new THREE.Raycaster()
+    cRay.setFromCamera(new THREE.Vector2(0,0), window.camera)
+    const center = new THREE.Vector3().copy(cRay.ray.direction)
 
-    q.setFromUnitVectors( window.camera.position.normalize(), target.negate().normalize())
-    window.camera.position.applyQuaternion(q)
+    const tRay = new THREE.Raycaster()
+    tRay.setFromCamera(new THREE.Vector2(mouse.x, mouse.y), window.camera)
+
+    const target = new THREE.Vector3().copy(tRay.ray.direction)
+
+    const rotateEnd = new THREE.Quaternion()
+    rotateEnd.setFromUnitVectors( center, target )
+    const rotateStart = new THREE.Quaternion().set(0, 0 , 0 , -1)
+
+    //window.controls.active.rotateCameraTowards(q)
+    //window.camera.position.applyQuaternion(rotateEnd)
+
+    const rotate = (acc) => {
+      setTimeout(()=>{
+        if(rotateStart.equals(rotateEnd)) return
+        rotateStart.rotateTowards(rotateEnd, acc)
+        window.camera.position.applyQuaternion(rotateStart)
+        rotate(acc + acc)
+      }, 20)
+    }
+    rotate(0.0014)    
   }
 }
 
+const levels = {
+  galaxy: undefined,
+  constellation: undefined,
+  object: undefined,
+}
+export const changeLevel = (next) => {
+  console.log('change view')
+  const copy = window.scene.children[0].clone()
+  levels[window.scene.name] = copy
 
+  window.scene.remove(window.scene.children[0])
+}

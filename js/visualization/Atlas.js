@@ -27,6 +27,7 @@ const Atlas = function () {
     considered bad practice might need refactor
   */
   const SCENE = window.scene = new THREE.Scene()
+  SCENE.name = 'atlas'
   SCENE.selectable = []
   const CAMERA = window.camera = new THREE.PerspectiveCamera(60, width/height, .1, 100000)
   CAMERA.zoom = 1
@@ -60,7 +61,7 @@ const Atlas = function () {
   const geometries = new THREE.Object3D()
   this.scenes[this.currentScene].add( geometries )
   this.scenes[this.currentScene].add( CAMERA )
-  geometries.name = 'geometries'
+  geometries.name = 'galaxy'
 
   //GEOMETRIES
   console.time('geometries')

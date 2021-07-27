@@ -31,7 +31,8 @@ export function useLocation() {
       computeZenith(latitude, longitude).normalize(),
       center.normalize()
     )
-    const geometries = window.scene.getObjectByName('geometries').quaternion
+    const geometries = window.scene.getObjectByName('galaxy').quaternion
+    console.log(geometries)
     rotateCameraTo(geometries, target, .01)
   },
   err=>{
@@ -60,7 +61,7 @@ export function useDeviceOrientation() {
           center.normalize()
         )
         cube.position.set(target)
-        const geometries = window.scene.getObjectByName('geometries').quaternion
+        const geometries = window.scene.getObjectByName('galaxy').quaternion
         rotateCameraTo(geometries,target,1)
       },
       100, 
