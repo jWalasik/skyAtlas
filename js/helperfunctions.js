@@ -20,20 +20,18 @@ export function debounce(func, wait, immediate) {
 };
 //true logarithmic scaling doesnt seem to work well, settled with non scientific version
 export function scaleMag(mag) {
-  //prevent expontential scaling for brightest objects
-  // const maxMag = 3.0
-  // let intensity = (1 / Math.pow(10, (mag - maxMag) / 2.5)).clamp(0, 10)
-  // if(intensity < .5) intensity = intensity * 0.75 + 0.125
-  // const radius = (Math.sqrt(intensity)).clamp(1,6)
-  // return radius*2
+  const percent = (val, min, max) => {
+    const invert = max - val
+    return (invert - min) / (max - min)
+  }
 
   //walasik constants aka stupid scale
   let size
   if(mag>6) { //naked eye visibility
-    size = 1.1
+    size = percent(mag, 6, 20) * (2.0 - 1.0) + 0.7
   } else if(mag<3.5) {  //most named stars
-    size = 6
-  } else size = 2.2
+    size = percent(mag, -5, 3.5) * (8.0 - 5.0) + 5.2
+  } else size = percent(mag, 3.0, 6) * (2.2 - 1.6) + 3.0
   return size
 }
 

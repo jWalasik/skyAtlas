@@ -10,7 +10,7 @@ export function setControlEvents() {
   display.addEventListener('mousemove', getCoords, false)
   display.addEventListener('mousedown', isDrag, false);
   display.addEventListener('mouseup', mouseSelect, false);
-  display.addEventListener('wheel', zoomSelect, true)
+  //display.addEventListener('wheel', zoomSelect, true)
 }
 
 export function highlight() {
@@ -39,6 +39,7 @@ export function highlight() {
 }
 
 export function zoomSelect(e) {
+  if(!window.scene.getObjectByName('galaxy')) return
   if(e.deltaY < 0 && window.camera.position.z <= 100) {
     detailedView(SELECTED)
   }
@@ -57,6 +58,7 @@ function getCoords({clientX, clientY}) {
 }
 
 function mouseSelect(e) {
+  if(e.which !== 1) return
   const dX = Math.abs(e.offsetX - startX),
         dY = Math.abs(e.offsetY - startY)
 
@@ -99,7 +101,6 @@ const levels = {
   object: undefined,
 }
 export const changeLevel = (next) => {
-  console.log('change view')
   const copy = window.scene.children[0].clone()
   levels[window.scene.name] = copy
 

@@ -15,6 +15,7 @@ import Bounds from './bounds.js'
 import Graticule from './graticule.js'
 import StarField from './starField.js'
 import Planets from './planets.js'
+import {animateObject, Object} from './object.js'
 import {handlePermissions} from '../controls/permissions.js'
 import {highlight, setControlEvents} from '../controls/selector.js'
 import { debounce } from '../helperfunctions.js'
@@ -68,14 +69,20 @@ const Atlas = function () {
   const graticule = Graticule()
   geometries.add( graticule )
   
-  const boundaries = Bounds()
-  geometries.add( boundaries )
+  // const boundaries = Bounds()
+  // geometries.add( boundaries )
 
-  const asterisms = Asterisms()
-  geometries.add( asterisms )
+  // const asterisms = Asterisms()
+  // geometries.add( asterisms )
 
-  const starField = StarField()
-  geometries.add( starField )
+  // const starField = StarField()
+  // geometries.add( starField )
+
+
+  const object = Object('Betelgeuse', 'star')
+  console.log(object)
+  geometries.add(object.surface)
+  geometries.add(object.corona)
   
   //promise due to async texture loader
   Planets().then(planets => {
@@ -104,6 +111,9 @@ const Atlas = function () {
     CONTROLS.active.update(this.clock.getDelta())
     debounce(highlight(), .5, false)
     starFieldTwinkle()
+
+    animateObject()
+
     requestAnimationFrame(this.render.bind(this))
     renderer.render(SCENE, CAMERA)
     composer.render()
