@@ -33,6 +33,9 @@ const Bounds = () => {
     bounds.name = name
     bounds.userData = {
       type: 'constellation',
+      fullName: undefined,
+      minorStars: [],
+      majorStars: [],
       linkedObjects: new Set([]), //string refrences for planets, messier objects and other bodies that might temporary appear in constellation
       asterism: undefined
     }

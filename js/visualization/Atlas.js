@@ -7,19 +7,15 @@ import {UnrealBloomPass} from '../lib/postprocessing/UnrealBloomPass.js'
 import {RenderPass} from '../lib/postprocessing/RenderPass.js'
 import {EffectComposer} from '../lib/postprocessing/EffectComposer.js'
 
+import Galaxy from './galaxy.js'
 import Menu from '../controls/menu.js'
-
 import deviceInfo from '../deviceInfo.js'
-import Asterisms from './asterisms.js'
-import Bounds from './bounds.js'
-import Graticule from './graticule.js'
-import StarField from './starField.js'
-import Planets from './planets.js'
-import {animateObject, Object} from './object.js'
+
 import {handlePermissions} from '../controls/permissions.js'
 import {highlight, setControlEvents} from '../controls/selector.js'
 import { debounce } from '../helperfunctions.js'
 import { starFieldTwinkle } from './animate.js'
+
 
 const Atlas = function () {
   const {height, width, mobile, webGL} = deviceInfo()
@@ -58,36 +54,10 @@ const Atlas = function () {
   this.clock = new THREE.Clock
   CAMERA.position.set(0,0,1) //z needs to be greater than 0 due to gimbal stuff
 
-  //store geometries in master object to ease rotations
-  const geometries = new THREE.Object3D()
-  this.scenes[this.currentScene].add( geometries )
   this.scenes[this.currentScene].add( CAMERA )
-  geometries.name = 'galaxy'
 
   //GEOMETRIES
-  console.time('geometries')
-  const graticule = Graticule()
-  geometries.add( graticule )
-  
-  // const boundaries = Bounds()
-  // geometries.add( boundaries )
-
-  // const asterisms = Asterisms()
-  // geometries.add( asterisms )
-
-  // const starField = StarField()
-  // geometries.add( starField )
-
-
-  const object = Object('Betelgeuse', 'star')
-  console.log(object)
-  geometries.add(object.surface)
-  geometries.add(object.corona)
-  
-  //promise due to async texture loader
-  Planets().then(planets => {
-    geometries.add( planets )
-  })
+  Galaxy()
 
   //CONTROLS
   Menu()
@@ -111,8 +81,8 @@ const Atlas = function () {
     CONTROLS.active.update(this.clock.getDelta())
     debounce(highlight(), .5, false)
     starFieldTwinkle()
-
-    animateObject()
+    //if rendering object closeup animate
+    //animateObject()
 
     requestAnimationFrame(this.render.bind(this))
     renderer.render(SCENE, CAMERA)

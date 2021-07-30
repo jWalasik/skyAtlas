@@ -1,8 +1,8 @@
 import * as THREE from '../lib/three.module.js'
 
 export const animateObject = () => {
-  coronaUniform.time.value += 0.02
-  surfaceUniform.time.value += 0.07
+  coronaUniform.time.value += 0.01
+  surfaceUniform.time.value += 1.0
 }
 
 const coronaUniform = {
@@ -13,7 +13,10 @@ const coronaUniform = {
 
 const surfaceUniform = {
   time: {type: 'f', value: 0.1},
-  speed: {type: 'f', value: 0.02},
+  speed: {type: 'f', value: 0.1},
+  scale: {type: 'f', value: .1},
+  contrast: {type: 'f', value: .7},
+  brightness: {type: 'f', value: .5},
   resolution: {type: 'v2', value: new THREE.Vector2()},
   color: {type: 'v3', value: new THREE.Vector3()},
   veinColor: {type: 'v3', value: new THREE.Vector3(1,1,1)},
@@ -23,8 +26,8 @@ const surfaceUniform = {
 export const Object = (name, type) => {
   coronaUniform.resolution.value.x = 1
   coronaUniform.resolution.value.y = 1
-  coronaUniform.color.value.x = .1
-  coronaUniform.color.value.y = .1
+  coronaUniform.color.value.x = .333
+  coronaUniform.color.value.y = .2
   coronaUniform.color.value.z = .1
 
   const coronaMaterial = new THREE.ShaderMaterial({
@@ -41,9 +44,9 @@ export const Object = (name, type) => {
   surfaceUniform.resolution.value.x = 1; // window.innerWidth;
   surfaceUniform.resolution.value.y = 1;
   surfaceUniform.iChannel0.value.wrapS = surfaceUniform.iChannel0.value.wrapT = THREE.RepeatWrapping;
-  surfaceUniform.color.value.x = .2
+  surfaceUniform.color.value.x = .666
   surfaceUniform.color.value.y = .5
-  surfaceUniform.color.value.z = .5
+  surfaceUniform.color.value.z = .3
 
   const surfaceMaterial = new THREE.ShaderMaterial({
     uniforms: surfaceUniform,
@@ -63,150 +66,201 @@ export const Object = (name, type) => {
 
 const shaders = {
   surfaceVertex: `
-    // Set the precision for data types used in this shader
     precision highp float;
-    
-    // Default attributes provided by THREE.js. Attributes are only available in the
-    // vertex shader. You can pass them to the fragment shader using varyings
-    //attribute vec3 position;
-    //attribute vec3 normal;
-    //attribute vec2 uv;
+    precision highp int;
     attribute vec2 uv2;
     
-    // Examples of variables passed from vertex to fragment shader
-    varying vec3 vPosition;
+    uniform float speed;
+    uniform float time;
+    uniform float scale;
+    
+    varying vec3 vTexCoord3D;
     varying vec3 vNormal;
-    varying vec2 vUv;
-    varying vec2 vUv2;
-    varying vec3 fNormal;
+    varying vec3 vViewPosition;
     varying vec3 fPosition;
+    varying vec3 fNormal;
     
-    void main() {
+    void main( void ) {
     
-        // To pass variables to the fragment shader, you assign them here in the
-        // main function. Traditionally you name the varying with vAttributeName
-        vNormal = normal;
-        vUv = uv;
-        vUv2 = uv2;
-        vPosition = position;
-        //glow
-        fNormal = normalize(normalMatrix*normal);
-        vec4 pos = modelViewMatrix * vec4(position, 1.0);
-        fPosition = pos.xyz;
+      vec4 mPosition = modelMatrix * vec4( position, 1.0 );
+      vNormal = normalize( normalMatrix * normal );
+      vViewPosition = cameraPosition - mPosition.xyz;
     
-        // This sets the position of the vertex in 3d space. The correct math is
-        // provided below to take into account camera and object data.
-        //gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
-        gl_Position = projectionMatrix * pos;
+      vTexCoord3D = scale * ( position.xyz + vec3( 0.0, 0.0, time * speed ) );
+      gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+    
     }
   `,
   surfaceFragment: `
-    precision highp float;
+  // http://alteredqualia.com/three/examples/webgl_shader_fireball.html
+  precision highp float;
+  precision highp int;
+  
+  //
+  // Description : Array and textureless GLSL 3D simplex noise function.
+  //      Author : Ian McEwan, Ashima Arts.
+  //  Maintainer : ijm
+  //     Lastmod : 20110409 (stegu)
+  //     License : Copyright (C) 2011 Ashima Arts. All rights reserved.
+  //               Distributed under the MIT License. See LICENSE file.
+  //
+  
+  uniform float time;
+  uniform float contrast;
+  uniform float brightness;
+  uniform vec3 color;
+  
+  varying vec3 vTexCoord3D;
+  varying vec3 vNormal;
+  varying vec3 vViewPosition;
+  varying vec3 fPosition;
+  varying vec3 fNormal;
+  
+  vec4 permute( vec4 x ) {  
+    return mod( ( ( x * 34.0 ) + 1.0 ) * x, 289.0 );  
+  }
+  
+  vec4 taylorInvSqrt( vec4 r ) {  
+    return 1.79284291400159 - 0.85373472095314 * r;  
+  }
+  
+  float snoise( vec3 v ) {  
+    const vec2 C = vec2( 1.0 / 6.0, 1.0 / 3.0 );
+    const vec4 D = vec4( 0.0, 0.5, 1.0, 2.0 );
+  
+    // First corner
+  
+    vec3 i  = floor( v + dot( v, C.yyy ) );
+    vec3 x0 = v - i + dot( i, C.xxx );
+  
+    // Other corners
+  
+    vec3 g = step( x0.yzx, x0.xyz );
+    vec3 l = 1.0 - g;
+    vec3 i1 = min( g.xyz, l.zxy );
+    vec3 i2 = max( g.xyz, l.zxy );
+  
+    //  x0 = x0 - 0. + 0.0 * C
+    vec3 x1 = x0 - i1 + 1.0 * C.xxx;
+    vec3 x2 = x0 - i2 + 2.0 * C.xxx;
+    vec3 x3 = x0 - 1. + 3.0 * C.xxx;
+  
+    // Permutations
+  
+    i = mod( i, 289.0 );
+    vec4 p = permute( permute( permute(
+         i.z + vec4( 0.0, i1.z, i2.z, 1.0 ) )
+         + i.y + vec4( 0.0, i1.y, i2.y, 1.0 ) )
+         + i.x + vec4( 0.0, i1.x, i2.x, 1.0 ) );
+  
+    // Gradients
+    // ( N*N points uniformly over a square, mapped onto an octahedron.)
+  
+    float n_ = 1.0 / 7.0; // N=7
+  
+    vec3 ns = n_ * D.wyz - D.xzx;
+  
+    vec4 j = p - 49.0 * floor( p * ns.z *ns.z );  //  mod(p,N*N)
+  
+    vec4 x_ = floor( j * ns.z );
+    vec4 y_ = floor( j - 7.0 * x_ );    // mod(j,N)
+  
+    vec4 x = x_ *ns.x + ns.yyyy;
+    vec4 y = y_ *ns.x + ns.yyyy;
+    vec4 h = 1.0 - abs( x ) - abs( y );
+  
+    vec4 b0 = vec4( x.xy, y.xy );
+    vec4 b1 = vec4( x.zw, y.zw );
+  
+    vec4 s0 = floor( b0 ) * 2.0 + 1.0;
+    vec4 s1 = floor( b1 ) * 2.0 + 1.0;
+    vec4 sh = -step( h, vec4( 0.0 ) );
+  
+    vec4 a0 = b0.xzyw + s0.xzyw * sh.xxyy;
+    vec4 a1 = b1.xzyw + s1.xzyw * sh.zzww;
+  
+    vec3 p0 = vec3( a0.xy, h.x );
+    vec3 p1 = vec3( a0.zw, h.y );
+    vec3 p2 = vec3( a1.xy, h.z );
+    vec3 p3 = vec3( a1.zw, h.w );
+  
+    // Normalise gradients
+  
+    vec4 norm = taylorInvSqrt( vec4( dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3) ) );
+    p0 *= norm.x;
+    p1 *= norm.y;
+    p2 *= norm.z;
+    p3 *= norm.w;
+  
+    // Mix final noise value
+  
+    vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3) ), 0.0 );
+    m = m * m;
+    return 42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1),
+                  dot(p2,x2), dot(p3,x3) ) );
+  
+  }
+  
+  float heightMap( vec3 coord ) {
+  
+    float n = abs( snoise( coord ) );
+  
+    n += 0.25   * abs( snoise( coord * 2.0 ) );
+    n += 0.25   * abs( snoise( coord * 4.0 ) );
+    n += 0.125  * abs( snoise( coord * 8.0 ) );
+    n += 0.0625 * abs( snoise( coord * 16.0 ) );
+  
+    return n;
+  
+  }
+  
+  void main( void ) {
+  
+    // height
+  
+    float n = heightMap( vTexCoord3D );
+  
+    // color
+  
+    vec3 baseColor = color * vec3( color.r * 1.5 - n + 0.5, color.g - n + 0.5, color.b * 0.5 - n + 0.5 );
+  
+    // normal
+  
+    const float e = 0.001;
+  
+    float nx = heightMap( vTexCoord3D + vec3( e, 0.0, 0.0 ) );
+    float ny = heightMap( vTexCoord3D + vec3( 0.0, e, 0.0 ) );
+    float nz = heightMap( vTexCoord3D + vec3( 0.0, 0.0, e ) );
+  
+    vec3 normal = normalize( vNormal + contrast * vec3( n - nx, n - ny, n - nz ) / e );
+  
+    // diffuse light
+  
+    vec3 vLightWeighting = vec3( 0.1 ) * brightness;
+  
+    vec4 lDirection = viewMatrix * vec4( normalize( vec3( 1.0, 0.0, 0.5 ) ), 0.0 );
+    float directionalLightWeighting = dot( normal, normalize( lDirection.xyz ) ) * 0.25 + 0.75;
+    vLightWeighting += vec3( 1.0 ) * directionalLightWeighting;
+  
+    // specular light
+  
+    vec3 dirHalfVector = normalize( lDirection.xyz + normalize( vViewPosition ) );
+  
+    float dirDotNormalHalf = dot( normal, dirHalfVector );
+  
+    float dirSpecularWeight = 0.0;
+    if ( dirDotNormalHalf >= 0.0 )
+      dirSpecularWeight = ( 1.0 - n ) * pow( dirDotNormalHalf, 5.0 );
+  
+    vLightWeighting += color * dirSpecularWeight * n * 2.0;
 
-    uniform float time;
-    uniform float speed;
-    uniform vec3 veinColor;
-    //uniform float veinBrightness;
-    uniform vec3 color;
-    uniform vec2 resolution;
-    varying vec2 vUv;
-    varying vec3 fPosition;
-    varying vec3 fNormal;
+    vec3 eye = normalize(-fPosition.xyz);
+    float rim = smoothstep(0.0, 1.0, 1.0 - dot(normal, eye));
     
-    uniform sampler2D iChannel0;
-    
-    #define PI 3.14159265
-    
-    //vec3 saturate( vec3 i ) {return clamp( i, 0.0, 1.0 );}
-    //float saturate( float i ) {return clamp( i, 0.0, 1.0 );}
-    
-    vec4 texture2DNearest( sampler2D _tex, vec2 _uv, vec2 _reso ){
-      return texture2D( _tex, ( floor( _uv * _reso ) + 0.5 ) / _reso );
-    }
-    
-    float expCurve( float _in, float _lv ){
-      return sign( 0.5 - _in ) * ( exp( -abs( _in - 0.5 ) * _lv ) - 1.0 ) * 0.5 + 0.5;
-    }
-    
-    vec4 noise( vec2 _uv, vec2 _mul, vec2 _off, float _iter, float _lacu ){
-      vec4 sum = vec4( 0.0 );
-    
-      for( float i=0.0; i<99.0; i+=1.0 ){
-          vec2 uv0 = ( ( _uv ) * _mul + _off ) * 0.01 * exp( i * _lacu ) + time * speed * i * 0.01;
-          vec2 uv1 = ( ( _uv + vec2( 1.0, 0.0 ) ) * _mul + _off ) * 0.01 * exp( i * _lacu ) + time * speed * i * 0.01;
-          vec4 tex0 = texture2D( iChannel0, uv0 );
-          vec4 tex1 = texture2D( iChannel0, uv1 );
-          vec4 tex = mix( tex1, tex0, expCurve( _uv.x, 10.0 ) );
-          sum += tex / pow( 2.0, i + 1.0 );
-          if( _iter < i ){ break; }
-      }
-    
-      return sum;
-    }
-    
-    vec4 Body_main(){
-          vec4 Body_gl_FragColor = vec4(0.0);
-          vec2 uv = mod( vUv.xy / resolution, 1.0 );
-          uv = mod( uv + vec2( 0.5, 0.0 ), 1.0 );
-    
-          // 1
-          vec3 col1 = vec3( 0.0 );
-    
-          float line = 0.0;
-          for( float i=0.0; i<8.5; i+=1.0 ){
-              vec2 mul = vec2( exp( i * 0.3 ) );
-              vec2 off = vec2( i * 423.1 );
-    
-              float lineL = 1.0 - abs( noise( uv, mul * vec2( 2.0, 1.5 ), off, 2.0, 0.4 ).x - 0.5 ) * 2.0;
-              float lineS = 1.0 - abs( noise( uv, mul * vec2( 14.0 ), off + 10.0, 6.0, 0.7 ).x - 0.5 ) * 2.0;
-    
-              float lineT = expCurve( pow( lineL, 200.0 ), 7.0 ) * 1.0;
-              lineT += pow( lineL, 12.0 ) * expCurve( pow( lineS, 40.0 ), 10.0 ) * 1.0;
-              //lineT = saturate( lineT );
-              lineT *= expCurve( noise( uv, mul * 7.0, off + 20.0, 6.0, 1.0 ).x * 0.88, 20.0 );
-    
-              line += lineT * exp( -i * 0.01 );
-          }
-    
-          //line = saturate( line );
-    
-          col1 = vec3( 0.9 ) * color;
-    
-          col1 = mix(
-              col1,
-              color * 0.8,
-              expCurve( noise( uv, vec2( 4.0 ), vec2( 40.0 ), 5.0, 0.7 ).x * 0.7, 14.0 )
-          );
-    
-          col1 = mix(
-              col1,
-              color * 0.8,
-              expCurve( noise( uv, vec2( 4.0 ), vec2( 50.0 ), 5.0, 0.7 ).x * 0.7, 5.0 ) * 0.7
-          );
-    
-          col1 = mix(
-              col1,
-              color * 2.0, //4.0 = veinBrightness
-              line
-          );
-    
-          vec3 col = col1;
-          Body_gl_FragColor = vec4(col, 1.0);
-          return Body_gl_FragColor *= 1.0;
-    
-      }
-    vec4 Glow_main(){
-      vec4 Glow_gl_FragColor = vec4(1.0);
-      vec3 normal = normalize(fNormal);
-      vec3 eye = normalize(-fPosition.xyz);
-      float rim = smoothstep(0.2, 1.2, 1.0 - dot(normal, eye));
-      Glow_gl_FragColor = vec4( clamp(rim, 0.0, 1.0) * 1.0 * color, 1.0 );
-      return Glow_gl_FragColor *= 1.0;
-    }
-    
-    void main(){
-          gl_FragColor = (Body_main() + Glow_main());
-    }
+    vec3 shade = clamp(rim, 0.1, 0.7) * 0.5 * baseColor;
+
+    gl_FragColor = vec4( shade * vLightWeighting, 1.0 );
+  }
   `,
   coronaVertex: `
     varying vec2 vUv;

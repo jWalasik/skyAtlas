@@ -10,6 +10,7 @@ const Constellation = (constellation) => {
   const container = new THREE.Object3D()
   container.name = `${constellation.name}-detailed`
   container.selectable = []
+  
   window.scene.add(container)
 
   const background = [],

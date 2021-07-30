@@ -9,7 +9,7 @@ const StarField = (constellation) => {
       vertices = [], 
       colors = [], 
       sizes = [],
-      constellations = []
+      constellations = {}
       
   const starData = !constellation ? database.getData('hyg') : constellation
 
@@ -18,13 +18,11 @@ const StarField = (constellation) => {
     vertices.push(x,y,z)
     
     const {r,g,b} = starColor(star.ci, star.spect)
-    const color = new THREE.Color(`rgb(${r},${g},${b})`)
-    
+    const color = new THREE.Color(`rgb(${r},${g},${b})`)    
     colors.push(color.r,color.g,color.b)
-
     sizes.push(scaleMag(star.mag))
     
-    constellations.push(star.con)    
+    constellations[star.con] ? constellations[star.con].push(star) : constellations[star.con] = [star]
   })
   geometry.addAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
   geometry.addAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
@@ -56,7 +54,47 @@ const StarField = (constellation) => {
   })
 
   const starField = new THREE.Points(geometry, starMaterial)
+
   starField.name = 'starField'
+
+  //idle callback does not work on iOS based devices, if unsupported process stars immediately otherwise wait for all geometries to load
+  if(typeof(window.requestIdleCallback) != 'undefined') {
+    window.requestIdleCallback(() => sortStars())
+  } else sortStars()
+
+  //links each star with appropritate constellation for easier interaction handling
+  const sortStars = () => {
+    console.log(constellations)
+    Object.entries(constellations).forEach(con => {
+      //some stars do not have corresponding constellation, ignore them
+      if(con.name === '' || !con.name) return
+      let bounds
+      //serpens constellation is divided into two fields, need to link both
+      if(con.name === "Ser") {
+        bounds = [window.scene.getObjectByName('Ser1'), window.scene.getObjectByName('Ser2')]
+        con[1].forEach(star => {
+          if(star.name !== "") {
+            bounds[0].userData.majorStars.push(star)
+            bounds[1].userData.majorStars.push(star)
+          } else {
+            bounds[0].userData.minorStars.push(star)
+            bounds[1].userData.minorStars.push(star)
+          }
+        })
+      } else {
+        bounds = window.scene.getObjectByName(con[0])
+        con[1].forEach(star => {
+          if(star.name !== "") {
+            console.log(con.name)
+            bounds.userData.majorStars.push(star)
+          } else {
+            bounds.userData.minorStars.push(star)
+          }
+        })
+      }
+    })
+  }
+
 
   return starField  
 }

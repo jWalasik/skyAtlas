@@ -64,6 +64,10 @@ export default async function init() {
 
         return item
       }
+      if(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
+        info.appendChild(addInfo("iOS based devices are currently unsupported, application will not work as expected"))
+      }
+
       info.appendChild(addInfo("Manual calibration is currently disabled, if your screen doesn't reflect actual sky turn off 'North Orientation' option in menu and restart application while facing actual north."))
 
       info.appendChild(addInfo("You may access menu by using Right Mouse Button or Long Press on mobile"))

@@ -14,7 +14,9 @@ const Asterisms = () => {
     let asterism = new THREE.Object3D()
     asterism.name = fullName
     //link asterism to constellation for easier event handling
-    window.scene.getObjectByName(abbrv).userData.asterism = fullName
+    const boundary = window.scene.getObjectByName(abbrv).userData
+    boundary.asterism = asterism
+    boundary.fullName = fullName
     //lines are separated to prevent connecting incorrect points
     geometry.coordinates.forEach(path => {
       let lineGeometry = new THREE.Geometry()

@@ -32,7 +32,6 @@ export function useLocation() {
       center.normalize()
     )
     const geometries = window.scene.getObjectByName('galaxy').quaternion
-    console.log(geometries)
     rotateCameraTo(geometries, target, .01)
   },
   err=>{
