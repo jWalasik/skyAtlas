@@ -21,8 +21,9 @@ const StarField = (constellation) => {
     const color = new THREE.Color(`rgb(${r},${g},${b})`)    
     colors.push(color.r,color.g,color.b)
     sizes.push(scaleMag(star.mag))
-    
-    constellations[star.con] ? constellations[star.con].push(star) : constellations[star.con] = [star]
+    let abbrv
+    abbrv = (star.con && star.con !== '') ? star.con : 'unknown'
+    constellations[abbrv] ? constellations[abbrv].push(star) : constellations[abbrv] = [star]
   })
   geometry.addAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
   geometry.addAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
@@ -64,13 +65,12 @@ const StarField = (constellation) => {
 
   //links each star with appropritate constellation for easier interaction handling
   const sortStars = () => {
-    console.log(constellations)
     Object.entries(constellations).forEach(con => {
-      //some stars do not have corresponding constellation, ignore them
-      if(con.name === '' || !con.name) return
+      //around 1600 stars with magnitude 12+ has no corresponding constellation
+      if(con[0] === 'unknown') return
       let bounds
       //serpens constellation is divided into two fields, need to link both
-      if(con.name === "Ser") {
+      if(con[0] === "Ser") {
         bounds = [window.scene.getObjectByName('Ser1'), window.scene.getObjectByName('Ser2')]
         con[1].forEach(star => {
           if(star.name !== "") {
@@ -85,7 +85,6 @@ const StarField = (constellation) => {
         bounds = window.scene.getObjectByName(con[0])
         con[1].forEach(star => {
           if(star.name !== "") {
-            console.log(con.name)
             bounds.userData.majorStars.push(star)
           } else {
             bounds.userData.minorStars.push(star)
@@ -94,7 +93,6 @@ const StarField = (constellation) => {
       }
     })
   }
-
 
   return starField  
 }

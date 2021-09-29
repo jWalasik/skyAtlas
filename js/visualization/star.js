@@ -4,7 +4,6 @@ import { celestialToCartesian, scaleMag, starColor, vertex } from "../helperfunc
 const map = new THREE.TextureLoader().load('./assets/lensflare0_alpha.png')
 
 export const starSimple = ({ci, con, dec, dist, mag, ra, name, spect}) => {
-  console.log(name)
   const starGeo = new THREE.BufferGeometry();
   const {x,y,z} = vertex([ra*15, dec])
   starGeo.setAttribute('position', new THREE.Float32BufferAttribute([x,y,z], 3))
@@ -16,7 +15,7 @@ export const starSimple = ({ci, con, dec, dist, mag, ra, name, spect}) => {
 
   const starMat = new THREE.PointsMaterial({
     color: `#${color.getHexString()}`,
-    size: scaleMag(mag) * 400,
+    size: scaleMag(mag) * 100,
     blending: THREE.AdditiveBlending,
     transparent: true,
     map: map

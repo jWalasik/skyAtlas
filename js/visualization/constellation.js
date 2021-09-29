@@ -1,31 +1,55 @@
+import { changeLevel } from '../controls/selector.js'
 import { GalaxyDB } from '../database.js'
 import * as THREE from '../lib/three.module.js'
-
-const database = new GalaxyDB()
+import { starSimple } from './star.js'
+import StarField from './starField.js'
 
 const Constellation = (constellation) => {
-  const starData = database.getData('hyg')
-        asterismData = database.getData('lines')
-  
+  window.scene.selectable.constellation = []
   const container = new THREE.Object3D()
-  container.name = `${constellation.name}-detailed`
-  container.selectable = []
-  
-  window.scene.add(container)
+  container.name = `${constellation.name}-container`
 
-  const background = [],
-        majorStars = []
+  const asterism = constellation.userData.asterism.clone()
+  container.add(asterism)
 
-  starData.forEach(star => {
-    //filter by name
-    if(star.con == constellation.name) {
-      console.log(star.name)
-      if(!star.name) {
-        background.push(star)
-      } else {
-        majorStars.push(star)
-      }
-    }
+  const background = StarField(constellation.userData.minorStars)
+  container.add(background)
+
+  const majorStars = constellation.userData.majorStars
+  majorStars.forEach(star => {
+    const starObj = starSimple(star)
+    container.add(starObj)
+    window.scene.selectable.constellation.push(starObj)
+  })
+  const objects = constellation.userData.linkedObjects
+
+  objects.forEach(obj => {
+    const copy = window.scene.getObjectByName(obj).clone()
+    container.add(copy)
+    window.scene.selectable.constellation.push(copy)
   })
 
+  //add return button
+  const handleReturn = () => {
+    const constellation = window.scene.getObjectByName(container.name)
+    window.scene.remove(constellation)
+    document.getElementById('return-button').remove()
+    changeLevel('galaxy')
+  }
+  const display = document.getElementById('display')
+  const returnArrow = document.createElement('img')
+  returnArrow.setAttribute('src', 'assets/icons/return-icon.png')
+  returnArrow.setAttribute('alt', 'return arrow')
+  const button = document.createElement('button')
+  button.appendChild(returnArrow)
+  button.classList = 'button button-return'
+  button.id = 'return-button'
+
+  button.addEventListener('click', handleReturn)
+
+  display.appendChild(button)
+
+  return container
 }
+
+export default Constellation

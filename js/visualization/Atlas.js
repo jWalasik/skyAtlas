@@ -25,7 +25,11 @@ const Atlas = function () {
   */
   const SCENE = window.scene = new THREE.Scene()
   SCENE.name = 'atlas'
-  SCENE.selectable = []
+  SCENE.selectable = window.scene.selectable = {
+    galaxy: [],
+    constellation: [],
+    object: []
+  }
   const CAMERA = window.camera = new THREE.PerspectiveCamera(60, width/height, .1, 100000)
   CAMERA.zoom = 1
   //old shaders are not compatible with webgl2, thus using previous renderer version - deprecation incoming, upgrade advised

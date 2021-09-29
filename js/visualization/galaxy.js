@@ -32,11 +32,11 @@ const Galaxy = () => {
     container.add( planets )
   })
 
-  console.time('geometries')
+  console.timeEnd('geometries')
 
-  const object = Object('Betelgeuse', 'star')
-  container.add(object.surface)
-  container.add(object.corona)
+  // const object = Object('Betelgeuse', 'star')
+  // container.add(object.surface)
+  // container.add(object.corona)
 
   //return container
 }

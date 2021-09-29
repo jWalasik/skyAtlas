@@ -30,8 +30,8 @@ export function scaleMag(mag) {
   if(mag>6) { //naked eye visibility
     size = percent(mag, 6, 20) * (2.0 - 1.0) + 0.7
   } else if(mag<3.5) {  //most named stars
-    size = percent(mag, -5, 3.5) * (8.0 - 5.0) + 5.2
-  } else size = percent(mag, 3.0, 6) * (2.2 - 1.6) + 3.0
+    size = percent(mag, -5, 3.5) * (8.0 - 5.0) + 3.3
+  } else size = percent(mag, 3.0, 6) * (2.2 - 1.6) + 3.3
   return size
 }
 

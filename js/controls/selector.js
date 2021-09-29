@@ -1,8 +1,14 @@
 import * as THREE from '../lib/three.module.js'
 import { rotateCameraTo } from '../visualization/animate.js';
 import { detailedView } from '../visualization/detailedView.js';
+import Constellation from '../visualization/constellation.js'
 
+let level = 'galaxy'
+
+//pointers to keep track of previously selected objects
 let SELECTED
+let resized = false
+
 const mouse = new THREE.Vector2();
 const display = document.getElementById('WebGL-Output')
 
@@ -16,32 +22,42 @@ export function setControlEvents() {
 export function highlight() {
   const ray = new THREE.Raycaster()
   ray.setFromCamera(mouse, window.camera)
-  ray.params.Points.threshold = 50
-  
-  const boundaries = window.scene.getObjectByName('boundaries')
-  if(boundaries) {
-    let intersects = ray.intersectObjects(boundaries.children, true)
-    .filter(({object}) => {
-      return object.visible
-    })
-    
-  if(intersects.length > 0) {
+  ray.params.Points.threshold = 150
+
+  let intersects = ray.intersectObjects(window.scene.selectable[level])
+
+  if(intersects.length > 0 && level === 'constellation') {
+    console.log(intersects)
+    if(resized === true) {
+      resized = false
+      SELECTED.material.size /= 1.5
+    }
+    SELECTED = intersects[0].object
+    if(resized === false) {
+      resized = true
+      SELECTED.material.size *= 1.5
+    }
+
+    document.getElementById('object-name').innerHTML = SELECTED.name
+  }
+  //highlights boundary background
+  else if(intersects.length > 0) {
     //remove highlight from previous object
     if(SELECTED && intersects[0].object !== SELECTED) {
       SELECTED.material.opacity = 0.0
     }
     SELECTED = intersects[0].object
     SELECTED.material.opacity = 0.05
-    document.getElementById('object-name').innerHTML = intersects[0].object.userData.asterism
-  }
-  }
 
+    document.getElementById('object-name').innerHTML = intersects[0].object.userData.fullName
+  }
+  
 }
 
 export function zoomSelect(e) {
   if(!window.scene.getObjectByName('galaxy')) return
   if(e.deltaY < 0 && window.camera.position.z <= 100) {
-    detailedView(SELECTED)
+    changeLevel('constellation')
   }
 }
 
@@ -64,14 +80,11 @@ function mouseSelect(e) {
 
   const delta = 10 //distance in pixels
   if(dX < delta && dY < delta) {
-    detailedView(SELECTED)
+    changeLevel('constellation')
     //geometries container is rotated by geolocation, because of that there is an offset between camera and selected objects
     //for now use raycasters to get proper angle to rotate, test adding new logic to trackball controls or wrapping camera in rotating object
 
-
-    //copy selected object
-
-    
+    //copy selected object    
     const cRay = new THREE.Raycaster()
     cRay.setFromCamera(new THREE.Vector2(0,0), window.camera)
     const center = new THREE.Vector3().copy(cRay.ray.direction)
@@ -101,14 +114,22 @@ function mouseSelect(e) {
   }
 }
 
-const levels = {
-  galaxy: undefined,
-  constellation: undefined,
-  object: undefined,
+export const changeLevel = (lvl) => {
+  const scene = window.scene
+  switch (lvl) {
+    case 'constellation':
+      const constellation = Constellation(SELECTED)
+      scene.add(constellation)
+      level = 'constellation'
+      scene.getObjectByName('galaxy').visible = false
+      break
+    case 'object':
+      break
+    case 'galaxy':
+    default:
+      scene.getObjectByName('galaxy').visible = true
+      level = 'galaxy'
+      break
+  }
 }
-export const changeLevel = (next) => {
-  const copy = window.scene.children[0].clone()
-  levels[window.scene.name] = copy
 
-  window.scene.remove(window.scene.children[0])
-}

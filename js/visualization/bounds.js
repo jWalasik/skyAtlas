@@ -39,7 +39,7 @@ const Bounds = () => {
       linkedObjects: new Set([]), //string refrences for planets, messier objects and other bodies that might temporary appear in constellation
       asterism: undefined
     }
-    window.scene.selectable.push(bounds)
+    window.scene.selectable.galaxy.push(bounds)
     boundaries.add(bounds)
   })
   return boundaries

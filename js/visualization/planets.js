@@ -9,7 +9,7 @@ function linkToConstellation(object) {
   const center = new THREE.Vector3(0,0,0)
   const ray = new THREE.Raycaster(center, new THREE.Vector3().copy(object.position).normalize())
   ray.params.Points.threshold = 5
-  const intersections = ray.intersectObjects(window.scene.selectable)
+  const intersections = ray.intersectObjects(window.scene.selectable.galaxy)
   //triangulation method is bugged causing boundaries to overlap sometimes
   //temporary fix
   intersections.forEach(constellation => {
