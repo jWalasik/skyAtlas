@@ -27,7 +27,6 @@ export function highlight() {
   let intersects = ray.intersectObjects(window.scene.selectable[level])
 
   if(intersects.length > 0 && level === 'constellation') {
-    console.log(intersects)
     if(resized === true) {
       resized = false
       SELECTED.material.size /= 1.5
@@ -122,6 +121,8 @@ export const changeLevel = (lvl) => {
       scene.add(constellation)
       level = 'constellation'
       scene.getObjectByName('galaxy').visible = false
+      //clear current selection to prevent unintended interaction
+      SELECTED = undefined
       break
     case 'object':
       break
