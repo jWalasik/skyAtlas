@@ -33,11 +33,8 @@ const Constellation = (constellation) => {
 
   //add return button
   const handleReturn = () => {
-    const constellation = window.scene.getObjectByName(container.name)
-    window.scene.remove(constellation)
-    document.getElementById('return-button').remove()
-    document.getElementById('description-container').remove()
-    changeLevel('galaxy')
+    const btn = document.getElementById('return-button')
+    changeLevel(btn.value)
   }
 
   //handle controls
@@ -51,17 +48,16 @@ const Constellation = (constellation) => {
   button.appendChild(returnArrow)
   button.classList = 'button button-return'
   button.id = 'return-button'
+  button.value = 'galaxy'
 
   button.addEventListener('click', handleReturn)
 
   display.appendChild(button)
-  console.log(constellation)
 
   //fetch description
   const wikiHref = constellation.userData.fullName.replace(/ /g, '_') + '_(constellation)'
   getWikiData(wikiHref)
     .then(res => {
-      console.log(res)
       descriptionModal(res.query.pages[0].extract)
     })
     .catch(err => console.log(err))

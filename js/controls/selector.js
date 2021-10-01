@@ -2,6 +2,7 @@ import * as THREE from '../lib/three.module.js'
 import { rotateCameraTo } from '../visualization/animate.js';
 import { detailedView } from '../visualization/detailedView.js';
 import Constellation from '../visualization/constellation.js'
+import { StarBody } from '../visualization/object.js'
 
 let level = 'galaxy'
 
@@ -79,7 +80,7 @@ function mouseSelect(e) {
 
   const delta = 10 //distance in pixels
   if(dX < delta && dY < delta) {
-    changeLevel('constellation')
+    changeLevel(level === 'galaxy' ? 'constellation' : 'object')
     //geometries container is rotated by geolocation, because of that there is an offset between camera and selected objects
     //for now use raycasters to get proper angle to rotate, test adding new logic to trackball controls or wrapping camera in rotating object
 
@@ -113,21 +114,44 @@ function mouseSelect(e) {
   }
 }
 
-export const changeLevel = (lvl) => {
+export const changeLevel = (next) => {
   const scene = window.scene
-  switch (lvl) {
+  switch (next) {
     case 'constellation':
-      const constellation = Constellation(SELECTED)
-      scene.add(constellation)
+      if(level === 'object') {
+        //show constellation
+        scene.children[2].visible = true
+        //change description and name
+
+        //update return button
+        document.getElementById('return-button').value = 'galaxy'
+        //dispose of object
+        scene.remove(scene.children[3])
+      } else {
+        const constellation = Constellation(SELECTED)
+        scene.add(constellation)
+
+        scene.getObjectByName('galaxy').visible = false
+
+      }
       level = 'constellation'
-      scene.getObjectByName('galaxy').visible = false
-      //clear current selection to prevent unintended interaction
-      SELECTED = undefined
       break
     case 'object':
+      scene.getObjectByName(SELECTED.parent.name).visible = false
+      StarBody(SELECTED)
+      document.getElementById('return-button').value = 'constellation'
+      level = 'object'
       break
     case 'galaxy':
     default:
+      if(level === 'constellation') {
+        //constellation should always have the same index, might need refactor
+        const disposable = scene.children[2]
+        scene.remove(disposable)
+
+        document.getElementById('return-button').remove()
+        document.getElementById('description-container').remove()
+      }
       scene.getObjectByName('galaxy').visible = true
       level = 'galaxy'
       break

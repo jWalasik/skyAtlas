@@ -6,9 +6,5 @@ export async function getWikiData(name){
 
   return await fetch(endpoint)
     .then(response => response.json())
-    .then(res => {
-      console.log(res)
-      return res
-    })
     .catch(err => console.log(err));
 }

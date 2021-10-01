@@ -6,7 +6,7 @@ import Graticule from './graticule.js'
 import StarField from './starField.js'
 import Planets from './planets.js'
 
-import {animateObject, Object} from './object.js'
+import {animateObject, StarBody } from './object.js'
 
 const Galaxy = () => {
   const container = new THREE.Object3D()
@@ -33,10 +33,6 @@ const Galaxy = () => {
   })
 
   console.timeEnd('geometries')
-
-  // const object = Object('Betelgeuse', 'star')
-  // container.add(object.surface)
-  // container.add(object.corona)
 
   //return container
 }

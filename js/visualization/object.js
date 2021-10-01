@@ -13,22 +13,25 @@ const coronaUniform = {
 
 const surfaceUniform = {
   time: {type: 'f', value: 0.1},
-  speed: {type: 'f', value: 0.1},
+  speed: {type: 'f', value: 0.2},
   scale: {type: 'f', value: .1},
   contrast: {type: 'f', value: .7},
-  brightness: {type: 'f', value: .5},
+  brightness: {type: 'f', value: 1.0},
   resolution: {type: 'v2', value: new THREE.Vector2()},
   color: {type: 'v3', value: new THREE.Vector3()},
-  veinColor: {type: 'v3', value: new THREE.Vector3(1,1,1)},
+  veinColor: {type: 'v3', value: new THREE.Vector3(.7,.71,.71)},
   iChannel0: {type: 't', value: new THREE.TextureLoader().load('./assets/lensflare0_alpha.png')}
 }
 
-export const Object = (name, type) => {
+export const StarBody = (data) => {
+  const container = new THREE.Object3D()
+  container.name = data.name
+
   coronaUniform.resolution.value.x = 1
   coronaUniform.resolution.value.y = 1
-  coronaUniform.color.value.x = .333
-  coronaUniform.color.value.y = .2
-  coronaUniform.color.value.z = .1
+  coronaUniform.color.value.x = data.material.color.r
+  coronaUniform.color.value.y = data.material.color.g
+  coronaUniform.color.value.z = data.material.color.b
 
   const coronaMaterial = new THREE.ShaderMaterial({
     uniforms: coronaUniform,
@@ -44,9 +47,9 @@ export const Object = (name, type) => {
   surfaceUniform.resolution.value.x = 1; // window.innerWidth;
   surfaceUniform.resolution.value.y = 1;
   surfaceUniform.iChannel0.value.wrapS = surfaceUniform.iChannel0.value.wrapT = THREE.RepeatWrapping;
-  surfaceUniform.color.value.x = .666
-  surfaceUniform.color.value.y = .5
-  surfaceUniform.color.value.z = .3
+  surfaceUniform.color.value.x = data.material.color.r
+  surfaceUniform.color.value.y = data.material.color.g
+  surfaceUniform.color.value.z = data.material.color.b
 
   const surfaceMaterial = new THREE.ShaderMaterial({
     uniforms: surfaceUniform,
@@ -55,13 +58,13 @@ export const Object = (name, type) => {
     side: THREE.DoubleSide,
     transparent: true
   })
-  const surface = new THREE.Mesh(new THREE.SphereGeometry(200, 30,30), surfaceMaterial)
+  const surface = new THREE.Mesh(new THREE.SphereGeometry(190, 30,30), surfaceMaterial)
   surface.name='surface'
 
-  return {
-    corona: corona,
-    surface: surface
-  }
+  container.add(corona)
+  container.add(surface)
+
+  window.scene.add(container)
 }
 
 const shaders = {
@@ -257,7 +260,7 @@ const shaders = {
     vec3 eye = normalize(-fPosition.xyz);
     float rim = smoothstep(0.0, 1.0, 1.0 - dot(normal, eye));
     
-    vec3 shade = clamp(rim, 0.1, 0.7) * 0.5 * baseColor;
+    vec3 shade = clamp(rim, 0.1, 0.7) * baseColor;
 
     gl_FragColor = vec4( shade * vLightWeighting, 1.0 );
   }
@@ -276,10 +279,10 @@ const shaders = {
     #define PI 3.14159265359
     #define TWO_PI 6.28318530718
     #define SQ3 1.73205080757
-    #define SIZE 400.0
+    #define SIZE 100.0
     #define I_R 100.0
-    #define F_R 400.0
-    #define SPEED 0.4
+    #define F_R 150.0
+    #define SPEED 1.4
 
     precision highp float;
 
@@ -290,7 +293,7 @@ const shaders = {
     varying vec2 vUv;
     float random(in vec2 _st)
     {
-      return fract(sin(dot(_st.xy, vec2(12.9898, 78.233))) * 43758.54531237);
+      return fract(sin(dot(_st.xy, vec2(8.9898, 28.233))) * 23758.54531237);
     }
     float noise(in vec2 _st)
     {
@@ -309,7 +312,7 @@ const shaders = {
     }
     vec4 flare(float alpha, vec2 main, float seed, float dir)
     {
-      float amnt = 0.6 + sin(seed) * 8.0;
+      float amnt = 0.6 + sin(seed) * 12.0;
       float ang = atan(main.y, main.x);
       float t = time * SPEED * dir;
       float n = noise(vec2((seed + ang * amnt + t * 0.1) + cos(alpha * 13.8 + noise(t + ang + seed) * 3.0) * 0.2 + seed / 20.0, seed + t + ang));
