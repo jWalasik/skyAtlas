@@ -18,6 +18,15 @@ export function appendNode(items) {
 
 }
 
+export function setName(name) {
+  let container = document.getElementById('name-container')
+  if(!container) {
+    container = document.createElement('name-container')
+    container.classList = 'name-container'
+  }
+  container.innerText = name
+}
+
 export function descriptionModal(content) {
   const container = document.createElement('div')
   container.classList = 'description-container'

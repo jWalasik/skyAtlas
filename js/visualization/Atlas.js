@@ -74,7 +74,7 @@ const Atlas = function () {
 
   const bloomPass = new UnrealBloomPass(new THREE.Vector2(width,height),1.5, 0.4, 0.85)
   bloomPass.threshold = 0
-  bloomPass.strength = 0
+  bloomPass.strength = 1.2
   bloomPass.radius = 0
 
   let composer = new EffectComposer(renderer)

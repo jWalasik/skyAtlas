@@ -85,32 +85,31 @@ function mouseSelect(e) {
     //for now use raycasters to get proper angle to rotate, test adding new logic to trackball controls or wrapping camera in rotating object
 
     //copy selected object    
-    const cRay = new THREE.Raycaster()
-    cRay.setFromCamera(new THREE.Vector2(0,0), window.camera)
-    const center = new THREE.Vector3().copy(cRay.ray.direction)
+    // const cRay = new THREE.Raycaster()
+    // cRay.setFromCamera(new THREE.Vector2(0,0), window.camera)
+    // const center = new THREE.Vector3().copy(cRay.ray.direction)
 
-    const tRay = new THREE.Raycaster()
-    tRay.setFromCamera(new THREE.Vector2(mouse.x, mouse.y), window.camera)
+    // const tRay = new THREE.Raycaster()
+    // tRay.setFromCamera(new THREE.Vector2(mouse.x, mouse.y), window.camera)
 
-    const target = new THREE.Vector3().copy(tRay.ray.direction)
+    // const target = new THREE.Vector3().copy(tRay.ray.direction)
 
-    const rotateEnd = new THREE.Quaternion()
-    rotateEnd.setFromUnitVectors( center, target )
-    const rotateStart = new THREE.Quaternion().set(0, 0 , 0 , -1)
+    // const rotateEnd = new THREE.Quaternion()
+    // rotateEnd.setFromUnitVectors( center, target )
+    // const rotateStart = new THREE.Quaternion().set(0, 0 , 0 , -1)
 
+    // //window.controls.active.rotateCameraTowards(q)
+    // //window.camera.position.applyQuaternion(rotateEnd)
 
-    //window.controls.active.rotateCameraTowards(q)
-    //window.camera.position.applyQuaternion(rotateEnd)
-
-    const rotate = (acc) => {
-      setTimeout(()=>{
-        if(rotateStart.equals(rotateEnd)) return
-        rotateStart.rotateTowards(rotateEnd, acc)
-        window.camera.position.applyQuaternion(rotateStart)
-        rotate(acc + acc)
-      }, 20)
-    }
-    rotate(0.0014)    
+    // const rotate = (acc) => {
+    //   setTimeout(()=>{
+    //     if(rotateStart.equals(rotateEnd)) return
+    //     rotateStart.rotateTowards(rotateEnd, acc)
+    //     window.camera.position.applyQuaternion(rotateStart)
+    //     rotate(acc + acc)
+    //   }, 20)
+    // }
+    // rotate(0.0014)    
   }
 }
 
@@ -122,7 +121,7 @@ export const changeLevel = (next) => {
         //show constellation
         scene.children[2].visible = true
         //change description and name
-
+        
         //update return button
         document.getElementById('return-button').value = 'galaxy'
         //dispose of object
@@ -132,9 +131,9 @@ export const changeLevel = (next) => {
         scene.add(constellation)
 
         scene.getObjectByName('galaxy').visible = false
-
       }
       level = 'constellation'
+      centerCameraOn(scene.children[2])
       break
     case 'object':
       scene.getObjectByName(SELECTED.parent.name).visible = false
@@ -158,3 +157,18 @@ export const changeLevel = (next) => {
   }
 }
 
+const centerCameraOn = (container) => {
+  const bCenter = new THREE.Box3().setFromObject(container).getCenter()
+  //const camDirection = new THREE.Quaternion().copy(camera.quaternion)
+  const camDirection = camera.getWorldDirection()
+  const target = new THREE.Quaternion().setFromUnitVectors(bCenter.normalize(), camDirection.normalize())
+
+  const animate = (acc) => {
+    if(acc>=1) return
+    THREE.Quaternion.slerp(container.quaternion, target, container.quaternion, acc)
+    setTimeout(()=>animate(acc+1/100), 20)
+    camera.zoom = 1+acc
+    camera.updateProjectionMatrix ()
+  }
+  animate(1/100)
+}
