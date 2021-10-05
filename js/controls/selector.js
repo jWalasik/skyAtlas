@@ -134,6 +134,7 @@ export const changeLevel = (next) => {
       }
       level = 'constellation'
       centerCameraOn(scene.children[2])
+      cameraLock(true)
       break
     case 'object':
       scene.getObjectByName(SELECTED.parent.name).visible = false
@@ -153,6 +154,10 @@ export const changeLevel = (next) => {
       }
       scene.getObjectByName('galaxy').visible = true
       level = 'galaxy'
+
+      cameraLock(false)
+      window.camera.zoom = 1
+      window.camera.updateProjectionMatrix()
       break
   }
 }
@@ -160,7 +165,7 @@ export const changeLevel = (next) => {
 const centerCameraOn = (container) => {
   const bCenter = new THREE.Box3().setFromObject(container).getCenter()
   //const camDirection = new THREE.Quaternion().copy(camera.quaternion)
-  const camDirection = camera.getWorldDirection()
+  const camDirection = camera.getWorldDirection().clone()
   const target = new THREE.Quaternion().setFromUnitVectors(bCenter.normalize(), camDirection.normalize())
 
   const animate = (acc) => {
@@ -168,7 +173,13 @@ const centerCameraOn = (container) => {
     THREE.Quaternion.slerp(container.quaternion, target, container.quaternion, acc)
     setTimeout(()=>animate(acc+1/100), 20)
     camera.zoom = 1+acc
-    camera.updateProjectionMatrix ()
+    camera.updateProjectionMatrix()
   }
   animate(1/100)
+}
+
+const cameraLock = (bool) => {
+  const controls = window.controls.active
+  controls.noRoll = bool
+  controls.noRotate = bool
 }
