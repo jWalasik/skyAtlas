@@ -40,27 +40,19 @@ export function useLocation() {
 }
 
 export function useDeviceOrientation() {
-  var geometry = new THREE.BoxGeometry( 200, 200, 200 );
-  var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
-  var cube = new THREE.Mesh( geometry, material );
-
-  cube.position.set(0,0,12000)
-  cube.name='helper';
-  window.scene.add(cube)
-
   window.addEventListener(
     'deviceorientation', 
     debounce(
       e => {
         const heading = compassHeading(e.alpha, e.beta, e.gamma)
-        const center = new THREE.Vector3(0,12000,0)
-        const north = vertex([0, e.alpha-360])
+        const center = window.camera.getWorldDirection().clone()
+        const north = vertex([0, heading])
         const target = new THREE.Quaternion().setFromUnitVectors(
           north.normalize(),
           center.normalize()
         )
-        cube.position.set(target)
         const geometries = window.scene.getObjectByName('galaxy').quaternion
+        
         rotateCameraTo(geometries,target,1)
       },
       100, 
