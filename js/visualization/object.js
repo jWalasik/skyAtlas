@@ -5,6 +5,16 @@ export const animateObject = () => {
   surfaceUniform.time.value += 1.0
 }
 
+const transition = (object, step, end) => {
+  setTimeout(()=>{
+      const {x,y,z} = object.position.multiplyScalar(step)
+      object.position.set(x,y,z)
+      const distance = object.position.distanceTo(new THREE.Vector3(0,0,0))
+      console.log(distance, object.position)
+      if(distance > end ) transition(object, step, end);
+  }, 25)
+}
+
 const coronaUniform = {
   time: {type: 'f', value: 0.1},
   resolution: {type: 'v2', value: new THREE.Vector2()},
@@ -26,6 +36,11 @@ const surfaceUniform = {
 export const StarBody = (data) => {
   const container = new THREE.Object3D()
   container.name = data.name
+
+  const direction = window.camera.getWorldDirection()
+  const {x,y,z} = direction.multiplyScalar(16000);
+  container.position.set(x,y,z)
+  transition(container, .90, 1000);
 
   coronaUniform.resolution.value.x = 1
   coronaUniform.resolution.value.y = 1
@@ -63,6 +78,8 @@ export const StarBody = (data) => {
 
   container.add(corona)
   container.add(surface)
+
+  container.lookAt(window.camera.position)
 
   window.scene.add(container)
 }

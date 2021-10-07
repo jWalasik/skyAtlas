@@ -45,15 +45,8 @@ export function useDeviceOrientation() {
     debounce(
       e => {
         const heading = compassHeading(e.alpha, e.beta, e.gamma)
-        const center = window.camera.getWorldDirection().clone()
-        const north = vertex([0, heading])
-        const target = new THREE.Quaternion().setFromUnitVectors(
-          north.normalize(),
-          center.normalize()
-        )
-        const geometries = window.scene.getObjectByName('galaxy').quaternion
-        
-        rotateCameraTo(geometries,target,1)
+        window.controls.active.alphaOffset = heading
+        window.controls.active.update()
       },
       100, 
       true // 

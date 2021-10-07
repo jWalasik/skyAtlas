@@ -58,7 +58,7 @@ const Constellation = (constellation) => {
   const wikiHref = constellation.userData.fullName.replace(/ /g, '_') + '_(constellation)'
   getWikiData(wikiHref)
     .then(res => {
-      descriptionModal(res.query.pages[0].extract)
+      document.getElementById('controls-description').innerHTML = res.query.pages[0].extract
     })
     .catch(err => console.log(err))
   

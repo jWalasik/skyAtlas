@@ -176,7 +176,7 @@ export function compassHeading(alpha, beta, gamma) {
   }
 
   // Convert radians to degrees
-  compassHeading *= 180 / Math.PI;
+  //compassHeading *= 180 / Math.PI;
   return compassHeading;
 }
 

@@ -80,36 +80,7 @@ function mouseSelect(e) {
 
   const delta = 10 //distance in pixels
   if(dX < delta && dY < delta) {
-    changeLevel(level === 'galaxy' ? 'constellation' : 'object')
-    //geometries container is rotated by geolocation, because of that there is an offset between camera and selected objects
-    //for now use raycasters to get proper angle to rotate, test adding new logic to trackball controls or wrapping camera in rotating object
-
-    //copy selected object    
-    // const cRay = new THREE.Raycaster()
-    // cRay.setFromCamera(new THREE.Vector2(0,0), window.camera)
-    // const center = new THREE.Vector3().copy(cRay.ray.direction)
-
-    // const tRay = new THREE.Raycaster()
-    // tRay.setFromCamera(new THREE.Vector2(mouse.x, mouse.y), window.camera)
-
-    // const target = new THREE.Vector3().copy(tRay.ray.direction)
-
-    // const rotateEnd = new THREE.Quaternion()
-    // rotateEnd.setFromUnitVectors( center, target )
-    // const rotateStart = new THREE.Quaternion().set(0, 0 , 0 , -1)
-
-    // //window.controls.active.rotateCameraTowards(q)
-    // //window.camera.position.applyQuaternion(rotateEnd)
-
-    // const rotate = (acc) => {
-    //   setTimeout(()=>{
-    //     if(rotateStart.equals(rotateEnd)) return
-    //     rotateStart.rotateTowards(rotateEnd, acc)
-    //     window.camera.position.applyQuaternion(rotateStart)
-    //     rotate(acc + acc)
-    //   }, 20)
-    // }
-    // rotate(0.0014)    
+    changeLevel(level === 'galaxy' ? 'constellation' : 'object') 
   }
 }
 
@@ -118,7 +89,6 @@ export const changeLevel = (next) => {
   switch (next) {
     case 'constellation':
       if(level === 'object') {
-        //show constellation
         scene.children[2].visible = true
         //change description and name
         
@@ -131,9 +101,9 @@ export const changeLevel = (next) => {
         scene.add(constellation)
 
         scene.getObjectByName('galaxy').visible = false
+        centerCameraOn(scene.children[2])
       }
       level = 'constellation'
-      centerCameraOn(scene.children[2])
       cameraLock(true)
       break
     case 'object':

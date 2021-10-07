@@ -16,6 +16,7 @@ import {highlight, setControlEvents} from '../controls/selector.js'
 import { debounce } from '../helperfunctions.js'
 import { starFieldTwinkle } from './animate.js'
 import { animateObject } from './object.js'
+import { setupControlsOverlay } from '../controls/modal.js'
 
 
 const Atlas = function () {
@@ -66,6 +67,7 @@ const Atlas = function () {
 
   //CONTROLS
   Menu()
+  setupControlsOverlay()
   handlePermissions(this.scenes[this.currentScene])
   setControlEvents()
   

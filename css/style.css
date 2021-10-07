@@ -275,7 +275,7 @@ body {
   border-radius: 5px;
 }
 .description-expanded > .description-text {
-  display: block;
+  display: none;
 }
 
 .description-text {
@@ -308,4 +308,77 @@ body {
 .button-flipped {
   transform: rotate(180deg);
   top: -100%;
+}
+
+.controls-overlay {
+  position: absolute;
+  display: grid;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+}
+.controls-overlay > * {
+  position: absolute;
+}
+.controls-overlay__hidden > * {
+  display: none;
+}
+
+.controls-name {
+  font-size: 36px;
+  font-weight: 300;
+  color: #03cafc;
+  margin: 4px;
+  left: 60px;
+}
+
+.controls-button {
+  top: 10px;
+  left: 10px;
+  height: 44px;
+  width: 44px;
+  background: none;
+  border: 2px solid #03cafc;
+  border-radius: 50%;
+  transition: all .3s;
+  pointer-events: all;
+  cursor: pointer;
+}
+
+.controls-button > img {
+  margin: 0px 0px -2px -1px;
+  width: 30px;
+  height: 30px;
+  filter: invert(55%) sepia(91%) saturate(2288%) hue-rotate(157deg) brightness(110%) contrast(98%);
+}
+.controls-button__expand {
+  top: 90%;
+  left: calc(50% - 22px);
+}
+.controls-button__flipped {
+  transform: rotate(180deg);
+  top: 10px;
+}
+
+.controls-description {
+  pointer-events: all;
+  margin: 15px;
+  color: white;
+  background:rgba(0, 0, 0, .5);
+  overflow: auto;
+  max-height: calc(100% - 100px);
+  scrollbar-width: thin;
+  scrollbar-color: #03cafc;
+  bottom: 20px;
+}
+.controls-description::-webkit-scrollbar {
+  width: 8px;
+}
+.controls-description::-webkit-scrollbar-track {
+  background-color: #6d8388;
+}
+.controls-description::-webkit-scrollbar-thumb {
+  background: #03cafc;
+  border-radius: 2.5px;
 }
