@@ -26,7 +26,7 @@ const surfaceUniform = {
   speed: {type: 'f', value: 0.2},
   scale: {type: 'f', value: .1},
   contrast: {type: 'f', value: .7},
-  brightness: {type: 'f', value: 1.0},
+  brightness: {type: 'f', value: .1},
   resolution: {type: 'v2', value: new THREE.Vector2()},
   color: {type: 'v3', value: new THREE.Vector3()},
   veinColor: {type: 'v3', value: new THREE.Vector3(.7,.71,.71)},
@@ -59,25 +59,25 @@ export const StarBody = (data) => {
   const corona = new THREE.Mesh(new THREE.PlaneGeometry(2000, 2000, 1, 1), coronaMaterial)
   corona.name = 'corona'
   
-  surfaceUniform.resolution.value.x = 1; // window.innerWidth;
-  surfaceUniform.resolution.value.y = 1;
-  surfaceUniform.iChannel0.value.wrapS = surfaceUniform.iChannel0.value.wrapT = THREE.RepeatWrapping;
-  surfaceUniform.color.value.x = data.material.color.r
-  surfaceUniform.color.value.y = data.material.color.g
-  surfaceUniform.color.value.z = data.material.color.b
+  // surfaceUniform.resolution.value.x = 1; // window.innerWidth;
+  // surfaceUniform.resolution.value.y = 1;
+  // surfaceUniform.iChannel0.value.wrapS = surfaceUniform.iChannel0.value.wrapT = THREE.RepeatWrapping;
+  // surfaceUniform.color.value.x = data.material.color.r
+  // surfaceUniform.color.value.y = data.material.color.g
+  // surfaceUniform.color.value.z = data.material.color.b
 
-  const surfaceMaterial = new THREE.ShaderMaterial({
-    uniforms: surfaceUniform,
-    vertexShader: shaders.surfaceVertex,
-    fragmentShader: shaders.surfaceFragment,
-    side: THREE.DoubleSide,
-    transparent: true
-  })
-  const surface = new THREE.Mesh(new THREE.SphereGeometry(190, 30,30), surfaceMaterial)
-  surface.name='surface'
+  // const surfaceMaterial = new THREE.ShaderMaterial({
+  //   uniforms: surfaceUniform,
+  //   vertexShader: shaders.surfaceVertex,
+  //   fragmentShader: shaders.surfaceFragment,
+  //   side: THREE.DoubleSide,
+  //   transparent: true
+  // })
+  // const surface = new THREE.Mesh(new THREE.SphereGeometry(190, 30,30), surfaceMaterial)
+  // surface.name='surface'
 
   container.add(corona)
-  container.add(surface)
+  //container.add(surface)
 
   container.lookAt(window.camera.position)
 
@@ -267,7 +267,7 @@ const shaders = {
   
     // diffuse light
   
-    vec3 vLightWeighting = vec3( 0.1 ) * brightness;
+    vec3 vLightWeighting = vec3( brightness );
   
     vec4 lDirection = viewMatrix * vec4( normalize( vec3( 1.0, 0.0, 0.5 ) ), 0.0 );
     float directionalLightWeighting = dot( normal, normalize( lDirection.xyz ) ) * 0.25 + 0.75;
@@ -308,8 +308,8 @@ const shaders = {
     #define TWO_PI 6.28318530718
     #define SQ3 1.73205080757
     #define SIZE 100.0
-    #define I_R 100.0
-    #define F_R 150.0
+    #define I_R 80.0
+    #define F_R 120.0
     #define SPEED 1.4
 
     precision highp float;
@@ -340,15 +340,15 @@ const shaders = {
     }
     vec4 flare(float alpha, vec2 main, float seed, float dir)
     {
-      float amnt = 0.6 + sin(seed) * 12.0;
+      float amnt = .6 + sin(seed) * 22.0;
       float ang = atan(main.y, main.x);
       float t = time * SPEED * dir;
-      float n = noise(vec2((seed + ang * amnt + t * 0.1) + cos(alpha * 13.8 + noise(t + ang + seed) * 3.0) * 0.2 + seed / 20.0, seed + t + ang));
-      n *= pow(noise(vec2(seed * 194.0 + ang * amnt + t + cos(alpha * 2.0 * n + t * 1.1 + ang) * 2.8, seed + t + ang) + alpha), 2.0);
+      float n = noise(vec2((seed + ang * amnt + t * 0.1) + cos(alpha * 13.8 + noise(t + ang + seed) * 3.0) * 0.2 + seed / 12.0, seed + t + ang));
+      n *= pow(noise(vec2(seed * 194.0 + ang * amnt + t + cos(alpha * 2.0 * n + t * 1.1 + ang) * 2.8, seed + t + ang) + alpha), 1.0);
       n *= pow(noise(vec2(seed * 134.0 + ang * amnt + t + cos(alpha * 2.2 * n + t * 1.1 + ang) * 1.1, seed + t + ang) + alpha), 3.0);
       n *= pow(noise(vec2(seed * 123.0 + ang * amnt + t + cos(alpha * 2.3 * n + t * 1.1 + ang) * 0.8, seed + t + ang) + alpha), 4.0);
-      n *= pow(alpha, 2.6);
-      n *= (ang + PI) / 2.0 * (TWO_PI - ang - PI);
+      n *= pow(alpha, 1.6);
+      n *= (ang + PI) / 1.0 * (TWO_PI - ang - PI);
       n += sqrt(alpha * alpha) * 0.26;
       return vec4(pow(n * 2.1, 2.0), n, n, n);
     }
