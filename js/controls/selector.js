@@ -91,7 +91,9 @@ export const changeLevel = (next) => {
       if(level === 'object') {
         scene.children[2].visible = true
         //change description and name
-        
+        const constellation = scene.getObjectByName(scene.children[2].name.replace(/-container/g, ''))
+        document.getElementById('controls-name').innerText = constellation.userData.fullName
+        document.getElementById('controls-description').innerHTML = constellation.userData.wiki
         //update return button
         document.getElementById('return-button').value = 'galaxy'
         //dispose of object
@@ -102,6 +104,7 @@ export const changeLevel = (next) => {
 
         scene.getObjectByName('galaxy').visible = false
         centerCameraOn(scene.children[2])
+        document.getElementById('controls-overlay').classList.toggle('controls-overlay__hidden')
       }
       level = 'constellation'
       cameraLock(true)
@@ -119,8 +122,7 @@ export const changeLevel = (next) => {
         const disposable = scene.children[2]
         scene.remove(disposable)
 
-        document.getElementById('return-button').remove()
-        document.getElementById('description-container').remove()
+        document.getElementById('controls-overlay').classList.toggle('controls-overlay__hidden')
       }
       scene.getObjectByName('galaxy').visible = true
       level = 'galaxy'

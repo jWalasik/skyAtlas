@@ -371,6 +371,10 @@ body {
   scrollbar-width: thin;
   scrollbar-color: #03cafc;
   bottom: 20px;
+  height: 0;
+}
+.controls-description__expanded {
+  height: 100%;
 }
 .controls-description::-webkit-scrollbar {
   width: 8px;

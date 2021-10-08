@@ -1,4 +1,5 @@
 import * as THREE from '../lib/three.module.js'
+import { getWikiData } from '../utils/wikiLookup.js'
 
 export const animateObject = () => {
   coronaUniform.time.value += 0.01
@@ -10,7 +11,6 @@ const transition = (object, step, end) => {
       const {x,y,z} = object.position.multiplyScalar(step)
       object.position.set(x,y,z)
       const distance = object.position.distanceTo(new THREE.Vector3(0,0,0))
-      console.log(distance, object.position)
       if(distance > end ) transition(object, step, end);
   }, 25)
 }
@@ -80,6 +80,17 @@ export const StarBody = (data) => {
   container.add(surface)
 
   container.lookAt(window.camera.position)
+
+  document.getElementById('controls-name').innerText = data.name
+
+  //fetch description
+  const wikiHref = data.name.replace(/ /g, '_') + '_(star)'
+  getWikiData(wikiHref)
+    .then(res => {
+      const description = document.getElementById('controls-description')
+      description.innerHTML = res.query.pages[0].extract || 'Sorry! We could not find relevant wikipedia entry regarding this object :('  
+    })
+    .catch(err => console.log(err))
 
   window.scene.add(container)
 }

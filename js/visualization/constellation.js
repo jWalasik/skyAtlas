@@ -1,6 +1,3 @@
-import { descriptionModal } from '../controls/modal.js'
-import { changeLevel } from '../controls/selector.js'
-import { GalaxyDB } from '../database.js'
 import * as THREE from '../lib/three.module.js'
 import { getWikiData } from '../utils/wikiLookup.js'
 import { starSimple } from './star.js'
@@ -31,34 +28,16 @@ const Constellation = (constellation) => {
     window.scene.selectable.constellation.push(copy)
   })
 
-  //add return button
-  const handleReturn = () => {
-    const btn = document.getElementById('return-button')
-    changeLevel(btn.value)
-  }
-
-  //handle controls
-  const display = document.getElementById('display')
-
-  const returnArrow = document.createElement('img')
-  returnArrow.setAttribute('src', 'assets/icons/return-icon.png')
-  returnArrow.setAttribute('alt', 'return arrow')
-
-  const button = document.createElement('button')
-  button.appendChild(returnArrow)
-  button.classList = 'button button-return'
-  button.id = 'return-button'
-  button.value = 'galaxy'
-
-  button.addEventListener('click', handleReturn)
-
-  display.appendChild(button)
+  document.getElementById('controls-name').innerText = constellation.userData.fullName
 
   //fetch description
   const wikiHref = constellation.userData.fullName.replace(/ /g, '_') + '_(constellation)'
   getWikiData(wikiHref)
     .then(res => {
-      document.getElementById('controls-description').innerHTML = res.query.pages[0].extract
+      const description = document.getElementById('controls-description')
+      description.innerHTML = res.query.pages[0].extract
+      //save data for later usage
+      constellation.userData.wiki = res.query.pages[0].extract
     })
     .catch(err => console.log(err))
   

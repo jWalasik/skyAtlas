@@ -190,7 +190,6 @@ const Menu = async (initialValues) => {
 
   function setIntensity(e) {
     const prev = SETTINGS[e.target.id] !== e.target.value ? SETTINGS[e.target.id] : 1
-
     const output = document.getElementById(`${e.target.id}-output`)
 
     window.settings[e.target.id] = e.target.value
