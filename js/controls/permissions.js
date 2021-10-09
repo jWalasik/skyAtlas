@@ -1,5 +1,5 @@
 import * as THREE from '../lib/three.module.js'
-import {computeZenith, vertex, compassHeading, debounce} from '../helperfunctions.js'
+import {computeZenith, compassHeading, debounce} from '../helperfunctions.js'
 import { rotateCameraTo } from '../visualization/animate.js'
 import { clearModal, setModal } from './modal.js'
 

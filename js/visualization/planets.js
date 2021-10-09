@@ -17,18 +17,18 @@ function linkToConstellation(object) {
   })
 }
 
-// function updatePosition() {
-//   setInterval(()=>{
-//     system.compute()
-//     system.geocentricCoords().map(planet => {
-//       if(planet.name === 'earth' || planet.name==='pluto') return
-//       const object = window.scene.getObjectByName(planet.name)
-//       const {x,y,z} = vertex([planet.ra*15,planet.dec])
-//       object.position.set(x,y,z)
-//       linkToConstellation(object)
-//     })
-//   }, 3000) //5min 300000
-// }
+function updatePosition() {
+  setInterval(()=>{
+    system.compute()
+    system.geocentricCoords().map(planet => {
+      if(planet.name === 'earth' || planet.name==='pluto') return
+      const object = window.scene.getObjectByName(planet.name)
+      const {x,y,z} = vertex([planet.ra*15,planet.dec])
+      object.position.set(x,y,z)
+      linkToConstellation(object)
+    })
+  }, 300000) //5min 300000
+}
 
 const Planets = async () => {
   system.compute()

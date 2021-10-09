@@ -10,10 +10,13 @@ const Bounds = () => {
   boundaries.name = 'boundaries'
   const data = database.getData('boundaries')
   data.boundaries.forEach(([name, ...rest]) => {
+    let faceMap = []
+    console.log(name)
     const boundsGeometry = new THREE.Geometry(),  //bounds are used as 'face' to detect raycasting and highlight whole field
           outlineGeometry = new THREE.Geometry()  //outline 
     for(let i=0; i<rest.length; i+=2) {
       //consider mapping boundaries in 2d cooridinate system aswell for better view transitions
+      faceMap.push(new THREE.Vector2(rest[i], rest[i+1]))
       const point = vertex([rest[i], rest[i+1]])
       boundsGeometry.vertices.push(point)
       outlineGeometry.vertices.push(point)
@@ -22,9 +25,16 @@ const Bounds = () => {
     const outlineMaterial = new THREE.LineBasicMaterial({color: 0x0072f5})
     const outline = new THREE.Line(outlineGeometry, outlineMaterial)
 
-    //face shape triangulation
-    const triangles = THREE.ShapeUtils.triangulateShape(boundsGeometry.vertices, [])
-    triangles.forEach(([x,y,z]) => boundsGeometry.faces.push(new THREE.Face3(x,y,z)))
+    //face shape triangulation - for some reason certain constellations, triangulation works better using 3d coordinates, others 2d
+    if(name.match(/(And)|(Cas)|(Cep)|(Dra)|(Her)|(Oct)|(Peg)|(Eri)|(Phe)|(Psc)/g)) {
+      const triangles = THREE.ShapeUtils.triangulateShape(boundsGeometry.vertices, [])
+      triangles.forEach(([x,y,z]) => boundsGeometry.faces.push(new THREE.Face3(x,y,z)))
+    } else {
+      const triangles = THREE.ShapeUtils.triangulateShape(faceMap, [])
+      triangles.forEach(([x,y,z]) => {
+        boundsGeometry.faces.push(new THREE.Face3(x,y,z))
+      })
+    }
     
     const boundsMaterial = new THREE.MeshBasicMaterial({color: 0x96fff7, transparent:true, opacity:0.0});
     const bounds = new THREE.Mesh(boundsGeometry, boundsMaterial)

@@ -1,6 +1,4 @@
 import * as THREE from '../lib/three.module.js'
-import { rotateCameraTo } from '../visualization/animate.js';
-import { detailedView } from '../visualization/detailedView.js';
 import Constellation from '../visualization/constellation.js'
 import { StarBody } from '../visualization/object.js'
 

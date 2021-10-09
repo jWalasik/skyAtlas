@@ -340,7 +340,7 @@ const shaders = {
     }
     vec4 flare(float alpha, vec2 main, float seed, float dir)
     {
-      float amnt = .6 + sin(seed) * 22.0;
+      float amnt = .6 + sin(seed) * 12.0;
       float ang = atan(main.y, main.x);
       float t = time * SPEED * dir;
       float n = noise(vec2((seed + ang * amnt + t * 0.1) + cos(alpha * 13.8 + noise(t + ang + seed) * 3.0) * 0.2 + seed / 12.0, seed + t + ang));
