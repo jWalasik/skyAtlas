@@ -1,9 +1,25 @@
 import * as THREE from '../lib/three.module.js'
 import { getWikiData } from '../utils/wikiLookup.js'
+import { Planet } from './planet.js'
 
 export const animateObject = () => {
   coronaUniform.time.value += 0.01
   surfaceUniform.time.value += 1.0
+}
+
+export const objectType = (object) => {
+  const type = object.userData.type
+  switch (type) {
+    default:
+    case 'star':
+      StarBody(object)
+      break
+    case 'planet':
+      Planet(object)
+      break
+    case 'messier':
+      break
+  }
 }
 
 const transition = (object, step, end) => {
@@ -34,6 +50,7 @@ const surfaceUniform = {
 }
 
 export const StarBody = (data) => {
+  console.log(data)
   const container = new THREE.Object3D()
   container.name = data.name
 

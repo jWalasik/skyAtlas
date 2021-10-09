@@ -43,6 +43,9 @@ const Planets = async () => {
       const sphere = new THREE.SphereBufferGeometry(info[planet.name].size*3,10,10)
       const planetBody = new THREE.Mesh(sphere, map)
       planetBody.name = planet.name
+      planetBody.userData = {
+        type: 'planet'
+      }
       const {x,y,z} = vertex([planet.ra*15,planet.dec])
       planetBody.position.set(x,y,z)
       linkToConstellation(planetBody)

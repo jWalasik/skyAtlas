@@ -1,6 +1,6 @@
 import * as THREE from '../lib/three.module.js'
 import Constellation from '../visualization/constellation.js'
-import { StarBody } from '../visualization/object.js'
+import { objectType, StarBody } from '../visualization/object.js'
 
 let level = 'galaxy'
 
@@ -88,18 +88,14 @@ export const changeLevel = (next) => {
     case 'constellation':
       if(level === 'object') {
         scene.children[2].visible = true
-        //change description and name
         const constellation = scene.getObjectByName(scene.children[2].name.replace(/-container/g, ''))
         document.getElementById('controls-name').innerText = constellation.userData.fullName
         document.getElementById('controls-description').innerHTML = constellation.userData.wiki
-        //update return button
         document.getElementById('return-button').value = 'galaxy'
-        //dispose of object
         scene.remove(scene.children[3])
       } else {
         const constellation = Constellation(SELECTED)
         scene.add(constellation)
-
         scene.getObjectByName('galaxy').visible = false
         centerCameraOn(scene.children[2])
         document.getElementById('controls-overlay').classList.toggle('controls-overlay__hidden')
@@ -109,7 +105,7 @@ export const changeLevel = (next) => {
       break
     case 'object':
       scene.getObjectByName(SELECTED.parent.name).visible = false
-      StarBody(SELECTED)
+      objectType(SELECTED)
       document.getElementById('return-button').value = 'constellation'
       level = 'object'
       break
@@ -119,12 +115,10 @@ export const changeLevel = (next) => {
         //constellation should always have the same index, might need refactor
         const disposable = scene.children[2]
         scene.remove(disposable)
-
         document.getElementById('controls-overlay').classList.toggle('controls-overlay__hidden')
       }
       scene.getObjectByName('galaxy').visible = true
       level = 'galaxy'
-
       cameraLock(false)
       window.camera.zoom = 1
       window.camera.updateProjectionMatrix()

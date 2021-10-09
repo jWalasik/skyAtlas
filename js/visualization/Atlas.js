@@ -17,6 +17,7 @@ import { debounce } from '../helperfunctions.js'
 import { starFieldTwinkle } from './animate.js'
 import { animateObject } from './object.js'
 import { setupControlsOverlay } from '../controls/modal.js'
+import { Planet } from './planet.js'
 
 
 const Atlas = function () {
@@ -34,6 +35,7 @@ const Atlas = function () {
   }
   const CAMERA = window.camera = new THREE.PerspectiveCamera(60, width/height, .1, 100000)
   CAMERA.zoom = 1
+  CAMERA.layers.enable(1)
   //old shaders are not compatible with webgl2, thus using previous renderer version - deprecation incoming, upgrade advised
   const renderer = window.renderer = new THREE.WebGL1Renderer({alpha: true});
     renderer.setPixelRatio(window.devicePixelRatio);
@@ -76,7 +78,7 @@ const Atlas = function () {
 
   const bloomPass = new UnrealBloomPass(new THREE.Vector2(width,height),1.5, 0.4, 0.85)
   bloomPass.threshold = 0
-  bloomPass.strength = 1.2
+  bloomPass.strength = 1.5
   bloomPass.radius = 0
 
   let composer = new EffectComposer(renderer)
@@ -92,8 +94,17 @@ const Atlas = function () {
     animateObject()
 
     requestAnimationFrame(this.render.bind(this))
-    renderer.render(SCENE, CAMERA)
+    
+    //render pass chain to exclude unwanted objects (such as planets) from bloom pass
+    renderer.autoClear = false;
+    renderer.clear()
+    camera.layers.set(0)
     composer.render()
+
+    renderer.clearDepth()
+    camera.layers.set(1)
+    renderer.render(SCENE, CAMERA)
+
   }
   this.render()
 }
