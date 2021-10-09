@@ -142,7 +142,7 @@ const centerCameraOn = (container) => {
   animate(1/100)
 }
 
-const cameraLock = (bool) => {
+export const cameraLock = (bool) => {
   const controls = window.controls.active
   controls.noRoll = bool
   controls.noRotate = bool

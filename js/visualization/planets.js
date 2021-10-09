@@ -3,7 +3,6 @@ import {SolarSystem} from '../lib/solarSystem.js'
 import { vertex } from '../helperfunctions.js'
 
 const system = new SolarSystem()
-const loader = new THREE.TextureLoader()
 
 function linkToConstellation(object) {
   const center = new THREE.Vector3(0,0,0)
@@ -21,7 +20,7 @@ function updatePosition() {
   setInterval(()=>{
     system.compute()
     system.geocentricCoords().map(planet => {
-      if(planet.name === 'earth' || planet.name==='pluto') return
+      if(planet.name === 'earth') return
       const object = window.scene.getObjectByName(planet.name)
       const {x,y,z} = vertex([planet.ra*15,planet.dec])
       object.position.set(x,y,z)
@@ -36,7 +35,7 @@ const Planets = async () => {
   planets.name = 'planets'
   return Promise.all(
      system.geocentricCoords().map(planet => {
-      if(planet.name === 'earth' || planet.name==='pluto') return
+      if(planet.name === 'earth') return
       //detailed map with high resultion, wasted of resources with such small size, good for detailed view though
       //const map = loader.load(`/assets/bodies/${planet.name}-map.jpg`)
       const map = new THREE.MeshBasicMaterial({color: info[planet.name].color})
@@ -59,39 +58,44 @@ const Planets = async () => {
 const info = {
   mercury: {
     color: 0xababab,
-    size: 40,
+    size: 18,
     brightness: -1.06
   },
   venus: {
     color: 0xffed4a,
-    size: 55,
+    size: 25,
     brightness: -3.9
   },
   mars: {
     color: 0xfc5603,
-    size: 50,
+    size: 23,
     brightness: -0.8
   },
   jupiter: {
     color: 0x4f3e2c,
-    size: 60,
+    size: 20,
     brightness: -2.0
   },
   saturn: {
     color: 0x868755,
-    size: 45,
+    size: 20,
     brightness: 0.64
   },
   uranus: {
     color: 0x4ccfca,
-    size: 35,
+    size: 18,
     brightness: 5.7
   },
   neptune: {
     color: 0x0088ff,
-    size: 25,
+    size: 15,
     brightness: 7.8
   },
+  pluto: {
+    color: 0xb4bfbf,
+    size: 12,
+    brightness: 9
+  }
 }
 
 export default Planets

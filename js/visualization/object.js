@@ -22,7 +22,7 @@ export const objectType = (object) => {
   }
 }
 
-const transition = (object, step, end) => {
+export const transition = (object, step, end) => {
   setTimeout(()=>{
       const {x,y,z} = object.position.multiplyScalar(step)
       object.position.set(x,y,z)
