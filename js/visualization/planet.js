@@ -3,7 +3,7 @@ import * as THREE from '../lib/three.module.js'
 import { getWikiData } from '../utils/wikiLookup.js'
 
 export const Planet = async (data) => {
-  const sphere = new THREE.SphereGeometry(600, 64, 64)
+  const sphere = new THREE.SphereGeometry(150, 64, 64)
   const material = new THREE.MeshBasicMaterial({
     map: await new THREE.TextureLoader().load(`./assets/bodies/${data.name}-map.jpg`),
     opacity: 1.0,
@@ -15,19 +15,23 @@ export const Planet = async (data) => {
 
   if(data.name === 'saturn') {
     const texture = new THREE.TextureLoader().load('./assets/bodies/saturn-ring.png')
-    texture.wrapS = texture.wrapT = THREE.RepeatWrapping
-    texture.offset.set(0.5, 0)
-    texture.repeat.set(0.25, 1)
-
-    const ringGeometry = new THREE.RingBufferGeometry(750,1450,64)
-  
 
     const material = new THREE.MeshBasicMaterial({
       map: texture,
       side: THREE.DoubleSide,
+      color: 0xffffff,
       transparent: true
-    })
-    const ring = new THREE.Mesh(ringGeometry, material)
+    });
+  
+    const geometry = new THREE.RingBufferGeometry(180, 350, 64);
+    var pos = geometry.attributes.position;
+    var v3 = new THREE.Vector3();
+    for (let i = 0; i < pos.count; i++) {
+      v3.fromBufferAttribute(pos, i);
+      geometry.attributes.uv.setXY(i, v3.length() < 200 ? 0 : 1, 1);
+    }
+  
+    const ring = new THREE.Mesh(geometry, material)
     ring.rotation.x = Math.PI/2
     ring.layers.set(1)
     planet.add(ring)
